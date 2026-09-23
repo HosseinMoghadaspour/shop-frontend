@@ -1,88 +1,105 @@
+import { useState } from "react";
+
+import { ProductGrid } from "../components/ProductGrid";
+import { ProductPagination } from "../components/ProductPagination";
+import { ProductSearch } from "../components/ProductSearch";
+import { ProductGridSkeleton } from "../components/ProductGridSkeleton";
 import { useProducts } from "../hooks/useProducts";
 
+const PAGE_SIZE = 20;
+
 export function ProductsPage() {
-  const {
-    data,
-    isLoading,
-    isError,
-    error,
-  } = useProducts();
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
 
-  if (isLoading) {
-    return (
-      <div className="mx-auto max-w-7xl px-4 py-10">
-        در حال دریافت محصولات...
-      </div>
-    );
+  const { data, isLoading, isFetching, isError } = useProducts({
+    page,
+    limit: PAGE_SIZE,
+    search: search.trim() || undefined,
+  });
+
+  function handleSearch(value: string) {
+    setSearch(value);
+    setPage(1);
   }
 
-  if (isError) {
-    console.error("Products API error:", error);
-
-    return (
-      <div className="mx-auto max-w-7xl px-4 py-10">
-        دریافت محصولات با خطا مواجه شد.
-      </div>
-    );
+  function handleClearSearch() {
+    setSearch("");
+    setPage(1);
   }
 
-  if (!data) {
-    return (
-      <div className="mx-auto max-w-7xl px-4 py-10">
-        اطلاعات محصولات دریافت نشد.
-      </div>
-    );
-  }
+  function handlePageChange(nextPage: number) {
+    setPage(nextPage);
 
-  if (data.products.length === 0) {
-    return (
-      <div className="mx-auto max-w-7xl px-4 py-10">
-        محصولی پیدا نشد.
-      </div>
-    );
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-10">
-      <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-bold">
-          محصولات
-        </h1>
+    <section className="mx-auto max-w-7xl px-4 py-10">
+      <div className="mb-8 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+        <div>
+          <h1 className="text-2xl font-bold">محصولات</h1>
 
-        <span className="text-sm text-muted-foreground">
-          {data.pagination.total.toLocaleString("fa-IR")} محصول
-        </span>
+          <p className="mt-1 text-sm text-muted-foreground">
+            مشاهده و انتخاب محصولات فروشگاه
+          </p>
+        </div>
+
+        <ProductSearch
+          value={search}
+          onChange={handleSearch}
+          onClear={handleClearSearch}
+        />
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {data.products.map((product) => (
-          <article
-            key={product.id}
-            className="rounded-lg border bg-card p-4"
-          >
-            <h2 className="font-semibold">
-              {product.name}
-            </h2>
+      {isLoading ? (
+        <ProductGridSkeleton />
+      ) : isError ? (
+        <div className="rounded-lg border border-destructive/30 bg-destructive/5 p-8 text-center">
+          <p className="font-medium">
+            دریافت محصولات با خطا مواجه شد.
+          </p>
 
-            {product.nameEn && (
-              <p className="mt-1 text-xs text-muted-foreground">
-                {product.nameEn}
-              </p>
-            )}
+          <p className="mt-2 text-sm text-muted-foreground">
+            لطفاً دوباره تلاش کنید.
+          </p>
+        </div>
+      ) : !data || data.products.length === 0 ? (
+        <div className="rounded-lg border p-10 text-center">
+          <p className="font-medium">محصولی پیدا نشد.</p>
 
-            <p className="mt-3 text-sm text-muted-foreground">
-              کد کالا: {product.code}
+          {search && (
+            <p className="mt-2 text-sm text-muted-foreground">
+              برای «{search}» محصولی پیدا نشد.
             </p>
-          </article>
-        ))}
-      </div>
+          )}
+        </div>
+      ) : (
+        <>
+          <div className="mb-5 flex items-center justify-between">
+            <span className="text-sm text-muted-foreground">
+              {data.pagination.total.toLocaleString("fa-IR")} محصول
+            </span>
 
-      <div className="mt-8 text-center text-sm text-muted-foreground">
-        صفحه{" "}
-        {data.pagination.page.toLocaleString("fa-IR")}{" "}
-        از{" "}
-        {data.pagination.totalPages.toLocaleString("fa-IR")}
-      </div>
-    </div>
+            {isFetching && (
+              <span className="text-xs text-muted-foreground">
+                در حال بروزرسانی...
+              </span>
+            )}
+          </div>
+
+          <ProductGrid products={data.products} />
+
+          <ProductPagination
+            page={data.pagination.page}
+            totalPages={data.pagination.totalPages}
+            onPageChange={handlePageChange}
+          />
+        </>
+      )}
+    </section>
   );
 }
