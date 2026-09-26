@@ -65,7 +65,7 @@ export interface Product {
   consumerPrice: number;
 
   isActive: boolean;
-  isShowIsOnlineShop: boolean;
+  isShowInOnlineShop: boolean;
 
   briefDescription: string | null;
   fullDescription: string | null;

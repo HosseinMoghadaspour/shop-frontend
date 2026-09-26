@@ -1,51 +1,84 @@
 import { createBrowserRouter } from "react-router-dom";
+
 import { StoreLayout } from "@/layouts/StoreLayout";
+
 import { ProductsPage } from "@/features/products/pages/ProductsPage";
 import { ProductDetailsPage } from "@/features/products/pages/ProductDetailsPage";
-function HomePage() {
-  return <div>صفحه اصلی فروشگاه</div>;
-}
+import { CartPage } from "@/features/cart/pages/CartPage";
 
-function CartPage() {
-  return <div>سبد خرید</div>;
+import { LoginPage } from "@/features/auth/pages/LoginPage";
+import { VerifyPage } from "@/features/auth/pages/VerifyPage";
+
+import { ProtectedRoute } from "./ProtectedRoute";
+
+function HomePage() {
+  return (
+    <div>
+      صفحه اصلی فروشگاه
+    </div>
+  );
 }
 
 function NotFoundPage() {
-  return <div>صفحه مورد نطر یافت نشد</div>;
+  return (
+    <div>
+      صفحه مورد نظر پیدا نشد.
+    </div>
+  );
 }
 
-function LoginPage() {
-  return <div>ورود به حساب کاربری</div>;
-}
+export const router =
+  createBrowserRouter([
+    {
+      element: <StoreLayout />,
+      children: [
+        {
+          path: "/",
+          element: <HomePage />,
+        },
 
-export const router = createBrowserRouter([
-  {
-    element: <StoreLayout />,
-    children: [
-      {
-        path: "/",
-        element: <HomePage />,
-      },
-      {
-        path: "/products",
-        element: <ProductsPage />,
-      },
-      {
-        path: "/products/:id",
-        element: <ProductDetailsPage />,
-      },
-      {
-        path: "/cart",
-        element: <CartPage />,
-      },
-      {
-        path: "/auth/login",
-        element: <LoginPage />,
-      },
-    ],
-  },
-  {
-    path: "*",
-    element: <NotFoundPage />,
-  },
-]);
+        {
+          path: "/products",
+          element: <ProductsPage />,
+        },
+
+        {
+          path: "/products/:id",
+          element:
+            <ProductDetailsPage />,
+        },
+
+        {
+          path: "/auth/login",
+          element: <LoginPage />,
+        },
+
+        {
+          path: "/auth/verify",
+          element: <VerifyPage />,
+        },
+
+        {
+          element:
+            <ProtectedRoute />,
+          children: [
+            {
+              path: "/cart",
+              element: <CartPage />,
+            },
+
+            // بعداً:
+            // /checkout
+            // /orders
+            // /profile
+            // /addresses
+          ],
+        },
+      ],
+    },
+
+    {
+      path: "*",
+      element: <NotFoundPage />,
+    },
+  ]);

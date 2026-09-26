@@ -9,6 +9,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { formatPrice } from "@/lib/formatter";
 import { useProduct } from "../hooks/useProduct";
 import { getApiAssetUrl } from "@/lib/api-url";
+import { useCartStore } from "@/stores/cart.store";
+import axios from "axios";
 
 export function ProductDetailsPage() {
   const navigate = useNavigate();
@@ -17,6 +19,10 @@ export function ProductDetailsPage() {
   const productId = Number(id);
 
   const { data: product, isLoading, isError } = useProduct(productId);
+
+  const addItem = useCartStore((state) => state.addItem);
+
+  const isCartUpdating = useCartStore((state) => state.isUpdating);
 
   if (isLoading) {
     return <ProductDetailsSkeleton />;
@@ -150,9 +156,40 @@ export function ProductDetailsPage() {
 
             {/* Add to cart */}
             <div className="mt-6">
-              <Button className="w-full" size="lg" disabled={!isAvailable}>
+              <Button
+                className="w-full"
+                size="lg"
+                disabled={
+                  isCartUpdating ||
+                  !product.isActive ||
+                  !product.isShowInOnlineShop ||
+                  !isAvailable
+                }
+                onClick={async () => {
+                  try {
+                    await addItem(
+                      product.id,
+                      product.minOrder && product.minOrder > 0
+                        ? product.minOrder
+                        : 1,
+                    );
+                  } catch (error) {
+                    if (
+                      axios.isAxiosError(error) &&
+                      error.response?.status === 401
+                    ) {
+                      navigate(
+                        `/auth/login?returnTo=${encodeURIComponent(
+                          `/products/${product.id}`,
+                        )}`,
+                      );
+                    }
+                  }
+                }}
+              >
                 <ShoppingCart className="ml-2 h-5 w-5" />
-                {isAvailable ? "افزودن به سبد خرید" : "محصول ناموجود است"}
+
+                {isCartUpdating ? "در حال افزودن..." : "افزودن به سبد خرید"}
               </Button>
             </div>
 
