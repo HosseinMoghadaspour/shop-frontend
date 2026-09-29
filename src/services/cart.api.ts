@@ -15,7 +15,7 @@ export interface CartItem {
 }
 
 export interface Cart {
-    peronId : number;
+    personId : number;
     items: CartItem[];
     itemsCount: number;
     totalQuantity: number;

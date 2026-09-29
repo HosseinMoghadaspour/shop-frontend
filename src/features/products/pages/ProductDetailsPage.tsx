@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-
+import { setPendingCartAction } from "@/features/cart/utils/pending-cart";
 import { formatPrice } from "@/lib/formatter";
 import { useProduct } from "../hooks/useProduct";
 import { getApiAssetUrl } from "@/lib/api-url";
@@ -57,7 +57,7 @@ export function ProductDetailsPage() {
       <div className="mb-6">
         <Link
           to={"/products"}
-          className="inline-flex items-center gap-2 text-sm text-muted-foreground ransition-colors hover:text-foreground"
+          className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
         >
           <ArrowRight className="h-4 w-4" />
           بازگشت به محصولات
@@ -166,25 +166,21 @@ export function ProductDetailsPage() {
                   !isAvailable
                 }
                 onClick={async () => {
+                 const quantity =
+                 product.minOrder && product.minOrder > 0
+                  ? product.minOrder : 1;
+
                   try {
-                    await addItem(
-                      product.id,
-                      product.minOrder && product.minOrder > 0
-                        ? product.minOrder
-                        : 1,
-                    );
+                    await addItem(product.id , quantity);
+
+                    navigate("/cart");
                   } catch (error) {
-                    if (
-                      axios.isAxiosError(error) &&
-                      error.response?.status === 401
-                    ) {
-                      navigate(
-                        `/auth/login?returnTo=${encodeURIComponent(
-                          `/products/${product.id}`,
-                        )}`,
-                      );
+                    if (axios.isAxiosError(error) && error.response?.status === 401) {
+                        setPendingCartAction({goodId: product.id , quantity});
+                        navigate( `/auth/login?returnTo=${encodeURIComponent("/cart")}`);
                     }
                   }
+
                 }}
               >
                 <ShoppingCart className="ml-2 h-5 w-5" />
