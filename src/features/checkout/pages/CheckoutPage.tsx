@@ -1,15 +1,18 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { AlertCircle, ArrowRight, Loader2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatPrice } from "@/lib/formatter";
 import { useCartStore } from "@/stores/cart.store";
-import { useState } from "react";
-import axios from "axios";
-import { createOrder, type OrderDeliveryAddress } from "@/services/orders.api";
-
+import { type OrderDeliveryAddress } from "@/services/orders.api";
 import { useOrderStore } from "@/stores/order.store";
+import {
+  getCitiesByProvince,
+  getProvinces,
+  type City,
+  type Province,
+} from "@/services/locations.api";
 
 export function CheckoutPage() {
   const navigate = useNavigate();
@@ -17,6 +20,14 @@ export function CheckoutPage() {
   const isLoading = useCartStore((state) => state.isLoading);
   const fetchCart = useCartStore((state) => state.fetchCart);
   const error = useCartStore((state) => state.error);
+  const [provinces, setProvinces] = useState<Province[]>([]);
+  const [cities, setCities] = useState<City[]>([]);
+
+  const [isLoadingProvinces, setIsLoadingProvinces] = useState(false);
+
+  const [isLoadingCities, setIsLoadingCities] = useState(false);
+
+  const [locationError, setLocationError] = useState<string | null>(null);
   const [form, setForm] = useState<OrderDeliveryAddress>({
     provinceId: 0,
     deliverToName: "",
@@ -74,12 +85,53 @@ export function CheckoutPage() {
           replace: true,
         },
       );
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.data?.message) {
-        console.error(error.response.data.message);
+    } catch {}
+  }
+
+  useEffect(() => {
+    async function loadProvinces() {
+      setIsLoadingProvinces(true);
+      setLocationError(null);
+
+      try {
+        const result = await getProvinces();
+
+        setProvinces(result);
+      } catch {
+        setLocationError("دریافت لیست استان‌ها با خطا مواجه شد.");
+      } finally {
+        setIsLoadingProvinces(false);
       }
     }
-  }
+
+    void loadProvinces();
+  }, []);
+
+  useEffect(() => {
+    if (!form.provinceId) {
+      setCities([]);
+      return;
+    }
+
+    async function loadCities() {
+      setIsLoadingCities(true);
+      setLocationError(null);
+
+      try {
+        const result = await getCitiesByProvince(form.provinceId);
+
+        setCities(result);
+      } catch {
+        setCities([]);
+
+        setLocationError("دریافت لیست شهرها با خطا مواجه شد.");
+      } finally {
+        setIsLoadingCities(false);
+      }
+    }
+
+    void loadCities();
+  }, [form.provinceId]);
 
   useEffect(() => {
     if (!cart) {
@@ -244,26 +296,39 @@ export function CheckoutPage() {
 
                   <select
                     value={form.provinceId}
-                    onChange={(event) =>
+                    onChange={(event) => {
+                      const provinceId = Number(event.target.value);
+
                       setForm((prev) => ({
                         ...prev,
-                        provinceId: Number(event.target.value),
-                      }))
-                    }
+                        provinceId,
+                        City: "",
+                      }));
+
+                      setCities([]);
+                    }}
                     className="w-full rounded-md border bg-background px-3 py-2 text-sm"
                     required
+                    disabled={isLoadingProvinces}
                   >
-                    <option value={0}>انتخاب استان</option>
+                    <option value={0}>
+                      {isLoadingProvinces
+                        ? "در حال دریافت استان‌ها..."
+                        : "انتخاب استان"}
+                    </option>
 
-                    {/* فعلاً موقت */}
-                    {/* بعداً از API استان‌ها پر می‌شود */}
+                    {provinces.map((province) => (
+                      <option key={province.id} value={province.id}>
+                        {province.name}
+                      </option>
+                    ))}
                   </select>
                 </div>
 
                 <div className="space-y-2">
                   <label className="text-sm font-medium">شهر</label>
 
-                  <input
+                  <select
                     value={form.City}
                     onChange={(event) =>
                       setForm((prev) => ({
@@ -272,9 +337,23 @@ export function CheckoutPage() {
                       }))
                     }
                     className="w-full rounded-md border bg-background px-3 py-2 text-sm"
-                    placeholder="شهر"
                     required
-                  />
+                    disabled={!form.provinceId || isLoadingCities}
+                  >
+                    <option value="">
+                      {!form.provinceId
+                        ? "ابتدا استان را انتخاب کنید"
+                        : isLoadingCities
+                          ? "در حال دریافت شهرها..."
+                          : "انتخاب شهر"}
+                    </option>
+
+                    {cities.map((city) => (
+                      <option key={city.id} value={city.name}>
+                        {city.name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
                 <div className="space-y-2 sm:col-span-2">
@@ -344,6 +423,11 @@ export function CheckoutPage() {
                   />
                 </div>
               </div>
+              {locationError && (
+                <div className="rounded-md border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
+                  {locationError}
+                </div>
+              )}
 
               {orderError && (
                 <div className="rounded-md border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
@@ -391,14 +475,6 @@ export function CheckoutPage() {
                 </span>
               </div>
             </div>
-
-            <Button className="w-full" size="lg" disabled>
-              ثبت سفارش
-            </Button>
-
-            <p className="text-center text-xs text-muted-foreground">
-              مرحله ثبت سفارش در حال تکمیل است.
-            </p>
           </CardContent>
         </Card>
       </div>

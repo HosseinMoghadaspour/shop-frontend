@@ -10,6 +10,7 @@ import { LoginPage } from "@/features/auth/pages/LoginPage";
 import { VerifyPage } from "@/features/auth/pages/VerifyPage";
 import { CheckoutPage } from "@/features/checkout/pages/CheckoutPage";
 import { ProtectedRoute } from "./ProtectedRoute";
+import { OrderSuccessPage } from "@/features/checkout/pages/OrderSuccessPage";
 
 function HomePage() {
   return <div>صفحه اصلی فروشگاه</div>;
@@ -59,6 +60,10 @@ export const router = createBrowserRouter([
             path: "/checkout",
             element: <CheckoutPage />,
           },
+          {
+            path: "/checkout/success",
+            element: <OrderSuccessPage/>
+          }
         ],
       },
     ],

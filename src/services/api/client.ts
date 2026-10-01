@@ -9,3 +9,10 @@ export const apiClient = axios.create({
   },
   withCredentials: true,
 });
+
+export function isUnauthorizedError(error: unknown): boolean {
+    return(
+        axios.isAxiosError(error) &&
+        error .response?.status === 401
+    );
+}

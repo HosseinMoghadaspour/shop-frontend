@@ -3,35 +3,59 @@ export interface PendingCartAction {
   quantity: number;
 }
 
-const PENDIN_CART_KEY = "pending-cart-action";
+const PENDING_CART_KEY = "pending-cart-action";
 
-export function setPendingCartAction(action: PendingCartAction): void {
-  sessionStorage.setItem(PENDIN_CART_KEY, JSON.stringify(action));
+function isValidPendingCartAction(
+  action: unknown,
+): action is PendingCartAction {
+  if (!action || typeof action !== "object") {
+    return false;
+  }
+
+  const value = action as Record<string, unknown>;
+
+  return (
+    Number.isInteger(value.goodId) &&
+    Number(value.goodId) > 0 &&
+    Number.isFinite(value.quantity) &&
+    Number(value.quantity) > 0
+  );
 }
 
-export function consumePendingCartAction(): PendingCartAction | null {
-  const raw = sessionStorage.getItem(PENDIN_CART_KEY);
+export function setPendingCartAction(
+  action: PendingCartAction,
+): void {
+  sessionStorage.setItem(
+    PENDING_CART_KEY,
+    JSON.stringify(action),
+  );
+}
+
+export function getPendingCartAction(): PendingCartAction | null {
+  const raw = sessionStorage.getItem(PENDING_CART_KEY);
 
   if (!raw) {
     return null;
   }
 
-  sessionStorage.removeItem(PENDIN_CART_KEY);
-
   try {
-    const action = JSON.parse(raw) as PendingCartAction;
+    const action: unknown = JSON.parse(raw);
 
-    if (
-      !Number.isInteger(action.goodId) ||
-      action.goodId <= 0 ||
-      !Number.isFinite(action.quantity) ||
-      action.quantity <= 0
-    ) {
+    if (!isValidPendingCartAction(action)) {
+      sessionStorage.removeItem(PENDING_CART_KEY);
       return null;
     }
 
-    return action;
+    return {
+      goodId: action.goodId,
+      quantity: action.quantity,
+    };
   } catch {
+    sessionStorage.removeItem(PENDING_CART_KEY);
     return null;
   }
+}
+
+export function clearPendingCartAction(): void {
+  sessionStorage.removeItem(PENDING_CART_KEY);
 }

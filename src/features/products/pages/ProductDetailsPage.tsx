@@ -10,7 +10,7 @@ import { formatPrice } from "@/lib/formatter";
 import { useProduct } from "../hooks/useProduct";
 import { getApiAssetUrl } from "@/lib/api-url";
 import { useCartStore } from "@/stores/cart.store";
-import axios from "axios";
+import { isUnauthorizedError } from "@/services/api/client";
 
 export function ProductDetailsPage() {
   const navigate = useNavigate();
@@ -175,7 +175,7 @@ export function ProductDetailsPage() {
 
                     navigate("/cart");
                   } catch (error) {
-                    if (axios.isAxiosError(error) && error.response?.status === 401) {
+                    if (isUnauthorizedError(error)) {
                         setPendingCartAction({goodId: product.id , quantity});
                         navigate( `/auth/login?returnTo=${encodeURIComponent("/cart")}`);
                     }
