@@ -11,6 +11,8 @@ import { VerifyPage } from "@/features/auth/pages/VerifyPage";
 import { CheckoutPage } from "@/features/checkout/pages/CheckoutPage";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { OrderSuccessPage } from "@/features/checkout/pages/OrderSuccessPage";
+import { OrdersPage } from "@/features/orders/pages/OrdersPage";
+import { OrderDetailsPage } from "@/features/orders/pages/OrderDetailsPage";
 
 function HomePage() {
   return <div>صفحه اصلی فروشگاه</div>;
@@ -62,8 +64,16 @@ export const router = createBrowserRouter([
           },
           {
             path: "/checkout/success",
-            element: <OrderSuccessPage/>
-          }
+            element: <OrderSuccessPage />,
+          },
+          {
+            path: "/orders",
+            element: <OrdersPage />,
+          },
+          {
+            path: "/orders/:id",
+            element: <OrderDetailsPage />,
+          },
         ],
       },
     ],

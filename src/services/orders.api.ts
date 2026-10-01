@@ -1,32 +1,32 @@
 import { apiClient } from "./api/client";
 
 export interface OrderDeliveryAddress {
-    provinceId: number;
-    deliverToName: string;
-    deliverToMobileNumber: string;
-    deliverToPhoneNumber?: string;
-    City: string;
-    Adrs:string;
-    PostalCode?: string;
-    RowDesc?: string;
-    FDateInsert?: string;
-    FTimeInsert?: string;
+  provinceId: number;
+  deliverToName: string;
+  deliverToMobileNumber: string;
+  deliverToPhoneNumber?: string;
+  City: string;
+  Adrs: string;
+  PostalCode?: string;
+  RowDesc?: string;
+  FDateInsert?: string;
+  FTimeInsert?: string;
 }
 
 export interface CreateOrderRequest {
-    deliveryAddress: OrderDeliveryAddress;
+  deliveryAddress: OrderDeliveryAddress;
 }
 
 export interface OrderItemResponse {
-    goodId: number;
-    goodCode: string;
-    goodName: string;
-    quantity: number;
-    unitPrice: number;
-    mainMeasureUnitId: number;
-    defaultMeasureUnitId: number;
-    discountPrice: number;
-    totalPrice: number;
+  goodId: number;
+  goodCode: string;
+  goodName: string;
+  quantity: number;
+  unitPrice: number;
+  mainMeasureUnitId: number;
+  defaultMeasureUnitId: number;
+  discountPrice: number;
+  totalPrice: number;
 }
 
 export interface CreateOrderResponse {
@@ -43,6 +43,7 @@ export interface CreateOrderResponse {
   payablePrice: number;
   items: OrderItemResponse[];
 }
+
 interface ApiResponse<T> {
   success: boolean;
   message?: string;
@@ -62,6 +63,17 @@ export interface OrderHeader {
   OrderStatus: boolean | null;
 }
 
+export interface OrderProduct {
+  RowID: number;
+  RowCode: string | null;
+  RowName: string | null;
+  RowNameEN: string | null;
+  RowNameAlias: string | null;
+  SalePrice: number | null;
+  DiscountPrice: number | null;
+  IMG_1: string | null;
+}
+
 export interface OrderDetail {
   OrderH_ID: number;
   Good_ID: number;
@@ -71,6 +83,7 @@ export interface OrderDetail {
   TotalPrice: number;
   PurchaseTotalPrice: number | null;
   PurchaseUnitPrice: number | null;
+  Good: OrderProduct | null;
 }
 
 export interface OrdersResponse {
