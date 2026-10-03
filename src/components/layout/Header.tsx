@@ -1,5 +1,5 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { ShoppingCart, UserRound, LogOut } from "lucide-react";
+import { ShoppingCart, UserRound, LogOut, ClipboardList } from "lucide-react";
 import { useEffect } from "react";
 import { useAuthStore } from "@/stores/auth.store";
 import { useCartStore } from "@/stores/cart.store";
@@ -103,6 +103,15 @@ export function Header() {
             <div className="h-10 w-20 animate-pulse rounded-md bg-muted" />
           ) : isAuthenticated ? (
             <div className="flex items-center gap-2">
+              <Link
+                to="/orders"
+                className="flex h-10 items-center gap-2 rounded-md px-3 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
+                title="سفارش‌های من"
+              >
+                <ClipboardList className="h-4 w-4" />
+
+                <span className="hidden sm:inline">سفارش‌های من</span>
+              </Link>
               <Link
                 to="/profile"
                 className="hidden max-w-40 items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-muted sm:flex"
