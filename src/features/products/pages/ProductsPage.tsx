@@ -59,9 +59,7 @@ export function ProductsPage() {
         <ProductGridSkeleton />
       ) : isError ? (
         <div className="rounded-lg border border-destructive/30 bg-destructive/5 p-8 text-center">
-          <p className="font-medium">
-            دریافت محصولات با خطا مواجه شد.
-          </p>
+          <p className="font-medium">دریافت محصولات با خطا مواجه شد.</p>
 
           <p className="mt-2 text-sm text-muted-foreground">
             لطفاً دوباره تلاش کنید.

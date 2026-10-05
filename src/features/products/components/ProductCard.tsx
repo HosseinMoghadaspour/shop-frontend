@@ -13,7 +13,7 @@ interface ProductCardProps {
 export function ProductCard({ product }: ProductCardProps) {
   const {
     name,
-    nameEn,
+    // nameEn,
     code,
     stock,
     pricing,
@@ -26,7 +26,7 @@ export function ProductCard({ product }: ProductCardProps) {
   const isAvailable = stock > 0;
 
   return (
-    <Card className="group overflow-hidden transition-shadow hover:shadow-md">
+    <Card className="group overflow-hidden transition-shadow hover:shadow-md w-[80%]">
       {/* Product image */}
       <Link
         to={`/products/${product.id}`}
@@ -59,14 +59,14 @@ export function ProductCard({ product }: ProductCardProps) {
           </h2>
         </Link>
 
-        {nameEn && (
+        {/* {nameEn && (
           <p className="mt-1 truncate text-xs text-muted-foreground">
             {nameEn}
           </p>
-        )}
+        )} */}
 
         {/* Code */}
-        <p className="mt-3 text-xs text-muted-foreground">کد کالا: {code}</p>
+        {/* <p className="mt-3 text-xs text-muted-foreground">کد کالا: {code}</p> */}
 
         {/* Price */}
         <div className="mt-4">
@@ -99,13 +99,13 @@ export function ProductCard({ product }: ProductCardProps) {
 
       <CardFooter className="p-4 pt-0">
         <Button
-          className="w-full"
+          className="w-full mt-3"
           disabled={!isAvailable}
           onClick={() => {
             window.location.href = `/products/${product.id}`;
           }}
         >
-          <ShoppingCart className="ml-2 h-4 w-4" />
+          <ShoppingCart className="ml-2 h-4 w-4 " />
           {isAvailable ? "افزودن به سبد" : "ناموجود"}
         </Button>
       </CardFooter>
