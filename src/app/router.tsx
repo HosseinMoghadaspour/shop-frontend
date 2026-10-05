@@ -13,7 +13,7 @@ import { ProtectedRoute } from "./ProtectedRoute";
 import { OrderSuccessPage } from "@/features/checkout/pages/OrderSuccessPage";
 import { OrdersPage } from "@/features/orders/pages/OrdersPage";
 import { OrderDetailsPage } from "@/features/orders/pages/OrderDetailsPage";
-
+import { ProfilePage } from "@/features/profile/pages/ProfilePage";
 function HomePage() {
   return <div>صفحه اصلی فروشگاه</div>;
 }
@@ -73,6 +73,10 @@ export const router = createBrowserRouter([
           {
             path: "/orders/:id",
             element: <OrderDetailsPage />,
+          },
+          {
+            path: "/profile",
+            element: <ProfilePage />,
           },
         ],
       },
