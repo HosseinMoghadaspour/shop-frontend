@@ -28,12 +28,12 @@ export function CheckoutPage() {
   const [isLoadingCities, setIsLoadingCities] = useState(false);
 
   const [locationError, setLocationError] = useState<string | null>(null);
+  const [provinceId, setProvinceId] = useState(0);
   const [form, setForm] = useState<OrderDeliveryAddress>({
-    provinceId: 0,
+    cityId: 0,
     deliverToName: "",
     deliverToMobileNumber: "",
     deliverToPhoneNumber: "",
-    City: "",
     Adrs: "",
     PostalCode: "",
     RowDesc: "",
@@ -45,7 +45,11 @@ export function CheckoutPage() {
   async function handleSubmitOrder(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (!form.provinceId) {
+    if (!provinceId) {
+      return;
+    }
+
+    if (!form.cityId) {
       return;
     }
 
@@ -57,10 +61,6 @@ export function CheckoutPage() {
       return;
     }
 
-    if (!form.City.trim()) {
-      return;
-    }
-
     if (!form.Adrs.trim()) {
       return;
     }
@@ -68,11 +68,10 @@ export function CheckoutPage() {
     try {
       const order = await submitOrder({
         deliveryAddress: {
-          provinceId: form.provinceId,
+          cityId: form.cityId,
           deliverToName: form.deliverToName.trim(),
           deliverToMobileNumber: form.deliverToMobileNumber.trim(),
           deliverToPhoneNumber: form.deliverToPhoneNumber?.trim() || undefined,
-          City: form.City.trim(),
           Adrs: form.Adrs.trim(),
           PostalCode: form.PostalCode?.trim() || undefined,
           RowDesc: form.RowDesc?.trim() || undefined,
@@ -108,7 +107,7 @@ export function CheckoutPage() {
   }, []);
 
   useEffect(() => {
-    if (!form.provinceId) {
+    if (!provinceId) {
       setCities([]);
       return;
     }
@@ -118,12 +117,10 @@ export function CheckoutPage() {
       setLocationError(null);
 
       try {
-        const result = await getCitiesByProvince(form.provinceId);
-
+        const result = await getCitiesByProvince(provinceId);
         setCities(result);
       } catch {
         setCities([]);
-
         setLocationError("دریافت لیست شهرها با خطا مواجه شد.");
       } finally {
         setIsLoadingCities(false);
@@ -131,7 +128,7 @@ export function CheckoutPage() {
     }
 
     void loadCities();
-  }, [form.provinceId]);
+  }, [provinceId]);
 
   useEffect(() => {
     if (!cart) {
@@ -295,14 +292,15 @@ export function CheckoutPage() {
                   <label className="text-sm font-medium">استان</label>
 
                   <select
-                    value={form.provinceId}
+                    value={provinceId}
                     onChange={(event) => {
-                      const provinceId = Number(event.target.value);
+                      const selectedProvinceId = Number(event.target.value);
+
+                      setProvinceId(selectedProvinceId);
 
                       setForm((prev) => ({
                         ...prev,
-                        provinceId,
-                        City: "",
+                        cityId: 0,
                       }));
 
                       setCities([]);
@@ -329,19 +327,19 @@ export function CheckoutPage() {
                   <label className="text-sm font-medium">شهر</label>
 
                   <select
-                    value={form.City}
+                    value={form.cityId}
                     onChange={(event) =>
                       setForm((prev) => ({
                         ...prev,
-                        City: event.target.value,
+                        cityId: Number(event.target.value),
                       }))
                     }
                     className="w-full rounded-md border bg-background px-3 py-2 text-sm"
                     required
-                    disabled={!form.provinceId || isLoadingCities}
+                    disabled={!provinceId || isLoadingCities}
                   >
                     <option value="">
-                      {!form.provinceId
+                      {!provinceId
                         ? "ابتدا استان را انتخاب کنید"
                         : isLoadingCities
                           ? "در حال دریافت شهرها..."
@@ -349,7 +347,7 @@ export function CheckoutPage() {
                     </option>
 
                     {cities.map((city) => (
-                      <option key={city.id} value={city.name}>
+                      <option key={city.id} value={city.id}>
                         {city.name}
                       </option>
                     ))}

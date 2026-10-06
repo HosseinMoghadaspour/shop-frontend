@@ -73,18 +73,21 @@ export function ProfilePage() {
               <p className="mt-1 font-medium">{userName}</p>
             </div>
             <div>
-                <p className="text-xs text-muted-foreground">شماره موبایل</p>
-                <p className="mt-1 font-medium" dir="ltr">{mobile}</p>
+              <p className="text-xs text-muted-foreground">شماره موبایل</p>
+              <p className="mt-1 font-medium" dir="ltr">
+                {mobile}
+              </p>
             </div>
             <Link
-            to="/orders"
-            className="flex items-center gap-2 rounded-lg border px-4 py-3 text-sm transition hover:bg-muted">
-                <ClipboardList className="h-4 w-4" />
-                سفارش‌های من
+              to="/orders"
+              className="flex items-center gap-2 rounded-lg border px-4 py-3 text-sm transition hover:bg-muted"
+            >
+              <ClipboardList className="h-4 w-4" />
+              سفارش‌های من
             </Link>
           </CardContent>
         </Card>
-      <Card className="lg:col-span-2">
+        <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <MapPin className="h-5 w-5" />
@@ -105,83 +108,65 @@ export function ProfilePage() {
               </div>
             )}
 
-            {!isLoadingAddresses &&
-              !addressError &&
-              addresses.length === 0 && (
-                <div className="rounded-lg border p-6 text-center">
-                  <MapPin className="mx-auto mb-3 h-8 w-8 text-muted-foreground" />
+            {!isLoadingAddresses && !addressError && addresses.length === 0 && (
+              <div className="rounded-lg border p-6 text-center">
+                <MapPin className="mx-auto mb-3 h-8 w-8 text-muted-foreground" />
 
-                  <p className="font-medium">
-                    هنوز آدرسی ثبت نشده است.
-                  </p>
+                <p className="font-medium">هنوز آدرسی ثبت نشده است.</p>
 
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    هنگام ثبت سفارش می‌توانید آدرس تحویل را وارد کنید.
-                  </p>
-                </div>
-              )}
+                <p className="mt-1 text-sm text-muted-foreground">
+                  هنگام ثبت سفارش می‌توانید آدرس تحویل را وارد کنید.
+                </p>
+              </div>
+            )}
 
-            {!isLoadingAddresses &&
-              !addressError &&
-              addresses.length > 0 && (
-                <div className="space-y-4">
-                  {addresses.map((address) => (
-                    <div
-                      key={address.id}
-                      className="rounded-xl border p-4"
-                    >
-                      <div className="mb-3 flex items-center justify-between">
-                        <div className="font-medium">
-                          {address.recipient.name ||
-                            "تحویل گیرنده"}
-                        </div>
-
-                        {address.isActive && (
-                          <span className="rounded-full bg-green-100 px-3 py-1 text-xs text-green-700">
-                            فعال
-                          </span>
-                        )}
+            {!isLoadingAddresses && !addressError && addresses.length > 0 && (
+              <div className="space-y-4">
+                {addresses.map((address) => (
+                  <div key={address.id} className="rounded-xl border p-4">
+                    <div className="mb-3 flex items-center justify-between">
+                      <div className="font-medium">
+                        <span className="text-muted-foreground">نام گیرنده:</span>{" "}
+                        {address.recipient.name || "تحویل گیرنده"}
+                        
                       </div>
 
-                      <div className="space-y-2 text-sm">
-                        <div>
-                          <span className="text-muted-foreground">
-                            محدوده:
-                          </span>{" "}
-                          {address.province?.name || "-"}
-                          {" / "}
-                          {address.county?.name || "-"}
-                          {" / "}
-                          {address.city?.name || "-"}
-                        </div>
+                      {address.isActive && (
+                        <span className="rounded-full bg-green-100 px-3 py-1 text-xs text-green-700">
+                          فعال
+                        </span>
+                      )}
+                    </div>
 
-                        <div>
-                          <span className="text-muted-foreground">
-                            آدرس:
-                          </span>{" "}
-                          {address.address || "-"}
-                        </div>
+                    <div className="space-y-2 text-sm">
+                      <div>
+                        <span className="text-muted-foreground">محدوده:</span>{" "}
+                        {address.province?.name || "-"}
+                        {" / "}
+                        {address.county?.name || "-"}
+                        {" / "}
+                        {address.city?.name || "-"}
+                      </div>
 
-                        <div>
-                          <span className="text-muted-foreground">
-                            کد پستی:
-                          </span>{" "}
-                          {address.postalCode || "-"}
-                        </div>
+                      <div>
+                        <span className="text-muted-foreground">آدرس:</span>{" "}
+                        {address.address || "-"}
+                      </div>
 
-                        <div>
-                          <span className="text-muted-foreground">
-                            موبایل:
-                          </span>{" "}
-                          <span dir="ltr">
-                            {address.recipient.mobile || "-"}
-                          </span>
-                        </div>
+                      <div>
+                        <span className="text-muted-foreground">کد پستی:</span>{" "}
+                        {address.postalCode || "-"}
+                      </div>
+
+                      <div>
+                        <span className="text-muted-foreground">موبایل:</span>{" "}
+                        <span dir="ltr">{address.recipient.mobile || "-"}</span>
                       </div>
                     </div>
-                  ))}
-                </div>
-              )}
+                  </div>
+                ))}
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

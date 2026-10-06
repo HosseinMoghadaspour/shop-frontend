@@ -1,16 +1,13 @@
 import { apiClient } from "./api/client";
 
 export interface OrderDeliveryAddress {
-  provinceId: number;
+  cityId: number;
   deliverToName: string;
   deliverToMobileNumber: string;
   deliverToPhoneNumber?: string;
-  City: string;
   Adrs: string;
   PostalCode?: string;
   RowDesc?: string;
-  FDateInsert?: string;
-  FTimeInsert?: string;
 }
 
 export interface CreateOrderRequest {
