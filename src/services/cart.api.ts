@@ -1,17 +1,26 @@
 import { apiClient } from "./api/client";
 
 export interface CartItem {
-    goodId : number;
-    rowCode : string;
-    rowName: string;
-    imageUrl : string | null;
-    quantity : number;
-    unitPrice : number;
-    totalPrice : number;
-    minOrder: number | null;
-    maxOrder: number | null;
-    isActive: boolean;
-    isShowInOnlineShop: boolean;
+  goodId: number;
+  rowCode: string;
+  rowName: string;
+  imageUrl: string | null;
+
+  quantity: number;
+  unitPrice: number;
+  totalPrice: number;
+
+  minOrder: number | null;
+  maxOrder: number | null;
+
+  unit: {
+    id: number;
+    name: string;
+    weightOrAmount: number | null;
+  } | null;
+
+  isActive: boolean;
+  isShowInOnlineShop: boolean;
 }
 
 export interface Cart {

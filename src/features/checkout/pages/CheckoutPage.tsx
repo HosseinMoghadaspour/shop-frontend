@@ -31,7 +31,7 @@ interface CartItem {
   totalPrice: number;
 }
 
-export default function CheckoutPage() {
+export function CheckoutPage() {
   const navigate = useNavigate();
 
   const { data: cart, isLoading: cartLoading } = useCart();

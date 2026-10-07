@@ -9,47 +9,48 @@ import { CartSummary } from "../components/CartSummary";
 import { EmptyCart } from "../components/EmptyCart";
 
 import { useCartStore } from "@/stores/cart.store";
+import { getQuantityStep } from "../utils/quantity";
 
 export function CartPage() {
   const cart = useCartStore((state) => state.cart);
-  const isLoading = useCartStore(
-    (state) => state.isLoading,
-  );
-  const isUpdating = useCartStore(
-    (state) => state.isUpdating,
-  );
+
+  const isLoading = useCartStore((state) => state.isLoading);
+
+  const isUpdating = useCartStore((state) => state.isUpdating);
+
   const error = useCartStore((state) => state.error);
 
-  const fetchCart = useCartStore(
-    (state) => state.fetchCart,
-  );
+  const fetchCart = useCartStore((state) => state.fetchCart);
 
-  const updateItem = useCartStore(
-    (state) => state.updateItem,
-  );
+  const updateItem = useCartStore((state) => state.updateItem);
 
-  const removeItem = useCartStore(
-    (state) => state.removeItem,
-  );
+  const removeItem = useCartStore((state) => state.removeItem);
 
-  const clearCart = useCartStore(
-    (state) => state.clear,
-  );
+  const clearCart = useCartStore((state) => state.clear);
 
   useEffect(() => {
     void fetchCart();
   }, [fetchCart]);
+
+  // ----------------------------------------
+  // Loading
+  // ----------------------------------------
 
   if (isLoading && !cart) {
     return (
       <div className="container mx-auto flex min-h-[50vh] items-center justify-center px-4">
         <div className="flex items-center gap-3 text-muted-foreground">
           <Loader2 className="size-5 animate-spin" />
+
           <span>در حال دریافت سبد خرید...</span>
         </div>
       </div>
     );
   }
+
+  // ----------------------------------------
+  // Error
+  // ----------------------------------------
 
   if (error && !cart) {
     return (
@@ -57,18 +58,11 @@ export function CartPage() {
         <div className="flex flex-col items-center text-center">
           <AlertCircle className="mb-4 size-10 text-destructive" />
 
-          <p className="font-medium">
-            دریافت سبد خرید با خطا مواجه شد.
-          </p>
+          <p className="font-medium">دریافت سبد خرید با خطا مواجه شد.</p>
 
-          <p className="mt-2 text-sm text-muted-foreground">
-            {error}
-          </p>
+          <p className="mt-2 text-sm text-muted-foreground">{error}</p>
 
-          <Button
-            className="mt-5"
-            onClick={() => void fetchCart()}
-          >
+          <Button className="mt-5" onClick={() => void fetchCart()}>
             تلاش مجدد
           </Button>
         </div>
@@ -76,43 +70,64 @@ export function CartPage() {
     );
   }
 
+  // ----------------------------------------
+  // Empty cart
+  // ----------------------------------------
+
   if (!cart || cart.items.length === 0) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <h1 className="mb-6 text-2xl font-bold">
-          سبد خرید
-        </h1>
+        <h1 className="mb-6 text-2xl font-bold">سبد خرید</h1>
 
         <EmptyCart />
       </div>
     );
   }
 
+  // ----------------------------------------
+  // Increase quantity
+  // ----------------------------------------
+
   const handleIncrease = async (
     goodId: number,
     quantity: number,
+    maxOrder: number | null,
   ) => {
-    try {
-      await updateItem(goodId, quantity + 1);
-    } catch {
-      // Error is already stored in Zustand.
-    }
-  };
+    const step = 0.5;
 
-  const handleDecrease = async (
-    goodId: number,
-    quantity: number,
-  ) => {
-    if (quantity <= 1) {
+    const nextQuantity = Number((quantity + step).toFixed(3));
+
+    if (maxOrder !== null && nextQuantity > maxOrder) {
       return;
     }
 
     try {
-      await updateItem(goodId, quantity - 1);
+      await updateItem(goodId, nextQuantity);
     } catch {
       // Error is already stored in Zustand.
     }
   };
+
+  const handleDecrease = async (goodId: number, quantity: number) => {
+    const step = 0.5;
+
+    const nextQuantity = Number((quantity - step).toFixed(3));
+
+    // حداقل مقدار سفارش همیشه 0.5
+    if (nextQuantity < 0.5) {
+      return;
+    }
+
+    try {
+      await updateItem(goodId, nextQuantity);
+    } catch {
+      // Error is already stored in Zustand.
+    }
+  };
+
+  // ----------------------------------------
+  // Remove item
+  // ----------------------------------------
 
   const handleRemove = async (goodId: number) => {
     try {
@@ -122,6 +137,10 @@ export function CartPage() {
     }
   };
 
+  // ----------------------------------------
+  // Clear cart
+  // ----------------------------------------
+
   const handleClear = async () => {
     try {
       await clearCart();
@@ -130,18 +149,23 @@ export function CartPage() {
     }
   };
 
+  // ----------------------------------------
+  // Render
+  // ----------------------------------------
+
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Header */}
+
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold">
-            سبد خرید
-          </h1>
+          <h1 className="text-2xl font-bold">سبد خرید</h1>
 
           <p className="mt-1 text-sm text-muted-foreground">
-            {cart.totalQuantity.toLocaleString("fa-IR")} کالا
-            در سبد خرید شما
+            {cart.totalQuantity.toLocaleString("fa-IR", {
+              maximumFractionDigits: 3,
+            })}{" "}
+            کالا در سبد خرید شما
           </p>
         </div>
 
@@ -157,16 +181,20 @@ export function CartPage() {
       </div>
 
       {/* Error */}
+
       {error && (
         <div className="mb-6 flex items-center gap-2 rounded-lg border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
           <AlertCircle className="size-4 shrink-0" />
+
           <span>{error}</span>
         </div>
       )}
 
       {/* Content */}
+
       <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
         {/* Items */}
+
         <div className="space-y-4">
           {cart.items.map((item) => (
             <CartItem
@@ -174,29 +202,17 @@ export function CartPage() {
               item={item}
               isUpdating={isUpdating}
               onIncrease={() =>
-                void handleIncrease(
-                  item.goodId,
-                  item.quantity,
-                )
+                void handleIncrease(item.goodId, item.quantity, item.maxOrder)
               }
-              onDecrease={() =>
-                void handleDecrease(
-                  item.goodId,
-                  item.quantity,
-                )
-              }
-              onRemove={() =>
-                void handleRemove(item.goodId)
-              }
+              onDecrease={() => void handleDecrease(item.goodId, item.quantity)}
+              onRemove={() => void handleRemove(item.goodId)}
             />
           ))}
         </div>
 
         {/* Summary */}
-        <CartSummary
-          cart={cart}
-          isUpdating={isUpdating}
-        />
+
+        <CartSummary cart={cart} isUpdating={isUpdating} />
       </div>
     </div>
   );
