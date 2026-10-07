@@ -1,5 +1,4 @@
 import { useMemo, useState } from "react";
-import type { ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   ArrowRight,
@@ -20,7 +19,7 @@ import AddressSelector from "../components/AddressSelector";
 import { useAddresses } from "@/features/addresses/hooks/useAddresses";
 
 import { useCart } from "@/features/cart/hooks/useCart";
-import { submitOrder } from "@/services/orders.api";
+import { createOrder } from "@/services/orders.api";
 import type { OrderDeliveryAddress } from "@/services/orders.api";
 
 interface CartItem {
@@ -31,43 +30,6 @@ interface CartItem {
   unitPrice: number;
   totalPrice: number;
 }
-
-interface CheckoutAddressRecipient {
-  name?: string | null;
-  mobile?: string | null;
-  phone?: string | null;
-}
-
-interface CheckoutAddressItem {
-  id: number;
-  cityId?: number | null;
-  recipient: CheckoutAddressRecipient;
-  address?: string | null;
-  postalCode?: string | null;
-  province?: {
-    name?: string | null;
-  } | null;
-  county?: {
-    name?: string | null;
-  } | null;
-  city?: {
-    name?: string | null;
-  } | null;
-}
-
-interface CheckoutForm extends OrderDeliveryAddress {}
-
-type CheckoutFieldValue = string | number;
-
-type NullableStringOrNumber = string | number | null | undefined;
-
-const handleInputChange = (
-  field: keyof CheckoutForm,
-  event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  callback: (field: keyof CheckoutForm, value: CheckoutFieldValue) => void,
-) => {
-  callback(field, event.target.value as CheckoutFieldValue);
-};
 
 export default function CheckoutPage() {
   const navigate = useNavigate();
@@ -196,7 +158,7 @@ export default function CheckoutPage() {
     try {
       setSubmitting(true);
 
-      const order = await submitOrder({
+      const order = await createOrder({
         deliveryAddress:
           selectedAddressId !== null
             ? {
