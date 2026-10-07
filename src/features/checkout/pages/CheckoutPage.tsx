@@ -17,7 +17,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 import AddressSelector from "../components/AddressSelector";
 import { useAddresses } from "@/features/addresses/hooks/useAddresses";
-
+import LocationSelector from "../components/LocationSelector";
 import { useCart } from "@/features/cart/hooks/useCart";
 import { createOrder } from "@/services/orders.api";
 import type { OrderDeliveryAddress } from "@/services/orders.api";
@@ -40,6 +40,7 @@ export default function CheckoutPage() {
   const [selectedAddressId, setSelectedAddressId] = useState<number | null>(
     null,
   );
+  const [provinceId, setProvinceId] = useState<number | null>(null);
 
   const [form, setForm] = useState<OrderDeliveryAddress>({
     cityId: 0,
@@ -70,6 +71,8 @@ export default function CheckoutPage() {
     setSelectedAddressId(address.id);
     setError(null);
 
+    setProvinceId(address.province?.id ?? null);
+
     setForm({
       cityId: address.cityId ?? 0,
       deliverToName: address.recipient.name ?? "",
@@ -83,6 +86,7 @@ export default function CheckoutPage() {
 
   const handleNewAddress = () => {
     setSelectedAddressId(null);
+    setProvinceId(null);
     setError(null);
 
     setForm({
@@ -105,11 +109,26 @@ export default function CheckoutPage() {
       [field]: value,
     }));
 
-    // اگر کاربر آدرس انتخاب‌شده را تغییر داد،
-    // دیگر نباید آن را به عنوان آدرس ذخیره‌شده قبلی ارسال کنیم.
     if (selectedAddressId !== null) {
       setSelectedAddressId(null);
+      setProvinceId(null);
     }
+  };
+
+  const handleProvinceChange = (value: number | null) => {
+    setProvinceId(value);
+
+    setForm((prev) => ({
+      ...prev,
+      cityId: 0,
+    }));
+  };
+
+  const handleCityChange = (value: number | null) => {
+    setForm((prev) => ({
+      ...prev,
+      cityId: value ?? 0,
+    }));
   };
 
   const handleSubmitOrder = async () => {
@@ -124,10 +143,7 @@ export default function CheckoutPage() {
       return;
     }
 
-    // ---------------------------------------
-    // Validation for a new address
-    // ---------------------------------------
-
+    
     if (selectedAddressId === null) {
       if (!Number.isInteger(form.cityId) || form.cityId <= 0) {
         setError("لطفاً شهر را انتخاب کنید.");
@@ -348,25 +364,12 @@ export default function CheckoutPage() {
                   />
                 </div>
 
-                {/* City */}
-                <div className="space-y-2">
-                  <Label htmlFor="cityId">شناسه شهر</Label>
-
-                  <Input
-                    id="cityId"
-                    type="number"
-                    value={form.cityId || ""}
-                    onChange={(event) =>
-                      handleChange("cityId", Number(event.target.value))
-                    }
-                    placeholder="شناسه شهر"
-                  />
-
-                  <p className="text-xs text-muted-foreground">
-                    فعلاً شناسه شهر را وارد کنید؛ در مرحله بعدی Province/City
-                    Selector را به این فرم وصل می‌کنیم.
-                  </p>
-                </div>
+                <LocationSelector
+                  provinceId={provinceId}
+                  cityId={form.cityId || null}
+                  onProvinceChange={handleProvinceChange}
+                  onCityChange={handleCityChange}
+                />
 
                 {/* Address */}
                 <div className="space-y-2">

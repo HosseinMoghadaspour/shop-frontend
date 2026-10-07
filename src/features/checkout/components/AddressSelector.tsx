@@ -1,12 +1,7 @@
 import { Check, MapPin, Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import type { DeliveryAddress } from "@/services/addresses.api";
@@ -26,6 +21,9 @@ export default function AddressSelector({
   onSelect,
   onNewAddress,
 }: AddressSelectorProps) {
+  const activeAddresses =
+    addresses?.filter((address) => address.isActive) ?? [];
+
   return (
     <Card>
       <CardHeader>
@@ -53,31 +51,24 @@ export default function AddressSelector({
             <Skeleton className="h-28 w-full" />
             <Skeleton className="h-28 w-full" />
           </>
-        ) : !addresses || addresses.length === 0 ? (
+        ) : !addresses || activeAddresses.length === 0 ? (
           <div className="rounded-lg border border-dashed p-6 text-center">
             <MapPin className="mx-auto mb-3 h-8 w-8 text-muted-foreground" />
 
-            <p className="font-medium">
-              هنوز آدرسی ثبت نکرده‌اید
-            </p>
+            <p className="font-medium">هنوز آدرسی ثبت نکرده‌اید</p>
 
             <p className="mt-1 text-sm text-muted-foreground">
               برای ادامه سفارش یک آدرس جدید وارد کنید.
             </p>
 
-            <Button
-              type="button"
-              className="mt-4"
-              onClick={onNewAddress}
-            >
+            <Button type="button" className="mt-4" onClick={onNewAddress}>
               <Plus className="ml-2 h-4 w-4" />
               افزودن آدرس
             </Button>
           </div>
         ) : (
-          addresses.map((address) => {
-            const selected =
-              selectedAddressId === address.id;
+          activeAddresses.map((address) => {
+            const selected = selectedAddressId === address.id;
 
             return (
               <button
@@ -101,9 +92,7 @@ export default function AddressSelector({
                         : "border-muted-foreground",
                     ].join(" ")}
                   >
-                    {selected && (
-                      <Check className="h-3.5 w-3.5" />
-                    )}
+                    {selected && <Check className="h-3.5 w-3.5" />}
                   </div>
 
                   <div className="min-w-0 flex-1">
@@ -142,17 +131,12 @@ export default function AddressSelector({
                       </p>
 
                       {address.address && (
-                        <p className="mt-1 line-clamp-2">
-                          {address.address}
-                        </p>
+                        <p className="mt-1 line-clamp-2">{address.address}</p>
                       )}
 
                       {address.postalCode && (
                         <p className="mt-1">
-                          کد پستی:{" "}
-                          <span dir="ltr">
-                            {address.postalCode}
-                          </span>
+                          کد پستی: <span dir="ltr">{address.postalCode}</span>
                         </p>
                       )}
                     </div>
