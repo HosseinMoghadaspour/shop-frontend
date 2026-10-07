@@ -128,3 +128,5 @@ export async function getOrderById(
 
   return response.data.data;
 }
+
+export const submitOrder = createOrder

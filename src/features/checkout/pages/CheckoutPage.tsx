@@ -17,9 +17,9 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
 import AddressSelector from "../components/AddressSelector";
-import { useAddresses } from "@/features/addresses/useAddresses";
+import { useAddresses } from "@/features/addresses/hooks/useAddresses";
 
-import { useCart } from "@/features/cart/useCart";
+import { useCart } from "@/features/cart/hooks/useCart";
 import { submitOrder } from "@/services/orders.api";
 import type { OrderDeliveryAddress } from "@/services/orders.api";
 
@@ -221,16 +221,10 @@ export default function CheckoutPage() {
        * این قسمت را مطابق response واقعی API تنظیم کن.
        */
 
-      const orderId = order?.data?.id ?? order?.data?.orderId ?? order?.id;
+      const orderId = order.orderHId;
 
       if (orderId) {
         navigate(`/orders/${orderId}`);
-        return;
-      }
-
-      // اگر API مستقیماً checkout/payment را برگرداند
-      if (order?.data?.paymentUrl) {
-        window.location.href = order.data.paymentUrl;
         return;
       }
 
