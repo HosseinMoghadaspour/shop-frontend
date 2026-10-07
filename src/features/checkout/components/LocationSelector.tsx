@@ -42,9 +42,7 @@ export default function LocationSelector({
           value={provinceId ? String(provinceId) : ""}
           onValueChange={(value) => {
             const id = Number(value);
-
             onProvinceChange(id);
-            onCityChange(null);
           }}
           disabled={provincesQuery.isLoading}
         >

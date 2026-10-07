@@ -143,8 +143,12 @@ export default function CheckoutPage() {
       return;
     }
 
-    
     if (selectedAddressId === null) {
+      if (!Number.isInteger(provinceId) || Number(provinceId) <= 0) {
+        setError("لطفاً استان را انتخاب کنید.");
+        return;
+      }
+
       if (!Number.isInteger(form.cityId) || form.cityId <= 0) {
         setError("لطفاً شهر را انتخاب کنید.");
         return;

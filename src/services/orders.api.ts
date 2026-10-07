@@ -59,8 +59,9 @@ export interface OrderHeader {
   TotalPrice: number | null;
   DiscountPercent: number | null;
   DiscountPrice: number | null;
-  PayablePrice: number | null;
   TaxPercent: number | null;
+  TaxPrice: number | null;
+  PayablePrice: number | null;
   OrderStatus: boolean | null;
 }
 

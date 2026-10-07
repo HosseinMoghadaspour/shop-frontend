@@ -211,18 +211,7 @@ export function OrderDetailsPage() {
                 ` (${formatPrice(order.TaxPercent)}٪)`}
             </span>
 
-            <span>
-              {formatPrice(
-                order.TotalPrice != null && order.PayablePrice != null
-                  ? Math.max(
-                      0,
-                      order.PayablePrice -
-                        (order.TotalPrice - (order.DiscountPrice ?? 0)),
-                    )
-                  : null,
-              )}{" "}
-              تومان
-            </span>
+            <span>{formatPrice(order.TaxPrice)} تومان</span>
           </div>
 
           <div className="flex justify-between border-t pt-3 text-base font-bold">
