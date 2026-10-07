@@ -1,34 +1,84 @@
-import { useEffect, useState } from "react";
-import { AlertCircle, ArrowRight, Loader2 } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { useMemo, useState } from "react";
+import type { ChangeEvent } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  ArrowRight,
+  CheckCircle2,
+  Loader2,
+  MapPin,
+  Package,
+  ShoppingBag,
+} from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { formatPrice } from "@/lib/formatter";
-import { useCartStore } from "@/stores/cart.store";
-import { type OrderDeliveryAddress } from "@/services/orders.api";
-import { useOrderStore } from "@/stores/order.store";
-import {
-  getCitiesByProvince,
-  getProvinces,
-  type City,
-  type Province,
-} from "@/services/locations.api";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
-export function CheckoutPage() {
+import AddressSelector from "../components/AddressSelector";
+import { useAddresses } from "@/features/addresses/useAddresses";
+
+import { useCart } from "@/features/cart/useCart";
+import { submitOrder } from "@/services/orders.api";
+import type { OrderDeliveryAddress } from "@/services/orders.api";
+
+interface CartItem {
+  goodId: number | string;
+  rowName: string;
+  imageUrl?: string | null;
+  quantity: number;
+  unitPrice: number;
+  totalPrice: number;
+}
+
+interface CheckoutAddressRecipient {
+  name?: string | null;
+  mobile?: string | null;
+  phone?: string | null;
+}
+
+interface CheckoutAddressItem {
+  id: number;
+  cityId?: number | null;
+  recipient: CheckoutAddressRecipient;
+  address?: string | null;
+  postalCode?: string | null;
+  province?: {
+    name?: string | null;
+  } | null;
+  county?: {
+    name?: string | null;
+  } | null;
+  city?: {
+    name?: string | null;
+  } | null;
+}
+
+interface CheckoutForm extends OrderDeliveryAddress {}
+
+type CheckoutFieldValue = string | number;
+
+type NullableStringOrNumber = string | number | null | undefined;
+
+const handleInputChange = (
+  field: keyof CheckoutForm,
+  event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  callback: (field: keyof CheckoutForm, value: CheckoutFieldValue) => void,
+) => {
+  callback(field, event.target.value as CheckoutFieldValue);
+};
+
+export default function CheckoutPage() {
   const navigate = useNavigate();
-  const cart = useCartStore((state) => state.cart);
-  const isLoading = useCartStore((state) => state.isLoading);
-  const fetchCart = useCartStore((state) => state.fetchCart);
-  const error = useCartStore((state) => state.error);
-  const [provinces, setProvinces] = useState<Province[]>([]);
-  const [cities, setCities] = useState<City[]>([]);
 
-  const [isLoadingProvinces, setIsLoadingProvinces] = useState(false);
+  const { data: cart, isLoading: cartLoading } = useCart();
+  const { data: addresses, isLoading: addressesLoading } = useAddresses();
 
-  const [isLoadingCities, setIsLoadingCities] = useState(false);
+  const [selectedAddressId, setSelectedAddressId] = useState<number | null>(
+    null,
+  );
 
-  const [locationError, setLocationError] = useState<string | null>(null);
-  const [provinceId, setProvinceId] = useState(0);
   const [form, setForm] = useState<OrderDeliveryAddress>({
     cityId: 0,
     deliverToName: "",
@@ -38,444 +88,560 @@ export function CheckoutPage() {
     PostalCode: "",
     RowDesc: "",
   });
-  const submitOrder = useOrderStore((state) => state.submitOrder);
-  const isSubmitting = useOrderStore((state) => state.isSubmitting);
-  const orderError = useOrderStore((state) => state.error);
-  const resetCart = useCartStore((state) => state.reset);
-  async function handleSubmitOrder(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
 
-    if (!provinceId) {
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const selectedAddress = useMemo(() => {
+    if (!selectedAddressId || !addresses) {
+      return null;
+    }
+
+    return (
+      addresses.find((address) => address.id === selectedAddressId) ?? null
+    );
+  }, [addresses, selectedAddressId]);
+
+  const handleSelectAddress = (
+    address: NonNullable<typeof addresses>[number],
+  ) => {
+    setSelectedAddressId(address.id);
+    setError(null);
+
+    setForm({
+      cityId: address.cityId ?? 0,
+      deliverToName: address.recipient.name ?? "",
+      deliverToMobileNumber: address.recipient.mobile ?? "",
+      deliverToPhoneNumber: address.recipient.phone ?? "",
+      Adrs: address.address ?? "",
+      PostalCode: address.postalCode ?? "",
+      RowDesc: "",
+    });
+  };
+
+  const handleNewAddress = () => {
+    setSelectedAddressId(null);
+    setError(null);
+
+    setForm({
+      cityId: 0,
+      deliverToName: "",
+      deliverToMobileNumber: "",
+      deliverToPhoneNumber: "",
+      Adrs: "",
+      PostalCode: "",
+      RowDesc: "",
+    });
+  };
+
+  const handleChange = (
+    field: keyof OrderDeliveryAddress,
+    value: string | number,
+  ) => {
+    setForm((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+
+    // اگر کاربر آدرس انتخاب‌شده را تغییر داد،
+    // دیگر نباید آن را به عنوان آدرس ذخیره‌شده قبلی ارسال کنیم.
+    if (selectedAddressId !== null) {
+      setSelectedAddressId(null);
+    }
+  };
+
+  const handleSubmitOrder = async () => {
+    setError(null);
+
+    if (cartLoading) {
       return;
     }
 
-    if (!form.cityId) {
+    if (!cart || !cart.items || cart.items.length === 0) {
+      setError("سبد خرید شما خالی است.");
       return;
     }
 
-    if (!form.deliverToName.trim()) {
-      return;
-    }
+    // ---------------------------------------
+    // Validation for a new address
+    // ---------------------------------------
 
-    if (!form.deliverToMobileNumber.trim()) {
-      return;
-    }
+    if (selectedAddressId === null) {
+      if (!Number.isInteger(form.cityId) || form.cityId <= 0) {
+        setError("لطفاً شهر را انتخاب کنید.");
+        return;
+      }
 
-    if (!form.Adrs.trim()) {
-      return;
+      if (!form.deliverToName.trim()) {
+        setError("نام تحویل‌گیرنده را وارد کنید.");
+        return;
+      }
+
+      if (!form.deliverToMobileNumber.trim()) {
+        setError("شماره موبایل تحویل‌گیرنده را وارد کنید.");
+        return;
+      }
+
+      if (!form.Adrs.trim()) {
+        setError("آدرس را وارد کنید.");
+        return;
+      }
+
+      if (!form.PostalCode?.trim()) {
+        setError("کد پستی را وارد کنید.");
+        return;
+      }
     }
 
     try {
+      setSubmitting(true);
+
       const order = await submitOrder({
-        deliveryAddress: {
-          cityId: form.cityId,
-          deliverToName: form.deliverToName.trim(),
-          deliverToMobileNumber: form.deliverToMobileNumber.trim(),
-          deliverToPhoneNumber: form.deliverToPhoneNumber?.trim() || undefined,
-          Adrs: form.Adrs.trim(),
-          PostalCode: form.PostalCode?.trim() || undefined,
-          RowDesc: form.RowDesc?.trim() || undefined,
-        },
+        deliveryAddress:
+          selectedAddressId !== null
+            ? {
+                addressId: selectedAddressId,
+              }
+            : {
+                cityId: form.cityId,
+                deliverToName: form.deliverToName.trim(),
+                deliverToMobileNumber: form.deliverToMobileNumber.trim(),
+                deliverToPhoneNumber:
+                  form.deliverToPhoneNumber?.trim() || undefined,
+                Adrs: form.Adrs.trim(),
+                PostalCode: form.PostalCode?.trim() || undefined,
+                RowDesc: form.RowDesc?.trim() || undefined,
+              },
       });
-      resetCart();
-      navigate(
-        `/checkout/success?orderId=${order.orderHId}&docNo=${order.docNo}`,
-        {
-          replace: true,
-        },
-      );
-    } catch {}
-  }
 
-  useEffect(() => {
-    async function loadProvinces() {
-      setIsLoadingProvinces(true);
-      setLocationError(null);
+      /*
+       * بسته به response واقعی submitOrder ممکن است
+       * شناسه سفارش در order.data.id یا order.data.orderId باشد.
+       *
+       * این قسمت را مطابق response واقعی API تنظیم کن.
+       */
 
-      try {
-        const result = await getProvinces();
+      const orderId = order?.data?.id ?? order?.data?.orderId ?? order?.id;
 
-        setProvinces(result);
-      } catch {
-        setLocationError("دریافت لیست استان‌ها با خطا مواجه شد.");
-      } finally {
-        setIsLoadingProvinces(false);
+      if (orderId) {
+        navigate(`/orders/${orderId}`);
+        return;
       }
-    }
 
-    void loadProvinces();
-  }, []);
-
-  useEffect(() => {
-    if (!provinceId) {
-      setCities([]);
-      return;
-    }
-
-    async function loadCities() {
-      setIsLoadingCities(true);
-      setLocationError(null);
-
-      try {
-        const result = await getCitiesByProvince(provinceId);
-        setCities(result);
-      } catch {
-        setCities([]);
-        setLocationError("دریافت لیست شهرها با خطا مواجه شد.");
-      } finally {
-        setIsLoadingCities(false);
+      // اگر API مستقیماً checkout/payment را برگرداند
+      if (order?.data?.paymentUrl) {
+        window.location.href = order.data.paymentUrl;
+        return;
       }
+
+      // اگر هنوز صفحه order detail نداریم
+      navigate("/orders");
+    } catch (err) {
+      console.error("Checkout error:", err);
+
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("ثبت سفارش انجام نشد. لطفاً دوباره تلاش کنید.");
+      }
+    } finally {
+      setSubmitting(false);
     }
+  };
 
-    void loadCities();
-  }, [provinceId]);
-
-  useEffect(() => {
-    if (!cart) {
-      void fetchCart();
-    }
-  }, [cart, fetchCart]);
-
-  if (isLoading && !cart) {
+  if (cartLoading) {
     return (
-      <section className="mx-auto flex min-h-[60vh] max-w-3xl items-center justify-center px-4">
-        <div className="flex items-center gap-3 text-muted-foreground">
+      <div className="container mx-auto flex min-h-[60vh] items-center justify-center px-4">
+        <div className="flex items-center gap-2 text-muted-foreground">
           <Loader2 className="h-5 w-5 animate-spin" />
-
-          <span>در حال دریافت اطلاعات سفارش...</span>
+          <span>در حال دریافت سبد خرید...</span>
         </div>
-      </section>
+      </div>
     );
   }
 
-  if (error && !cart) {
+  if (!cart || !cart.items || cart.items.length === 0) {
     return (
-      <section className="mx-auto flex min-h-[60vh] max-w-3xl items-center justify-center px-4">
-        <Card className="w-full">
-          <CardContent className="flex flex-col items-center py-10 text-center">
-            <AlertCircle className="mb-4 h-10 w-10 text-destructive" />
+      <div className="container mx-auto px-4 py-10">
+        <Card>
+          <CardContent className="flex min-h-[300px] flex-col items-center justify-center gap-4">
+            <ShoppingBag className="h-12 w-12 text-muted-foreground" />
 
-            <h1 className="text-lg font-semibold">
-              دریافت اطلاعات سفارش با خطا مواجه شد
-            </h1>
+            <h2 className="text-xl font-semibold">سبد خرید شما خالی است</h2>
 
-            <p className="mt-2 text-sm text-muted-foreground">{error}</p>
-
-            <Button className="mt-5" onClick={() => void fetchCart()}>
-              تلاش مجدد
-            </Button>
-          </CardContent>
-        </Card>
-      </section>
-    );
-  }
-
-  if (!cart || cart.items.length === 0) {
-    return (
-      <section className="mx-auto flex min-h-[60vh] max-w-3xl items-center justify-center px-4">
-        <Card className="w-full">
-          <CardContent className="py-10 text-center">
-            <h1 className="text-xl font-bold">سبد خرید شما خالی است</h1>
-
-            <p className="mt-2 text-sm text-muted-foreground">
-              برای ثبت سفارش ابتدا محصولی به سبد خرید اضافه کنید.
+            <p className="text-sm text-muted-foreground">
+              برای ادامه خرید ابتدا محصولی به سبد خرید اضافه کنید.
             </p>
 
-            <Button className="mt-5" onClick={() => navigate("/products")}>
+            <Button onClick={() => navigate("/products")}>
               مشاهده محصولات
             </Button>
           </CardContent>
         </Card>
-      </section>
+      </div>
     );
   }
 
   return (
-    <section className="mx-auto max-w-5xl px-4 py-8">
+    <div className="container mx-auto px-4 py-6" dir="rtl">
       {/* Header */}
-      <div className="mb-6">
-        <Link
-          to="/cart"
-          className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
-        >
-          <ArrowRight className="h-4 w-4" />
-          بازگشت به سبد خرید
-        </Link>
+      <div className="mb-6 flex items-center gap-3">
+        <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
+          <ArrowRight className="h-5 w-5" />
+        </Button>
 
-        <h1 className="mt-4 text-2xl font-bold">تکمیل سفارش</h1>
+        <div>
+          <h1 className="text-2xl font-bold">تکمیل سفارش</h1>
+
+          <p className="text-sm text-muted-foreground">
+            آدرس تحویل و اطلاعات سفارش را بررسی کنید.
+          </p>
+        </div>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
-        {/* Products */}
-        <Card>
-          <CardHeader>
-            <CardTitle>محصولات سفارش</CardTitle>
-          </CardHeader>
+      {error && (
+        <Card className="mb-6 border-destructive">
+          <CardContent className="pt-6">
+            <p className="text-sm text-destructive">{error}</p>
+          </CardContent>
+        </Card>
+      )}
 
-          <CardContent>
-            <div className="divide-y">
-              {cart.items.map((item) => (
-                <div
-                  key={item.goodId}
-                  className="flex items-center justify-between gap-4 py-4"
-                >
-                  <div className="min-w-0">
-                    <p className="font-medium">{item.rowName}</p>
+      <div className="grid gap-6 lg:grid-cols-3">
+        {/* Main */}
+        <div className="space-y-6 lg:col-span-2">
+          {/* Address selector */}
+          <AddressSelector
+            selectedAddressId={selectedAddressId}
+            addresses={addresses}
+            isLoading={addressesLoading}
+            onSelect={handleSelectAddress}
+            onNewAddress={handleNewAddress}
+          />
 
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      تعداد: {item.quantity.toLocaleString("fa-IR")}
+          {/* New address form */}
+          {selectedAddressId === null && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <MapPin className="h-5 w-5" />
+                  آدرس جدید
+                </CardTitle>
+              </CardHeader>
+
+              <CardContent className="space-y-5">
+                {/* Selected address status */}
+                <div className="rounded-lg border bg-muted/40 p-3 text-sm">
+                  <p className="font-medium">آدرس جدید برای این سفارش</p>
+
+                  <p className="mt-1 text-muted-foreground">
+                    اطلاعات زیر را کامل کنید.
+                  </p>
+                </div>
+
+                {/* Recipient */}
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="deliverToName">نام تحویل‌گیرنده</Label>
+
+                    <Input
+                      id="deliverToName"
+                      value={form.deliverToName}
+                      onChange={(event) =>
+                        handleChange("deliverToName", event.target.value)
+                      }
+                      placeholder="نام و نام خانوادگی"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="mobile">شماره موبایل</Label>
+
+                    <Input
+                      id="mobile"
+                      value={form.deliverToMobileNumber}
+                      onChange={(event) =>
+                        handleChange(
+                          "deliverToMobileNumber",
+                          event.target.value,
+                        )
+                      }
+                      placeholder="0912..."
+                      dir="ltr"
+                    />
+                  </div>
+                </div>
+
+                {/* Phone */}
+                <div className="space-y-2">
+                  <Label htmlFor="phone">
+                    تلفن ثابت
+                    <span className="mr-1 text-muted-foreground">
+                      (اختیاری)
+                    </span>
+                  </Label>
+
+                  <Input
+                    id="phone"
+                    value={form.deliverToPhoneNumber ?? ""}
+                    onChange={(event) =>
+                      handleChange("deliverToPhoneNumber", event.target.value)
+                    }
+                    placeholder="021..."
+                    dir="ltr"
+                  />
+                </div>
+
+                {/* City */}
+                <div className="space-y-2">
+                  <Label htmlFor="cityId">شناسه شهر</Label>
+
+                  <Input
+                    id="cityId"
+                    type="number"
+                    value={form.cityId || ""}
+                    onChange={(event) =>
+                      handleChange("cityId", Number(event.target.value))
+                    }
+                    placeholder="شناسه شهر"
+                  />
+
+                  <p className="text-xs text-muted-foreground">
+                    فعلاً شناسه شهر را وارد کنید؛ در مرحله بعدی Province/City
+                    Selector را به این فرم وصل می‌کنیم.
+                  </p>
+                </div>
+
+                {/* Address */}
+                <div className="space-y-2">
+                  <Label htmlFor="address">آدرس</Label>
+
+                  <Textarea
+                    id="address"
+                    value={form.Adrs}
+                    onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) =>
+                      handleChange("Adrs", event.target.value)
+                    }
+                    placeholder="آدرس کامل..."
+                    rows={4}
+                  />
+                </div>
+
+                {/* Postal code */}
+                <div className="space-y-2">
+                  <Label htmlFor="postalCode">کد پستی</Label>
+
+                  <Input
+                    id="postalCode"
+                    value={form.PostalCode ?? ""}
+                    onChange={(event) =>
+                      handleChange("PostalCode", event.target.value)
+                    }
+                    placeholder="۱۰ رقم"
+                    maxLength={10}
+                    dir="ltr"
+                  />
+                </div>
+
+                {/* Description */}
+                <div className="space-y-2">
+                  <Label htmlFor="description">
+                    توضیحات
+                    <span className="mr-1 text-muted-foreground">
+                      (اختیاری)
+                    </span>
+                  </Label>
+
+                  <Textarea
+                    id="description"
+                    value={form.RowDesc ?? ""}
+                    onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) =>
+                      handleChange("RowDesc", event.target.value)
+                    }
+                    placeholder="مثلاً زنگ واحد ۲..."
+                    rows={3}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Selected address preview */}
+          {selectedAddress && (
+            <Card className="border-primary/50">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <CheckCircle2 className="h-5 w-5 text-primary" />
+                  آدرس انتخاب‌شده
+                </CardTitle>
+              </CardHeader>
+
+              <CardContent>
+                <div className="space-y-3">
+                  <div>
+                    <p className="font-medium">
+                      {selectedAddress.recipient.name}
+                    </p>
+
+                    <p className="text-sm text-muted-foreground">
+                      {selectedAddress.recipient.mobile}
                     </p>
                   </div>
 
-                  <div className="shrink-0 text-left">
-                    <p className="font-medium">
-                      {formatPrice(item.totalPrice)}
+                  <div className="flex items-start gap-2">
+                    <MapPin className="mt-1 h-4 w-4 shrink-0 text-muted-foreground" />
+
+                    <div className="text-sm">
+                      <p>
+                        {selectedAddress.province?.name}
+                        {"، "}
+                        {selectedAddress.county?.name}
+                        {"، "}
+                        {selectedAddress.city?.name}
+                      </p>
+
+                      <p className="mt-1 text-muted-foreground">
+                        {selectedAddress.address}
+                      </p>
+                    </div>
+                  </div>
+
+                  {selectedAddress.postalCode && (
+                    <p className="text-sm text-muted-foreground">
+                      کد پستی: {selectedAddress.postalCode}
+                    </p>
+                  )}
+
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleNewAddress}
+                  >
+                    استفاده از آدرس جدید
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Products */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Package className="h-5 w-5" />
+                محصولات سفارش
+              </CardTitle>
+            </CardHeader>
+
+            <CardContent className="space-y-4">
+              {cart.items.map((item: CartItem) => (
+                <div
+                  key={item.goodId}
+                  className="flex items-center gap-4 border-b pb-4 last:border-b-0 last:pb-0"
+                >
+                  {/* Image */}
+                  <div className="h-20 w-20 shrink-0 overflow-hidden rounded-lg border bg-muted">
+                    {item.imageUrl ? (
+                      <img
+                        src={item.imageUrl}
+                        alt={item.rowName}
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center">
+                        <Package className="h-8 w-8 text-muted-foreground" />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Info */}
+                  <div className="min-w-0 flex-1">
+                    <h3 className="line-clamp-2 font-medium">{item.rowName}</h3>
+
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      تعداد: {item.quantity}
                     </p>
 
-                    <p className="mt-1 text-xs text-muted-foreground">
-                      {formatPrice(item.unitPrice)} ×{" "}
-                      {item.quantity.toLocaleString("fa-IR")}
+                    <p className="mt-1 text-sm">
+                      قیمت واحد: {item.unitPrice.toLocaleString("fa-IR")} تومان
                     </p>
+                  </div>
+
+                  {/* Total */}
+                  <div className="shrink-0 text-left">
+                    <p className="font-semibold">
+                      {item.totalPrice.toLocaleString("fa-IR")}
+                    </p>
+
+                    <p className="text-xs text-muted-foreground">تومان</p>
                   </div>
                 </div>
               ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>اطلاعات تحویل</CardTitle>
-          </CardHeader>
-
-          <CardContent>
-            <form onSubmit={handleSubmitOrder} className="space-y-5">
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">
-                    نام تحویل گیرنده
-                  </label>
-
-                  <input
-                    value={form.deliverToName}
-                    onChange={(event) =>
-                      setForm((prev) => ({
-                        ...prev,
-                        deliverToName: event.target.value,
-                      }))
-                    }
-                    className="w-full rounded-md border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary"
-                    placeholder="نام و نام خانوادگی"
-                    required
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">شماره موبایل</label>
-
-                  <input
-                    value={form.deliverToMobileNumber}
-                    onChange={(event) =>
-                      setForm((prev) => ({
-                        ...prev,
-                        deliverToMobileNumber: event.target.value,
-                      }))
-                    }
-                    className="w-full rounded-md border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary"
-                    placeholder="0912..."
-                    dir="ltr"
-                    required
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">استان</label>
-
-                  <select
-                    value={provinceId}
-                    onChange={(event) => {
-                      const selectedProvinceId = Number(event.target.value);
-
-                      setProvinceId(selectedProvinceId);
-
-                      setForm((prev) => ({
-                        ...prev,
-                        cityId: 0,
-                      }));
-
-                      setCities([]);
-                    }}
-                    className="w-full rounded-md border bg-background px-3 py-2 text-sm"
-                    required
-                    disabled={isLoadingProvinces}
-                  >
-                    <option value={0}>
-                      {isLoadingProvinces
-                        ? "در حال دریافت استان‌ها..."
-                        : "انتخاب استان"}
-                    </option>
-
-                    {provinces.map((province) => (
-                      <option key={province.id} value={province.id}>
-                        {province.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">شهر</label>
-
-                  <select
-                    value={form.cityId}
-                    onChange={(event) =>
-                      setForm((prev) => ({
-                        ...prev,
-                        cityId: Number(event.target.value),
-                      }))
-                    }
-                    className="w-full rounded-md border bg-background px-3 py-2 text-sm"
-                    required
-                    disabled={!provinceId || isLoadingCities}
-                  >
-                    <option value="">
-                      {!provinceId
-                        ? "ابتدا استان را انتخاب کنید"
-                        : isLoadingCities
-                          ? "در حال دریافت شهرها..."
-                          : "انتخاب شهر"}
-                    </option>
-
-                    {cities.map((city) => (
-                      <option key={city.id} value={city.id}>
-                        {city.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="space-y-2 sm:col-span-2">
-                  <label className="text-sm font-medium">آدرس کامل</label>
-
-                  <textarea
-                    value={form.Adrs}
-                    onChange={(event) =>
-                      setForm((prev) => ({
-                        ...prev,
-                        Adrs: event.target.value,
-                      }))
-                    }
-                    className="min-h-28 w-full resize-none rounded-md border bg-background px-3 py-2 text-sm"
-                    placeholder="آدرس کامل محل تحویل"
-                    required
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">کد پستی</label>
-
-                  <input
-                    value={form.PostalCode}
-                    onChange={(event) =>
-                      setForm((prev) => ({
-                        ...prev,
-                        PostalCode: event.target.value,
-                      }))
-                    }
-                    className="w-full rounded-md border bg-background px-3 py-2 text-sm"
-                    placeholder="کد پستی"
-                    dir="ltr"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">تلفن ثابت</label>
-
-                  <input
-                    value={form.deliverToPhoneNumber}
-                    onChange={(event) =>
-                      setForm((prev) => ({
-                        ...prev,
-                        deliverToPhoneNumber: event.target.value,
-                      }))
-                    }
-                    className="w-full rounded-md border bg-background px-3 py-2 text-sm"
-                    placeholder="تلفن ثابت"
-                    dir="ltr"
-                  />
-                </div>
-
-                <div className="space-y-2 sm:col-span-2">
-                  <label className="text-sm font-medium">توضیحات</label>
-
-                  <textarea
-                    value={form.RowDesc}
-                    onChange={(event) =>
-                      setForm((prev) => ({
-                        ...prev,
-                        RowDesc: event.target.value,
-                      }))
-                    }
-                    className="min-h-20 w-full resize-none rounded-md border bg-background px-3 py-2 text-sm"
-                    placeholder="توضیحات سفارش، در صورت نیاز"
-                  />
-                </div>
-              </div>
-              {locationError && (
-                <div className="rounded-md border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
-                  {locationError}
-                </div>
-              )}
-
-              {orderError && (
-                <div className="rounded-md border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
-                  {orderError}
-                </div>
-              )}
-
-              <Button
-                type="submit"
-                className="w-full"
-                size="lg"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? "در حال ثبت سفارش..." : "ثبت سفارش"}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </div>
 
         {/* Summary */}
-        <Card className="h-fit">
-          <CardHeader>
-            <CardTitle>خلاصه سفارش</CardTitle>
-          </CardHeader>
+        <div>
+          <Card className="sticky top-6">
+            <CardHeader>
+              <CardTitle>خلاصه سفارش</CardTitle>
+            </CardHeader>
 
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-muted-foreground">تعداد کالا</span>
+            <CardContent className="space-y-5">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">تعداد کالا</span>
 
-              <span>{cart.totalQuantity.toLocaleString("fa-IR")}</span>
-            </div>
-
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-muted-foreground">مبلغ کالاها</span>
-
-              <span>{formatPrice(cart.subtotal)}</span>
-            </div>
-
-            <div className="border-t pt-4">
-              <div className="flex items-center justify-between">
-                <span className="font-semibold">مبلغ نهایی</span>
-
-                <span className="text-xl font-bold">
-                  {formatPrice(cart.subtotal)}
-                </span>
+                <span>{cart.totalQuantity.toLocaleString("fa-IR")}</span>
               </div>
-            </div>
-          </CardContent>
-        </Card>
+
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">تعداد اقلام</span>
+
+                <span>{cart.itemsCount.toLocaleString("fa-IR")}</span>
+              </div>
+
+              <div className="border-t pt-4">
+                <div className="flex items-center justify-between">
+                  <span className="font-semibold">مبلغ قابل پرداخت</span>
+
+                  <div className="text-left">
+                    <span className="text-xl font-bold">
+                      {cart.subtotal.toLocaleString("fa-IR")}
+                    </span>
+
+                    <span className="mr-1 text-sm">تومان</span>
+                  </div>
+                </div>
+              </div>
+
+              <Button
+                className="w-full"
+                size="lg"
+                disabled={submitting}
+                onClick={handleSubmitOrder}
+              >
+                {submitting ? (
+                  <>
+                    <Loader2 className="ml-2 h-4 w-4 animate-spin" />
+                    در حال ثبت سفارش...
+                  </>
+                ) : (
+                  <>
+                    <CheckCircle2 className="ml-2 h-4 w-4" />
+                    ثبت و ادامه پرداخت
+                  </>
+                )}
+              </Button>
+
+              <p className="text-center text-xs text-muted-foreground">
+                با ثبت سفارش، اطلاعات سبد خرید و آدرس شما برای ثبت سفارش نهایی
+                بررسی می‌شود.
+              </p>
+            </CardContent>
+          </Card>
+        </div>
       </div>
-    </section>
+    </div>
   );
 }

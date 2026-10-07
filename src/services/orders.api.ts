@@ -11,7 +11,11 @@ export interface OrderDeliveryAddress {
 }
 
 export interface CreateOrderRequest {
-  deliveryAddress: OrderDeliveryAddress;
+  deliveryAddress:
+    | {
+        addressId: number;
+      }
+    | OrderDeliveryAddress;
 }
 
 export interface OrderItemResponse {
