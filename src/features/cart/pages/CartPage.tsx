@@ -9,7 +9,6 @@ import { CartSummary } from "../components/CartSummary";
 import { EmptyCart } from "../components/EmptyCart";
 
 import { useCartStore } from "@/stores/cart.store";
-import { getQuantityStep } from "../utils/quantity";
 
 export function CartPage() {
   const cart = useCartStore((state) => state.cart);
