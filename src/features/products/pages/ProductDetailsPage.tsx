@@ -11,6 +11,10 @@ import { useProduct } from "../hooks/useProduct";
 import { getApiAssetUrl } from "@/lib/api-url";
 import { useCartStore } from "@/stores/cart.store";
 import { isUnauthorizedError } from "@/services/api/client";
+import {
+  getInitialQuantity,
+  getMinimumQuantity,
+} from "@/features/cart/utils/quantity";
 
 export function ProductDetailsPage() {
   const navigate = useNavigate();
@@ -51,6 +55,11 @@ export function ProductDetailsPage() {
 
   const quantity = product.stockInfo[0]?.quantity ?? 0;
   const isAvailable = quantity > 0;
+  const minimumQuantity = getMinimumQuantity(
+    product.unit?.weightOrAmount,
+    product.minOrder,
+  );
+  const initialQuantity = getInitialQuantity(product.minOrder);
 
   return (
     <section className="mx-auto max-w-7xl px-4 py-10">
@@ -64,16 +73,16 @@ export function ProductDetailsPage() {
         </Link>
       </div>
 
-      <Card className="overflow-hidden">
+      <Card className="overflow-hidden border border-emerald-950/5 shadow-sm">
         <div className="grid gap-8 p-6 md:grid-cols-2 md:p-8">
           {/* Image */}
           <div className="flex items-center justify-center">
-            <div className="relative aspect-square w-full max-w-lg overflow-hidden rounded-xl bg-muted">
+            <div className="relative aspect-square w-full max-w-lg overflow-hidden rounded-3xl bg-[#f3f6f3] p-5 sm:p-8">
               {defaultImage ? (
                 <img
                   src={getApiAssetUrl(defaultImage.url)}
                   alt={defaultImage.alt || product.name}
-                  className="h-full w-full object-contain"
+                  className="h-full w-full object-contain mix-blend-multiply"
                 />
               ) : (
                 <div className="flex h-full items-center justify-center">
@@ -100,17 +109,13 @@ export function ProductDetailsPage() {
           {/* Product information */}
           <div className="flex flex-col">
             <div>
-              <h1 className="text-2xl font-bold md:text-3xl">{product.name}</h1>
+              <h1 className="text-2xl font-extrabold leading-relaxed md:text-3xl">{product.name}</h1>
 
               {product.nameEn && (
                 <p className="mt-2 text-sm text-muted-foreground">
                   {product.nameEn}
                 </p>
               )}
-
-              <p className="mt-3 text-sm text-muted-foreground">
-                کد کالا: {product.code}
-              </p>
             </div>
 
             {/* Description */}
@@ -121,7 +126,7 @@ export function ProductDetailsPage() {
             )}
 
             {/* Price */}
-            <div className="mt-8 rounded-xl bg-muted/50 p-5">
+            <div className="mt-8 rounded-2xl border border-primary/10 bg-primary/5 p-5">
               {product.pricing.hasDiscount &&
                 product.pricing.discountPercent !== null && (
                   <div className="mb-2 flex items-center gap-2">
@@ -135,8 +140,8 @@ export function ProductDetailsPage() {
                   </div>
                 )}
 
-              <p className="text-2xl font-bold">
-                {formatPrice(product.pricing.finalPrice)}
+              <p className="text-2xl font-extrabold text-primary">
+                {formatPrice(product.pricing.finalPrice)} <span className="text-sm font-normal text-muted-foreground">تومان</span>
               </p>
             </div>
 
@@ -166,17 +171,16 @@ export function ProductDetailsPage() {
                   !isAvailable
                 }
                 onClick={async () => {
-                 const quantity =
-                 product.minOrder && product.minOrder > 0
-                  ? product.minOrder : 1;
-
                   try {
-                    await addItem(product.id , quantity);
+                    await addItem(product.id, initialQuantity);
 
                     navigate("/cart");
                   } catch (error) {
                     if (isUnauthorizedError(error)) {
-                        setPendingCartAction({goodId: product.id , quantity});
+                        setPendingCartAction({
+                          goodId: product.id,
+                          quantity: initialQuantity,
+                        });
                         navigate( `/auth/login?returnTo=${encodeURIComponent("/cart")}`);
                     }
                   }
@@ -202,7 +206,7 @@ export function ProductDetailsPage() {
                 <div>
                   <p className="text-muted-foreground">حداقل سفارش</p>
                   <p className="mt-1 font-medium">
-                    {product.minOrder.toLocaleString("fa-IR")}
+                    {minimumQuantity.toLocaleString("fa-IR")}
                   </p>
                 </div>
               )}
@@ -221,7 +225,7 @@ export function ProductDetailsPage() {
 
         {/* Full description */}
         {(product.fullDescription || product.description) && (
-          <div className="border-t p-6 md:p-8">
+          <div className="border-t bg-white p-6 md:p-8">
             <h2 className="mb-4 text-xl font-bold">توضیحات محصول</h2>
 
             <div className="whitespace-pre-line leading-8 text-muted-foreground">

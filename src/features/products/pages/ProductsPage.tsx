@@ -38,13 +38,14 @@ export function ProductsPage() {
   }
 
   return (
-    <section className="mx-auto max-w-7xl px-4 py-10">
-      <div className="mb-8 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+    <section className="mx-auto max-w-7xl px-4 py-8 sm:py-12">
+      <div className="mb-8 rounded-3xl border border-emerald-950/5 bg-white p-5 shadow-sm sm:p-8">
+      <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
         <div>
-          <h1 className="text-2xl font-bold">محصولات</h1>
+          <h1 className="mt-1 text-2xl font-extrabold sm:text-3xl">محصولات</h1>
 
           <p className="mt-1 text-sm text-muted-foreground">
-            مشاهده و انتخاب محصولات فروشگاه
+            هر آنچه برای یک خرید خوب نیاز داری، همین‌جاست.
           </p>
         </div>
 
@@ -54,11 +55,12 @@ export function ProductsPage() {
           onClear={handleClearSearch}
         />
       </div>
+      </div>
 
       {isLoading ? (
         <ProductGridSkeleton />
       ) : isError ? (
-        <div className="rounded-lg border border-destructive/30 bg-destructive/5 p-8 text-center">
+        <div className="rounded-2xl border border-destructive/20 bg-white p-8 text-center">
           <p className="font-medium">دریافت محصولات با خطا مواجه شد.</p>
 
           <p className="mt-2 text-sm text-muted-foreground">
@@ -66,7 +68,7 @@ export function ProductsPage() {
           </p>
         </div>
       ) : !data || data.products.length === 0 ? (
-        <div className="rounded-lg border p-10 text-center">
+        <div className="rounded-2xl border bg-white p-10 text-center">
           <p className="font-medium">محصولی پیدا نشد.</p>
 
           {search && (
@@ -77,18 +79,6 @@ export function ProductsPage() {
         </div>
       ) : (
         <>
-          <div className="mb-5 flex items-center justify-between">
-            <span className="text-sm text-muted-foreground">
-              {data.pagination.total.toLocaleString("fa-IR")} محصول
-            </span>
-
-            {isFetching && (
-              <span className="text-xs text-muted-foreground">
-                در حال بروزرسانی...
-              </span>
-            )}
-          </div>
-
           <ProductGrid products={data.products} />
 
           <ProductPagination

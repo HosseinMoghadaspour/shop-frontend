@@ -9,6 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { ArrowRight, ShieldCheck } from "lucide-react";
 
 import { useAuthStore } from "@/stores/auth.store";
 import { useCartStore } from "@/stores/cart.store";
@@ -112,15 +113,14 @@ export function VerifyPage() {
   }
 
   return (
-    <section className="mx-auto flex min-h-[70vh] max-w-md items-center px-4 py-10">
-      <Card className="w-full">
-        <CardHeader>
-          <CardTitle>
-            تأیید شماره موبایل
-          </CardTitle>
+    <section className="mx-auto flex min-h-[70vh] max-w-md items-center px-4 py-12">
+      <Card className="w-full border border-emerald-950/5 shadow-xl shadow-emerald-950/5">
+        <CardHeader className="px-6 pt-7">
+          <CardTitle className="text-xl font-extrabold">تأیید شماره موبایل</CardTitle>
+          <p className="text-sm leading-6 text-muted-foreground">یک قدم تا ورود امن به حساب کاربری</p>
         </CardHeader>
 
-        <CardContent>
+        <CardContent className="px-6 pb-7">
           <form
             onSubmit={handleSubmit}
             className="space-y-5"
@@ -138,6 +138,7 @@ export function VerifyPage() {
               inputMode="numeric"
               dir="ltr"
               maxLength={6}
+              className="h-14 rounded-xl bg-muted/50 text-center text-xl tracking-[0.5em]"
               placeholder="------"
               value={code}
               onChange={(event) =>
@@ -169,6 +170,18 @@ export function VerifyPage() {
                 ? "در حال بررسی..."
                 : "تأیید و ورود"}
             </Button>
+            <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
+              <ShieldCheck className="size-4 text-primary" />
+              کد تأیید فقط برای ورود به حساب شماست.
+            </div>
+            <button
+              type="button"
+              onClick={() => navigate("/auth/login", { replace: true })}
+              className="mx-auto flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+            >
+              <ArrowRight className="size-3.5" />
+              ویرایش شماره موبایل
+            </button>
           </form>
         </CardContent>
       </Card>

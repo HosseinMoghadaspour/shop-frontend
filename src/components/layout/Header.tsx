@@ -1,5 +1,11 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { ShoppingCart, UserRound, LogOut, ClipboardList } from "lucide-react";
+import {
+  ShoppingCart,
+  UserRound,
+  LogOut,
+  ClipboardList,
+  Headset,
+} from "lucide-react";
 import { useEffect } from "react";
 import { useAuthStore } from "@/stores/auth.store";
 import { useCartStore } from "@/stores/cart.store";
@@ -45,21 +51,24 @@ export function Header() {
     } catch {}
   }
 
-  const cartQuantity = cart?.totalQuantity ?? 0;
+  const cartQuantity = cart?.itemsCount ?? 0;
   const userName = user?.RowName?.trim() || "حساب کاربری";
 
   return (
-    <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
+    <header className="sticky top-0 z-50 border-b border-emerald-950/5 bg-white/95 backdrop-blur-xl">
+      <div className="mx-auto flex h-[76px] max-w-7xl items-center justify-between gap-5 px-4">
         <Link
           to="/"
-          className="text-xl font-bold"
+          className="flex shrink-0 items-center gap-2.5 text-xl font-extrabold tracking-tight text-primary"
           aria-label="صفحه اصلی فروشگاه"
         >
-          فروشگاه
+          <span className="flex size-10 items-center justify-center rounded-2xl text-white shadow-lg shadow-primary/20">
+            <img src="./adinaLogo.png" alt="آدینامارکت" />
+          </span>
+    آدینامارکت
         </Link>
 
-        <nav className="hidden items-center gap-6 md:flex">
+        <nav className="hidden items-center gap-1 md:flex">
           {navItems.map((item) => (
             <NavLink
               key={item.to}
@@ -67,10 +76,10 @@ export function Header() {
               end={item.end}
               className={({ isActive }) =>
                 [
-                  "text-sm transition-colors",
+                  "rounded-xl px-4 py-2.5 text-sm font-medium transition-colors",
                   isActive
-                    ? "font-semibold text-primary"
-                    : "text-muted-foreground hover:text-foreground",
+                    ? "bg-primary/8 text-primary"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground",
                 ].join(" ")
               }
             >
@@ -80,11 +89,15 @@ export function Header() {
         </nav>
 
         {/* Actions */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 sm:gap-2">
+          {/* <span className="hidden items-center gap-2 text-xs text-muted-foreground xl:flex">
+            <Headset className="size-4 text-primary" />
+            پشتیبانی ۲۴ ساعته
+          </span> */}
           {/* Cart */}
           <Link
             to="/cart"
-            className="relative flex h-10 w-10 items-center justify-center rounded-md hover:bg-muted"
+            className="relative flex size-10 items-center justify-center rounded-xl text-foreground transition hover:bg-muted"
             aria-label="سبد خرید"
           >
             <ShoppingCart className="h-5 w-5" />
@@ -102,19 +115,19 @@ export function Header() {
           {!isInitialized ? (
             <div className="h-10 w-20 animate-pulse rounded-md bg-muted" />
           ) : isAuthenticated ? (
-            <div className="flex items-center gap-2">
-              <Link
+            <div className="flex items-center gap-1">
+              {/* <Link
                 to="/orders"
-                className="flex h-10 items-center gap-2 rounded-md px-3 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
+                className="flex h-10 items-center gap-2 rounded-xl px-3 text-sm text-muted-foreground transition hover:bg-muted hover:text-foreground"
                 title="سفارش‌های من"
               >
                 <ClipboardList className="h-4 w-4" />
 
                 <span className="hidden sm:inline">سفارش‌های من</span>
-              </Link>
+              </Link> */}
               <Link
                 to="/profile"
-                className="hidden max-w-40 items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-muted sm:flex"
+                className="hidden max-w-40 items-center gap-2 rounded-xl px-3 py-2 text-sm transition hover:bg-muted sm:flex"
                 title={userName}
               >
                 <UserRound className="h-4 w-4 shrink-0" />
@@ -125,7 +138,7 @@ export function Header() {
               <button
                 type="button"
                 onClick={() => void handleLogout()}
-                className="flex h-10 items-center gap-2 rounded-md px-3 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
+                className="flex h-10 items-center gap-2 rounded-xl px-3 text-sm text-muted-foreground transition hover:bg-muted hover:text-foreground"
               >
                 <LogOut className="h-4 w-4" />
 
@@ -135,7 +148,7 @@ export function Header() {
           ) : (
             <Link
               to="/auth/login"
-              className="flex h-10 items-center gap-2 rounded-md px-3 text-sm hover:bg-muted"
+              className="flex h-10 items-center gap-2 rounded-xl px-3 text-sm transition hover:bg-muted"
             >
               <UserRound className="h-5 w-5" />
 

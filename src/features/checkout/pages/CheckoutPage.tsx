@@ -238,7 +238,7 @@ export function CheckoutPage() {
 
   if (!cart || !cart.items || cart.items.length === 0) {
     return (
-      <div className="container mx-auto px-4 py-10">
+      <div className="container mx-auto max-w-7xl px-4 py-10">
         <Card>
           <CardContent className="flex min-h-[300px] flex-col items-center justify-center gap-4">
             <ShoppingBag className="h-12 w-12 text-muted-foreground" />
@@ -259,7 +259,7 @@ export function CheckoutPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-6" dir="rtl">
+    <div className="container mx-auto max-w-7xl px-4 py-8 sm:py-12" dir="rtl">
       {/* Header */}
       <div className="mb-6 flex items-center gap-3">
         <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
@@ -267,7 +267,8 @@ export function CheckoutPage() {
         </Button>
 
         <div>
-          <h1 className="text-2xl font-bold">تکمیل سفارش</h1>
+          <span className="text-xs font-bold text-primary">مرحله نهایی خرید</span>
+          <h1 className="text-2xl font-extrabold">تکمیل سفارش</h1>
 
           <p className="text-sm text-muted-foreground">
             آدرس تحویل و اطلاعات سفارش را بررسی کنید.
@@ -546,7 +547,7 @@ export function CheckoutPage() {
 
         {/* Summary */}
         <div>
-          <Card className="sticky top-6">
+          <Card className="border border-emerald-950/5 lg:sticky lg:top-24">
             <CardHeader>
               <CardTitle>خلاصه سفارش</CardTitle>
             </CardHeader>

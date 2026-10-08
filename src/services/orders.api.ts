@@ -24,8 +24,14 @@ export interface OrderItemResponse {
   goodName: string;
   quantity: number;
   unitPrice: number;
-  mainMeasureUnitId: number;
-  defaultMeasureUnitId: number;
+  mainMeasureUnitId: number | null;
+  defaultMeasureUnitId: number | null;
+  unit: {
+    id: number;
+    name: string;
+    weightOrAmount: number | null;
+  } | null;
+
   discountPrice: number;
   totalPrice: number;
 }

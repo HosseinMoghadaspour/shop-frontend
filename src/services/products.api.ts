@@ -18,6 +18,12 @@ export interface ProductImage {
     isDefault: boolean
 }
 
+export interface ProductMeasureUnit {
+  id: number;
+  name: string;
+  weightOrAmount: number | null;
+}
+
 export interface ProductStockInfo {
   barcode: string | null;
   productName: string | null;
@@ -90,6 +96,7 @@ export interface Product {
 
   mainMeasureUnitId: number;
   measureUnitId: number;
+  unit?: ProductMeasureUnit | null;
 
   showInCofferMenu: boolean;
 

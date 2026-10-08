@@ -57,8 +57,8 @@ export function OrdersPage() {
 
   if (isLoading) {
     return (
-      <main className="container mx-auto px-4 py-8">
-        <h1 className="mb-6 text-2xl font-bold">سفارش‌های من</h1>
+      <main className="container mx-auto px-4 py-8 sm:py-12">
+        <h1 className="mb-6 text-2xl font-extrabold">سفارش‌های من</h1>
 
         <div className="rounded-xl border p-6 text-center">
           در حال دریافت سفارش‌ها...
@@ -68,8 +68,8 @@ export function OrdersPage() {
   }
   if (error) {
     return (
-      <main className="container mx-auto px-4 py-8">
-        <h1 className="mb-6 text-2xl font-bold">سفارش‌های من</h1>
+      <main className="container mx-auto px-4 py-8 sm:py-12">
+        <h1 className="mb-6 text-2xl font-extrabold">سفارش‌های من</h1>
 
         <div className="rounded-xl border border-red-200 bg-red-50 p-6 text-center text-red-700">
           {error}
@@ -79,8 +79,8 @@ export function OrdersPage() {
   }
   if (orders.length === 0) {
     return (
-      <main className="container mx-auto px-4 py-8">
-        <h1 className="mb-6 text-2xl font-bold">سفارش‌های من</h1>
+      <main className="container mx-auto px-4 py-8 sm:py-12">
+        <h1 className="mb-6 text-2xl font-extrabold">سفارش‌های من</h1>
 
         <div className="rounded-xl border p-8 text-center">
           <p className="mb-4 text-muted-foreground">
@@ -98,8 +98,11 @@ export function OrdersPage() {
     );
   }
   return (
-    <main className="container mx-auto px-4 py-8">
-      <h1 className="mb-6 text-2xl font-bold">سفارش‌های من</h1>
+    <main className="container mx-auto px-4 py-8 sm:py-12">
+      <div className="mb-6">
+        <span className="text-xs font-bold text-primary">حساب من</span>
+        <h1 className="mt-1 text-2xl font-extrabold sm:text-3xl">سفارش‌های من</h1>
+      </div>
 
       <div className="space-y-4">
         {orders.map((order) => {
@@ -108,7 +111,7 @@ export function OrdersPage() {
           return (
             <div
               key={order.RowID}
-              className="rounded-xl border bg-card p-5 shadow-sm"
+              className="rounded-2xl border border-emerald-950/5 bg-white p-5 shadow-sm"
             >
               <div className="mb-4 flex flex-col gap-3 border-b pb-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>

@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
-import { ShoppingCart } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { formatPrice } from "@/lib/formatter";
+import { getApiAssetUrl } from "@/lib/api-url";
 import type { Product } from "@/services/products.api";
 
 interface ProductCardProps {
@@ -14,8 +14,7 @@ export function ProductCard({ product }: ProductCardProps) {
   const {
     name,
     // nameEn,
-    code,
-    stock,
+    stockInfo,
     pricing,
     images,
     isSpecialSale,
@@ -23,38 +22,39 @@ export function ProductCard({ product }: ProductCardProps) {
   } = product;
 
   const hasImage = images.length > 0;
-  const isAvailable = stock > 0;
+  const isAvailable = stockInfo[0]?.quantity && stockInfo[0].quantity > 0;
 
   return (
-    <Card className="group overflow-hidden transition-shadow hover:shadow-md w-[80%]">
+    <Card className="group h-full w-full overflow-hidden border border-emerald-950/5 bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-950/8">
       {/* Product image */}
       <Link
         to={`/products/${product.id}`}
         className="relative block overflow-hidden"
       >
-        <div className="flex aspect-square items-center justify-center bg-muted">
+        <div className="relative flex aspect-square items-center justify-center overflow-hidden bg-[#f3f6f3] p-3 sm:p-5">
           {hasImage ? (
             <img
-              src={images[0].url}
+              src={getApiAssetUrl(images[0].url)}
               alt={name}
-              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+              loading="lazy"
+              className="h-full w-full object-contain mix-blend-multiply transition-transform duration-500 group-hover:scale-110"
             />
           ) : (
-            <span className="text-sm text-muted-foreground">بدون تصویر</span>
+            <span className="text-sm text-muted-foreground">تصویر محصول</span>
           )}
         </div>
 
         {(isSpecialSale || amazingSale) && (
-          <Badge className="absolute right-3 top-3">
+          <Badge className="absolute right-3 top-3 rounded-full bg-primary px-3 text-[10px] shadow-sm">
             {amazingSale ? "فروش شگفت‌انگیز" : "فروش ویژه"}
           </Badge>
         )}
       </Link>
 
-      <CardContent className="p-4">
+      <CardContent className="flex flex-1 flex-col p-3 sm:p-4">
         {/* Product name */}
         <Link to={`/products/${product.id}`}>
-          <h2 className="line-clamp-2 min-h-12 font-semibold transition-colors group-hover:text-primary">
+          <h2 className="line-clamp-2 min-h-12 text-sm font-semibold leading-6 transition-colors group-hover:text-primary sm:text-base">
             {name}
           </h2>
         </Link>
@@ -69,27 +69,27 @@ export function ProductCard({ product }: ProductCardProps) {
         {/* <p className="mt-3 text-xs text-muted-foreground">کد کالا: {code}</p> */}
 
         {/* Price */}
-        <div className="mt-4">
+        <div className="mt-auto pt-4">
           {pricing.hasDiscount && pricing.discountPercent !== null && (
             <div className="mb-1 flex items-center gap-2">
               <span className="text-xs text-muted-foreground line-through">
                 {formatPrice(pricing.salePrice)}
               </span>
 
-              <Badge variant="destructive">
+              <Badge variant="destructive" className="rounded-full">
                 {pricing.discountPercent.toLocaleString("fa-IR")}٪
               </Badge>
             </div>
           )}
 
-          <p className="text-lg font-bold">{formatPrice(pricing.finalPrice)}</p>
+          <p className="text-base font-extrabold text-primary sm:text-lg">{formatPrice(pricing.finalPrice)} <span className="text-xs font-normal text-muted-foreground">تومان</span></p>
         </div>
 
         {/* Stock */}
         <div className="mt-2">
           {isAvailable ? (
             <span className="text-xs text-muted-foreground">
-              موجودی: {stock.toLocaleString("fa-IR")}
+              موجودی: {stockInfo[0]?.quantity?.toLocaleString("fa-IR")}
             </span>
           ) : (
             <span className="text-xs text-destructive">ناموجود</span>
@@ -97,17 +97,20 @@ export function ProductCard({ product }: ProductCardProps) {
         </div>
       </CardContent>
 
-      <CardFooter className="p-4 pt-0">
-        <Button
-          className="w-full mt-3"
-          disabled={!isAvailable}
-          onClick={() => {
-            window.location.href = `/products/${product.id}`;
-          }}
+      <CardFooter className="border-0 bg-transparent p-3 pt-0 sm:p-4 sm:pt-0">
+        <Link
+          to={`/products/${product.id}`}
+          aria-disabled={!isAvailable}
+          className={[
+            "mt-3 inline-flex h-10 w-full items-center justify-center gap-2 rounded-xl text-sm font-semibold transition",
+            isAvailable
+              ? "bg-primary text-primary-foreground hover:bg-primary/90"
+              : "pointer-events-none bg-muted text-muted-foreground",
+          ].join(" ")}
         >
-          <ShoppingCart className="ml-2 h-4 w-4 " />
-          {isAvailable ? "افزودن به سبد" : "ناموجود"}
-        </Button>
+          {isAvailable ? "مشاهده و خرید" : "ناموجود"}
+          <ArrowLeft className="size-4" />
+        </Link>
       </CardFooter>
     </Card>
   );

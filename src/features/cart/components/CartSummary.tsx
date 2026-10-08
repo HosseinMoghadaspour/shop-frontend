@@ -23,7 +23,7 @@ export function CartSummary({
   const navigate = useNavigate();
 
   return (
-    <Card className="lg:sticky lg:top-24">
+    <Card className="border border-emerald-950/5 lg:sticky lg:top-24">
       <CardHeader>
         <CardTitle>خلاصه سفارش</CardTitle>
       </CardHeader>
@@ -62,7 +62,7 @@ export function CartSummary({
         </div>
 
         <Button
-          className="w-full"
+          className="w-full font-bold"
           size="lg"
           disabled={isUpdating || cart.items.length === 0}
           onClick={() => navigate("/checkout")}
