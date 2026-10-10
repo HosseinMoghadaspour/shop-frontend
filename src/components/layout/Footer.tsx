@@ -48,7 +48,7 @@ export function Footer() {
         </div>
 
         <div className="mt-10 flex flex-col gap-3 border-t pt-6 text-center text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:text-right">
-          <span>© تمامی حقوق برای نوا مارکت محفوظ است.</span>
+          <span>© تمامی حقوق برای آدینامارکت محفوظ است.</span>
           <span>ساخته‌شده برای یک خرید بهتر</span>
         </div>
       </div>

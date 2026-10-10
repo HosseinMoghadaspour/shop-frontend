@@ -6,6 +6,7 @@ import { ProductGrid } from "../components/ProductGrid";
 import { ProductGridSkeleton } from "../components/ProductGridSkeleton";
 import { useProducts } from "../hooks/useProducts";
 import { getApiAssetUrl } from "@/lib/api-url";
+import { Slider } from "@/features/slider/slider";
 
 export function HomePage() {
   const { data, isLoading, isError, refetch } = useProducts({
@@ -21,7 +22,7 @@ export function HomePage() {
       <section className="mx-auto max-w-7xl px-4 pb-10 pt-6 sm:pb-14 sm:pt-10">
         <div className="relative isolate overflow-hidden rounded-[2rem] bg-[#103d32] text-white shadow-2xl shadow-emerald-950/10">
           <div className="absolute -left-24 -top-28 -z-10 size-96 rounded-full bg-emerald-400/15 blur-3xl" />
-          <div className="absolute -bottom-36 right-1/3 -z-10 size-96 rounded-full bg-teal-300/10 blur-3xl" />
+          {/* <div className="absolute -bottom-36 right-1/3 -z-10 size-96 rounded-full bg-teal-300/10 blur-3xl" />
           <div className="grid min-h-[380px] items-center gap-6 px-6 py-10 sm:px-10 md:grid-cols-[1.1fr_0.9fr] md:px-14 md:py-12">
             <div className="relative z-10">
               <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-xs text-emerald-50">
@@ -80,7 +81,8 @@ export function HomePage() {
                 </div>
               )}
             </div>
-          </div>
+          </div> */}
+          <Slider />
         </div>
 
         <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">

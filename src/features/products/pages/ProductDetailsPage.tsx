@@ -195,7 +195,7 @@ export function ProductDetailsPage() {
 
             {/* Product meta */}
             <div className="mt-8 grid grid-cols-2 gap-4 border-t pt-6 text-sm">
-              {product.weight !== null && (
+              {/* {product.weight !== null && (
                 <div>
                   <p className="text-muted-foreground">وزن</p>
                   <p className="mt-1 font-medium">{product.weight}</p>
@@ -209,7 +209,7 @@ export function ProductDetailsPage() {
                     {minimumQuantity.toLocaleString("fa-IR")}
                   </p>
                 </div>
-              )}
+              )} */}
 
               {product.maxOrder !== null && product.maxOrder > 0 && (
                 <div>

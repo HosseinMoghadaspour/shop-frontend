@@ -54,7 +54,6 @@ export function ProfilePage() {
   return (
     <main className="container mx-auto max-w-5xl px-4 py-8 sm:py-12">
       <div className="mb-6">
-        <span className="text-xs font-bold text-primary">حساب من</span>
         <h1 className="mt-1 text-2xl font-extrabold sm:text-3xl">حساب کاربری</h1>
         <p className="mt-2 text-sm text-muted-foreground">
           مدیریت اطلاعات حساب و آدرس‌های شما
@@ -129,7 +128,7 @@ export function ProfilePage() {
                       <div className="font-medium">
                         <span className="text-muted-foreground">نام گیرنده:</span>{" "}
                         {address.recipient.name || "تحویل گیرنده"}
-                        
+
                       </div>
 
                       {address.isActive && (

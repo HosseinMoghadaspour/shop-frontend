@@ -25,7 +25,7 @@ export function ProductCard({ product }: ProductCardProps) {
   const isAvailable = stockInfo[0]?.quantity && stockInfo[0].quantity > 0;
 
   return (
-    <Card className="group h-full w-full overflow-hidden border border-emerald-950/5 bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-950/8">
+    <Card className="group h-full md:w-60 overflow-hidden border border-emerald-950/5 bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-950/8">
       {/* Product image */}
       <Link
         to={`/products/${product.id}`}
@@ -82,7 +82,9 @@ export function ProductCard({ product }: ProductCardProps) {
             </div>
           )}
 
-          <p className="text-base font-extrabold text-primary sm:text-lg">{formatPrice(pricing.finalPrice)} <span className="text-xs font-normal text-muted-foreground">تومان</span></p>
+          <p className="text-base font-extrabold text-primary sm:text-lg">
+            {formatPrice(pricing.finalPrice)}
+          </p>
         </div>
 
         {/* Stock */}
