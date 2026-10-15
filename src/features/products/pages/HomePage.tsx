@@ -36,7 +36,7 @@ export function HomePage() {
         <section className="mx-auto max-w-7xl px-4 pb-10 pt-6 sm:pb-14">
             <Category />
         </section>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4 bg-[#EBFCEB] p-5 rounded-3xl">
           {[
             {
               icon: Truck,

@@ -5,6 +5,8 @@ import {
   logout as logoutApi,
   requestCustomerOtp,
   verifyCustomerOtp,
+  requestAdminOtp,
+  verifyAdminOtp,
   type AuthSession,
   type AuthUser,
 } from "@/services/auth.api";
@@ -35,6 +37,18 @@ interface AuthState {
   logout: () => Promise<void>;
 
   clearError: () => void;
+
+  requestAdminOtp: (
+  mobile: string,
+) => Promise<{ developmentOtp?: string }>;
+
+verifyAdminOtp: (
+  mobile: string,
+  code: string,
+) => Promise<void>;
+
+authKind: "customer" | "admin" | null;
+
 }
 
 export const useAuthStore =
@@ -64,6 +78,7 @@ export const useAuthStore =
           isAuthenticated: true,
           isInitialized: true,
           isLoading: false,
+          authKind: result.kind,
         });
       } catch {
         set({
@@ -172,4 +187,57 @@ export const useAuthStore =
         error: null,
       });
     },
+    requestAdminOtp: async (mobile) => {
+  set({ isLoading: true, error: null });
+
+  try {
+    const result = await requestAdminOtp(mobile);
+
+    set({ isLoading: false });
+
+    return {
+      developmentOtp: result.data?.developmentOtp,
+    };
+  } catch (error) {
+    set({
+      isLoading: false,
+      error: error instanceof Error
+        ? error.message
+        : "خطا در ارسال کد ورود مدیر.",
+    });
+
+    throw error;
+  }
+},
+
+verifyAdminOtp: async (mobile, code) => {
+  set({ isLoading: true, error: null });
+
+  try {
+    const result = await verifyAdminOtp(mobile, code);
+
+    if (result.session.kind !== "admin") {
+      throw new Error("نشست مدیر معتبر نیست.");
+    }
+
+    set({
+      user: result.user,
+      session: result.session,
+      isAuthenticated: true,
+      isInitialized: true,
+      isLoading: false,
+      error: null,
+    });
+  } catch (error) {
+    set({
+      isLoading: false,
+      error: error instanceof Error
+        ? error.message
+        : "خطا در ورود مدیر.",
+    });
+
+    throw error;
+  }
+},
+authKind: null,
   }));

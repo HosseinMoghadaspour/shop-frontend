@@ -164,12 +164,12 @@ export function Category() {
             const card = (
               <article
                 className={[
-                  "flex h-[105px] flex-col items-center justify-center",
+                  "flex h-[125px] flex-col items-center justify-center",
                   "gap-2 rounded-xl border px-3 py-3",
                   "transition-all duration-300",
                   "hover:-translate-y-0.5 hover:shadow-md",
                   "focus-visible:outline-none",
-                   "hover:border-emerald-600 hover:bg-gradient-to-b hover:from-emerald-500 hover:to-emerald-700 hover:text-white hover:shadow-md border-slate-200/80 bg-gradient-to-b from-white to-slate-50 text-slate-700 shadow-sm hover:border-emerald-300",
+                   "border-emerald-600 hover:bg-gradient-to-b hover:from-emerald-500 hover:to-emerald-700 hover:text-white hover:shadow-md bg-gradient-to-b from-white to-slate-50 text-[#215E21] shadow-sm hover:border-emerald-300",
                 ].join(" ")}
               >
                 <img
@@ -181,7 +181,7 @@ export function Category() {
                   aria-hidden="true"
                 />
 
-                <h3 className="w-full truncate text-center text-xs font-semibold sm:text-sm">
+                <h3 className="w-full truncate text-center text-xs font-semibold sm:text-sm  mt-4">
                   {category.name}
                 </h3>
               </article>
@@ -190,7 +190,7 @@ export function Category() {
             return (
               <CarouselItem
                 key={category.id}
-                className="basis-[145px] ps-2 sm:basis-[155px] lg:basis-[160px]"
+                className="basis-[145px] ps-5 sm:basis-[155px] lg:basis-[160px] mt-2"
               >
                 {category.url ? (
                   <a

@@ -79,6 +79,30 @@ export async function verifyCustomerOtp(
   return response.data.data;
 }
 
+
+export async function requestAdminOtp(mobile: string) {
+  const response = await apiClient.post<RequestOtpResponse>(
+    "/api/auth/admin/request-otp",
+    { mobile },
+  );
+
+  return response.data;
+}
+
+export async function verifyAdminOtp(
+  mobile: string,
+  code: string,
+) {
+  const response = await apiClient.post<VerifyOtpResponse>(
+    "/api/auth/admin/verify-otp",
+    { mobile, code },
+  );
+
+  return response.data.data;
+}
+
+
+
 export async function getCurrentUser() {
   const response =
     await apiClient.get<MeResponse>(

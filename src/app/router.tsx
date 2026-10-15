@@ -17,6 +17,10 @@ import { ProfilePage } from "@/features/profile/pages/ProfilePage";
 import { HomePage } from "@/features/products/pages/HomePage";
 import { Link } from "react-router-dom";
 import { ArrowRight, SearchX } from "lucide-react";
+import { AdminRoute } from "./AdminRoute";
+import { AdminLoginPage } from "@/features/auth/pages/admin/AdminLoginPage";
+import { AdminProductsPage } from "@/features/admin/pages/AdminProductsPage";
+import { AdminVerifyPage } from "@/features/auth/pages/admin/AdminVerifyPage";
 
 function NotFoundPage() {
   return (
@@ -26,9 +30,16 @@ function NotFoundPage() {
           <SearchX className="size-10" />
         </span>
         <p className="mt-6 text-sm font-semibold text-primary">صفحه پیدا نشد</p>
-        <h1 className="mt-2 text-2xl font-extrabold">اینجا چیزی برای دیدن نیست!</h1>
-        <p className="mt-3 text-sm leading-7 text-muted-foreground">آدرسی که وارد کرده‌اید در دسترس نیست یا جابه‌جا شده است.</p>
-        <Link to="/" className="mt-6 inline-flex h-10 items-center justify-center rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90">
+        <h1 className="mt-2 text-2xl font-extrabold">
+          اینجا چیزی برای دیدن نیست!
+        </h1>
+        <p className="mt-3 text-sm leading-7 text-muted-foreground">
+          آدرسی که وارد کرده‌اید در دسترس نیست یا جابه‌جا شده است.
+        </p>
+        <Link
+          to="/"
+          className="mt-6 inline-flex h-10 items-center justify-center rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
+        >
           برگشت به صفحه اصلی
           <ArrowRight className="mr-2 size-4" />
         </Link>
@@ -92,6 +103,23 @@ export const router = createBrowserRouter([
           {
             path: "/profile",
             element: <ProfilePage />,
+          },
+        ],
+      },
+      {
+        path: "/admin/login",
+        element: <AdminLoginPage />,
+      },
+      {
+        path: "/admin/verify",
+        element: <AdminVerifyPage />,
+      },
+      {
+        element: <AdminRoute />,
+        children: [
+          {
+            path: "/admin/products",
+            element: <AdminProductsPage />,
           },
         ],
       },
