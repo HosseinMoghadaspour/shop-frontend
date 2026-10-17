@@ -29,12 +29,8 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const user = useAuthStore((state) => state.user);
-  const isAuthenticated = useAuthStore(
-    (state) => state.isAuthenticated
-  );
-  const isInitialized = useAuthStore(
-    (state) => state.isInitialized
-  );
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const isInitialized = useAuthStore((state) => state.isInitialized);
   const logout = useAuthStore((state) => state.logout);
 
   const cart = useCartStore((state) => state.cart);
@@ -83,7 +79,6 @@ export function Header() {
       {/* ردیف بالا */}
       <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8">
         <div className="flex min-h-[76px] items-center justify-between gap-4 lg:gap-8">
-
           {/* لوگو */}
           <Link
             to="/"
@@ -138,7 +133,6 @@ export function Header() {
 
           {/* عملیات کاربر */}
           <div className="flex shrink-0 items-center gap-1 sm:gap-3">
-
             {!isInitialized ? (
               <div className="h-9 w-20 animate-pulse rounded-lg bg-slate-100" />
             ) : isAuthenticated ? (
@@ -149,9 +143,7 @@ export function Header() {
                   className="hidden items-center gap-2 rounded-lg px-2 py-2 text-sm text-slate-600 transition hover:bg-emerald-50 hover:text-emerald-700 lg:flex"
                 >
                   <UserRound className="size-5" />
-                  <span className="max-w-28 truncate">
-                    {userName}
-                  </span>
+                  <span className="max-w-28 truncate">{userName}</span>
                 </Link>
 
                 <button
@@ -169,9 +161,7 @@ export function Header() {
                 className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm text-slate-700 transition hover:bg-emerald-50 hover:text-emerald-700 sm:px-3"
               >
                 <UserRound className="size-5" />
-                <span className="hidden sm:inline">
-                  ورود / ثبت‌نام
-                </span>
+                <span className="hidden sm:inline">ورود / ثبت‌نام</span>
               </Link>
             )}
 
@@ -195,9 +185,7 @@ export function Header() {
             {/* منوی موبایل */}
             <button
               type="button"
-              aria-label={
-                mobileMenuOpen ? "بستن منو" : "باز کردن منو"
-              }
+              aria-label={mobileMenuOpen ? "بستن منو" : "باز کردن منو"}
               aria-expanded={mobileMenuOpen}
               onClick={() => setMobileMenuOpen((open) => !open)}
               className="flex size-10 items-center justify-center rounded-xl text-slate-700 transition hover:bg-slate-100 md:hidden"
@@ -237,9 +225,10 @@ export function Header() {
         </form>
 
         {/* ردیف پایین دسکتاپ */}
+
         <nav
           aria-label="منوی اصلی"
-          className="hidden h-[42px] md:items-center gap-1 md:flex "
+          className="hidden h-[42px] items-center justify-center gap-1 md:flex"
         >
           {navItems.map((item) => (
             <NavLink
@@ -315,4 +304,3 @@ export function Header() {
     </header>
   );
 }
-

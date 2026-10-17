@@ -1,26 +1,19 @@
-
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ShieldCheck } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuthStore } from "@/stores/auth.store";
 
 export function AdminLoginPage() {
   const navigate = useNavigate();
 
   const [mobile, setMobile] = useState("");
+  const [redirecting, setRedirecting] = useState(false);
 
-  const requestAdminOtp = useAuthStore(
-    (state) => state.requestAdminOtp,
-  );
+  const requestAdminOtp = useAuthStore((state) => state.requestAdminOtp);
   const isLoading = useAuthStore((state) => state.isLoading);
   const error = useAuthStore((state) => state.error);
   const clearError = useAuthStore((state) => state.clearError);
@@ -28,7 +21,9 @@ export function AdminLoginPage() {
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
 
-    if (!mobile.trim()) return;
+    if (!mobile.trim() || redirecting) return;
+
+    clearError();
 
     try {
       const result = await requestAdminOtp(mobile.trim());
@@ -37,14 +32,25 @@ export function AdminLoginPage() {
         mobile: mobile.trim(),
       });
 
-      // فقط برای محیط توسعه؛ در محیط عملیاتی کد را در URL قرار نده.
+      // فقط در محیط توسعه
       if (import.meta.env.DEV && result.developmentOtp) {
         params.set("developmentOtp", result.developmentOtp);
       }
 
       navigate(`/admin/verify?${params.toString()}`);
-    } catch {
-      // خطا در استور ثبت می‌شود.
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "";
+
+      if (
+        message.includes("شما مدیر نیستید") ||
+        message.includes("اجازه ورود به پنل مدیریت")
+      ) {
+        setRedirecting(true);
+
+        window.setTimeout(() => {
+          navigate("/", { replace: true });
+        }, 2500);
+      }
     }
   }
 
@@ -53,24 +59,18 @@ export function AdminLoginPage() {
       <div className="mx-auto flex min-h-[75vh] max-w-md items-center">
         <Card className="w-full rounded-3xl border-0 shadow-xl shadow-slate-900/5">
           <CardHeader className="space-y-4 px-6 pt-8">
-            <div className="flex size-14 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-800">
-              <ShieldCheck className="size-7" />
-            </div>
 
             <div>
-              <CardTitle className="text-2xl font-extrabold">
+              <CardTitle className="text-2xl font-extrabold text-center mb-10">
                 پنل مدیریت فروشگاه
               </CardTitle>
-              <p className="mt-2 text-sm leading-7 text-muted-foreground">
-                برای ورود، شماره موبایل مدیر را وارد کنید.
-              </p>
             </div>
           </CardHeader>
 
           <CardContent className="px-6 pb-8">
             <form onSubmit={handleSubmit} className="space-y-5">
               <div className="space-y-2">
-                <label htmlFor="admin-mobile" className="text-sm font-medium">
+                <label htmlFor="admin-mobile" className="text-sm font-medium leading-6 text-muted-foreground">
                   شماره موبایل مدیر
                 </label>
 
@@ -96,11 +96,15 @@ export function AdminLoginPage() {
                   {error}
                 </p>
               )}
-
+              {redirecting && (
+                <p role="alert" className="text-sm text-destructive">
+                  شما مدیر نیستید. در حال انتقال به صفحه اصلی...
+                </p>
+              )}
               <Button
                 type="submit"
                 className="h-12 w-full rounded-xl"
-                disabled={isLoading || !mobile.trim()}
+                disabled={isLoading || !mobile.trim() || redirecting}
               >
                 {isLoading ? "در حال ارسال کد..." : "دریافت کد ورود"}
               </Button>

@@ -11,18 +11,14 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product }: ProductCardProps) {
-  const {
-    name,
-    // nameEn,
-    stockInfo,
-    pricing,
-    images,
-    isSpecialSale,
-    amazingSale,
-  } = product;
+  const { name, pricing, isSpecialSale, amazingSale } = product;
 
-  const hasImage = images.length > 0;
-  const isAvailable = stockInfo[0]?.quantity && stockInfo[0].quantity > 0;
+  const stockInfo = Array.isArray(product.stockInfo) ? product.stockInfo : [];
+
+  const isAvailable = (stockInfo[0]?.quantity ?? 0) > 0;
+
+  const defaultImage =
+    product.images.find((image) => image.isDefault) ?? product.images[0];;
 
   return (
     <Card className="group h-full md:w-60 overflow-hidden border border-emerald-950/5 bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-950/8">
@@ -32,11 +28,14 @@ export function ProductCard({ product }: ProductCardProps) {
         className="relative block overflow-hidden"
       >
         <div className="relative flex aspect-square items-center justify-center overflow-hidden bg-[#f3f6f3] p-3 sm:p-5">
-          {hasImage ? (
+          {defaultImage ? (
             <img
-              src={getApiAssetUrl(images[0].url)}
-              alt={name}
+              src={getApiAssetUrl(defaultImage.url)}
+              alt={defaultImage?.alt || product.name || "تصویر محصول"}
               loading="lazy"
+              onError={(event) => {
+                event.currentTarget.style.display = "none";
+              }}
               className="h-full w-full object-contain mix-blend-multiply transition-transform duration-500 group-hover:scale-110"
             />
           ) : (

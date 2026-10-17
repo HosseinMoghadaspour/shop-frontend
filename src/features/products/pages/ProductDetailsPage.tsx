@@ -53,6 +53,8 @@ export function ProductDetailsPage() {
   const defaultImage =
     product.images.find((image) => image.isDefault) ?? product.images[0];
 
+    console.log(getApiAssetUrl(defaultImage.url))
+
   const quantity = product.stockInfo[0]?.quantity ?? 0;
   const isAvailable = quantity > 0;
   const minimumQuantity = getMinimumQuantity(
