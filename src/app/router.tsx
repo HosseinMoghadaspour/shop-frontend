@@ -20,6 +20,7 @@ import { ArrowRight, SearchX } from "lucide-react";
 import { AdminRoute } from "./AdminRoute";
 import { AdminLoginPage } from "@/features/auth/pages/admin/AdminLoginPage";
 import { AdminProductsPage } from "@/features/admin/pages/AdminProductsPage";
+import { AdminCategoriesPage } from "@/features/admin/pages/AdminCategoryPage";
 import { AdminVerifyPage } from "@/features/auth/pages/admin/AdminVerifyPage";
 
 function NotFoundPage() {
@@ -52,82 +53,32 @@ export const router = createBrowserRouter([
   {
     element: <StoreLayout />,
     children: [
-      {
-        path: "/",
-        element: <HomePage />,
-      },
-
-      {
-        path: "/products",
-        element: <ProductsPage />,
-      },
-
-      {
-        path: "/products/:id",
-        element: <ProductDetailsPage />,
-      },
-
-      {
-        path: "/auth/login",
-        element: <LoginPage />,
-      },
-
-      {
-        path: "/auth/verify",
-        element: <VerifyPage />,
-      },
-
+      { path: "/", element: <HomePage /> },
+      { path: "/products", element: <ProductsPage /> },
+      { path: "/products/:id", element: <ProductDetailsPage /> },
+      { path: "/auth/login", element: <LoginPage /> },
+      { path: "/auth/verify", element: <VerifyPage /> },
       {
         element: <ProtectedRoute />,
         children: [
-          {
-            path: "/cart",
-            element: <CartPage />,
-          },
-          {
-            path: "/checkout",
-            element: <CheckoutPage />,
-          },
-          {
-            path: "/checkout/success",
-            element: <OrderSuccessPage />,
-          },
-          {
-            path: "/orders",
-            element: <OrdersPage />,
-          },
-          {
-            path: "/orders/:id",
-            element: <OrderDetailsPage />,
-          },
-          {
-            path: "/profile",
-            element: <ProfilePage />,
-          },
+          { path: "/cart", element: <CartPage /> },
+          { path: "/checkout", element: <CheckoutPage /> },
+          { path: "/checkout/success", element: <OrderSuccessPage /> },
+          { path: "/orders", element: <OrdersPage /> },
+          { path: "/orders/:id", element: <OrderDetailsPage /> },
+          { path: "/profile", element: <ProfilePage /> },
         ],
       },
-      {
-        path: "/admin/login",
-        element: <AdminLoginPage />,
-      },
-      {
-        path: "/admin/verify",
-        element: <AdminVerifyPage />,
-      },
+      { path: "/admin/login", element: <AdminLoginPage /> },
+      { path: "/admin/verify", element: <AdminVerifyPage /> },
       {
         element: <AdminRoute />,
         children: [
-          {
-            path: "/admin/products",
-            element: <AdminProductsPage />,
-          },
+          { path: "/admin/products", element: <AdminProductsPage /> },
+          { path: "/admin/categories", element: <AdminCategoriesPage /> },
         ],
       },
     ],
   },
-
-  {
-    path: "*",
-    element: <NotFoundPage />,
-  },
+  { path: "*", element: <NotFoundPage /> },
 ]);

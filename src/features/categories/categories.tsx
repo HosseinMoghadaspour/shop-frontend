@@ -7,18 +7,9 @@ import {
 } from "@/components/ui/carousel";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { RefreshCw, ShoppingBasket } from "lucide-react";
-import {
-  Baby,
-  Bike,
-  Shirt,
-  Laptop,
-  House,
-  SprayCan,
-  Apple,
-  FolderOpen,
-} from "lucide-react";
 import { apiClient } from "@/services/api/client";
+import { RefreshCw, icons } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 interface CategoriesItem {
   id: number;
@@ -26,17 +17,23 @@ interface CategoriesItem {
   name: string;
   url: string | null;
   onlineCategoryImage: string | null;
+  iconName: string | null;
 }
 
-const categoryIcons = [
-  Baby,
-  Bike,
-  Shirt,
-  Laptop,
-  House,
-  SprayCan,
-  Apple,
-];
+function getCategoryIcon(iconName: string | null): LucideIcon {
+  if (!iconName) return icons.Package;
+
+  // پشتیبانی از نام‌هایی مانند ShoppingBasket و shopping-basket
+  const normalizedName = iconName
+    .replace(/([a-z0-9])([A-Z])/g, "$1-$2")
+    .toLowerCase();
+
+  const iconEntry = Object.entries(icons).find(
+    ([name]) => name.toLowerCase() === normalizedName.replace(/-/g, ""),
+  );
+
+  return (iconEntry?.[1] as LucideIcon | undefined) ?? icons.Package;
+}
 
 export function Category() {
   const [categories, setCategories] = useState<CategoriesItem[]>([]);
@@ -53,14 +50,13 @@ export function Category() {
       const response = await apiClient.get<{
         success: boolean;
         data: CategoriesItem[];
-      }>("/categories");
+      }>("/admin/categories");
 
-      if (
-        !response.data.success ||
-        !Array.isArray(response.data.data)
-      ) {
+      if (!response.data.success || !Array.isArray(response.data.data)) {
         throw new Error("پاسخ دسته‌بندی‌ها معتبر نیست.");
       }
+
+      console.log(response.data.data);
 
       setCategories(response.data.data);
     } catch (error) {
@@ -127,10 +123,7 @@ export function Category() {
           <p className="text-sm text-muted-foreground">
             دریافت دسته‌بندی‌های فروشگاه با مشکل مواجه شد.
           </p>
-          <Button
-            variant="outline"
-            onClick={() => void fetchCategories()}
-          >
+          <Button variant="outline" onClick={() => void fetchCategories()}>
             <RefreshCw className="ms-2 size-4" />
             تلاش مجدد
           </Button>
@@ -159,25 +152,23 @@ export function Category() {
         <CarouselContent className="-ms-2 items-stretch">
           {categories.map((category, index) => {
             const isActive = index === selectedIndex;
-            const Icon = category.onlineCategoryImage || "";
+            const Icon = getCategoryIcon(category.iconName);
 
             const card = (
               <article
                 className={[
                   "flex h-[125px] flex-col items-center justify-center",
                   "gap-2 rounded-xl border px-3 py-3",
-                  "transition-all duration-300",
-                  "hover:-translate-y-0.5 hover:shadow-md",
-                  "focus-visible:outline-none",
-                   "border-emerald-600 hover:bg-gradient-to-b hover:from-emerald-500 hover:to-emerald-700 hover:text-white hover:shadow-md bg-gradient-to-b from-white to-slate-50 text-[#215E21] shadow-sm hover:border-emerald-300",
+                  "border-emerald-600 bg-gradient-to-b from-white to-slate-50",
+                  "text-[#215E21] shadow-sm transition-all duration-300",
+                  "hover:-translate-y-0.5 hover:border-emerald-300",
+                  "hover:from-emerald-500 hover:to-emerald-700",
+                  "hover:text-white hover:shadow-md",
                 ].join(" ")}
               >
-                <img
-                  src={Icon}
-                  className={[
-                    "size-8 shrink-0 transition-colors",
-                    isActive ? "text-white" : "text-[#174e60]",
-                  ].join(" ")}
+                <Icon
+                  className="size-10 shrink-0 transition-colors"
+                  strokeWidth={1.8}
                   aria-hidden="true"
                 />
 
