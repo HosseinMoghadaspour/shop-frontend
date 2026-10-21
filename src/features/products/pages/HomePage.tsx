@@ -108,7 +108,7 @@ export function HomePage() {
   return (
     <div className="pb-10">
       <section className="mx-auto max-w-7xl px-4 pb-8 pt-5 sm:pb-12 sm:pt-8">
-        <div className="relative isolate overflow-hidden rounded-[1.5rem] bg-[#103d32] text-white shadow-xl shadow-emerald-950/10 sm:rounded-[2rem]">
+        <div className="relative isolate overflow-hidden rounded-[1.5rem] bg-gradient-to-br from-emerald-950 via-emerald-800 to-teal-700 text-white shadow-xl shadow-emerald-950/15 sm:rounded-[2rem]">
           <Slider />
         </div>
 
@@ -116,14 +116,14 @@ export function HomePage() {
           <Category />
         </div>
 
-        <div className="grid grid-cols-1 gap-3 rounded-3xl bg-[#EBFCEB] p-3 sm:grid-cols-3 sm:gap-4 sm:p-5">
+        <div className="grid grid-cols-1 gap-3 rounded-3xl bg-gradient-to-r from-emerald-50 via-teal-50 to-cyan-50 p-3 sm:grid-cols-3 sm:gap-4 sm:p-5">
           {[
             { icon: Truck, title: "ارسال سریع و مطمئن", description: "سفارش‌هایت را با خیال راحت تحویل بگیر." },
             { icon: ShieldCheck, title: "خریدی امن", description: "از ثبت سفارش تا تحویل، همراه شماییم." },
             { icon: BadgeCheck, title: "انتخاب‌های باکیفیت", description: "برای یک خرید رضایت‌بخش و به‌یادماندنی." },
           ].map(({ icon: Icon, title, description }) => (
-            <div key={title} className="flex items-center gap-3 rounded-2xl border border-emerald-950/5 bg-white p-3 sm:gap-4 sm:p-4">
-              <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/8 text-primary sm:size-11">
+            <div key={title} className="flex items-center gap-3 rounded-2xl border-0 bg-white/90 p-3 shadow-sm shadow-emerald-900/5 ring-1 ring-emerald-900/5 sm:gap-4 sm:p-4">
+              <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-100 to-teal-100 text-emerald-800 sm:size-11">
                 <Icon className="size-5" />
               </span>
               <div>
@@ -172,7 +172,7 @@ export function HomePage() {
         <section>
           <div className="mb-5 flex items-end justify-between gap-3">
             <div>
-              <span className="text-xs font-bold text-primary">منتخب فروشگاه</span>
+              <span className="text-xs font-bold text-emerald-700">منتخب فروشگاه</span>
               <h2 className="mt-1 text-lg font-extrabold sm:text-2xl">محصولات پیشنهادی</h2>
               <p className="mt-1 text-xs text-muted-foreground sm:text-sm">چند انتخاب دوست‌داشتنی برای شروع خرید</p>
             </div>
