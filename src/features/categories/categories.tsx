@@ -50,7 +50,7 @@ export function Category() {
       const response = await apiClient.get<{
         success: boolean;
         data: CategoriesItem[];
-      }>("/admin/categories");
+      }>("/categories");
 
       if (!response.data.success || !Array.isArray(response.data.data)) {
         throw new Error("پاسخ دسته‌بندی‌ها معتبر نیست.");

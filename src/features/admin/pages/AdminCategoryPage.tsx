@@ -225,11 +225,7 @@ export function AdminCategoriesPage() {
       <header className="border-b bg-white">
         <div className="mx-auto flex max-w-[1500px] flex-wrap items-center justify-between gap-4 px-4 py-5 sm:px-6 lg:px-8">
           <div className="flex items-center gap-3">
-            <span className="flex size-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
-              <FolderTree className="size-6" />
-            </span>
             <div>
-              <p className="text-sm font-medium text-emerald-700">پنل مدیریت</p>
               <h1 className="mt-1 text-2xl font-extrabold">مدیریت نمایش دسته‌بندی‌ها</h1>
               <p className="mt-1 text-sm text-slate-500">اطلاعات اصلی دسته‌بندی‌ها از سیستم حسابداری دریافت می‌شود.</p>
             </div>
@@ -304,15 +300,15 @@ export function AdminCategoriesPage() {
         ) : (
           <section className="grid gap-4 xl:grid-cols-2">
             {result.categories.map((category) => {
-              const image = categoryImageUrl(category.image);
+            //  const image = categoryImageUrl(category.image);
               const isBusy = busyAction === `visibility-${category.id}` || busyAction === `order-${category.id}` || busyAction === `icon-${category.id}`;
               return (
                 <Card key={category.id} className="overflow-hidden">
                   <CardHeader className="pb-3">
                     <div className="flex items-start gap-3">
-                      <div className="flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-xl border bg-slate-50">
+                      {/* <div className="flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-xl border bg-slate-50">
                         {image ? <img src={image} alt={category.name} className="size-full object-contain" loading="lazy" /> : <FolderTree className="size-7 text-slate-400" />}
-                      </div>
+                      </div> */}
                       <div className="flex size-12 shrink-0 items-center justify-center rounded-xl border border-emerald-100 bg-emerald-50 text-emerald-700" title={category.iconName ? `آیکون: ${category.iconName}` : "آیکون پیش‌فرض"}>
                         {(() => {
                           const SelectedIcon = CATEGORY_ICONS.find((item) => item.name === category.iconName)?.icon;
@@ -387,7 +383,7 @@ export function AdminCategoriesPage() {
                     </div>
                     {!category.isActive && <p className="text-xs leading-6 text-amber-700">این دسته‌بندی در حسابداری غیرفعال است؛ فعال‌سازی نمایش از این پنل امکان‌پذیر نیست.</p>}
 
-                    <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
+                    {/* <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
                       <div className="flex-1 space-y-2">
                         <label htmlFor={`sort-${category.id}`} className="flex items-center gap-2 text-sm font-medium">
                           <ArrowDownWideNarrow className="size-4 text-muted-foreground" /> ترتیب نمایش
@@ -412,7 +408,7 @@ export function AdminCategoriesPage() {
                         <Check className="ml-2 size-4" />
                         {busyAction === `order-${category.id}` ? "در حال ذخیره..." : "ذخیره ترتیب"}
                       </Button>
-                    </div>
+                    </div> */}
                   </CardContent>
                 </Card>
               );
