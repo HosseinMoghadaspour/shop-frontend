@@ -64,7 +64,7 @@ function ProductSection({
       </div>
 
       {isLoading ? (
-        <ProductGridSkeleton count={5} />
+        <ProductGridSkeleton count={5} horizontal={theme !== "plain"} />
       ) : isError ? (
         <div className={`rounded-2xl p-6 text-center ${theme === "plain" ? "border border-destructive/20 bg-white" : "bg-white/75"}`}>
           <p className="text-sm font-semibold">دریافت محصولات این بخش با خطا مواجه شد.</p>
