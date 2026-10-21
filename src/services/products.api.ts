@@ -1,21 +1,21 @@
 import { apiClient } from "./api/client";
 
 export interface ProductPricing {
-    salePrice: number;
-    consumerPrice: number;
-    discountPrice: number | null;
-    finalPrice: number;
-    hasDiscount: boolean;
-    discountPercent:number | null;
-    branchId: number | null;
-    priceType: string | null;
+  salePrice: number;
+  consumerPrice: number;
+  discountPrice: number | null;
+  finalPrice: number;
+  hasDiscount: boolean;
+  discountPercent: number | null;
+  branchId: number | null;
+  priceType: string | null;
 }
 
 export interface ProductImage {
-    id?: number;
-    url: string;
-    alt: string | null;
-    isDefault: boolean
+  id?: number;
+  url: string;
+  alt: string | null;
+  isDefault: boolean;
 }
 
 export interface ProductMeasureUnit {
@@ -62,51 +62,37 @@ export interface Product {
   name: string;
   nameEn: string | null;
   alias: string;
-
   categoryId: number | null;
   brandId: number | null;
   producerId: number | null;
   salePrice: number;
   discountPrice: number | null;
   consumerPrice: number;
-
   isActive: boolean;
   isShowInOnlineShop: boolean;
-
   briefDescription: string | null;
   fullDescription: string | null;
   description: string;
-
   isSpecialSale: boolean;
   amazingSale: boolean;
-
   minOrder: number | null;
   maxOrder: number | null;
   minShow: number | null;
-
   stock: number;
   orderPoint: number | null;
-
   isHasSize: boolean;
-
   width: number | null;
   height: number | null;
   length: number | null;
   weight: number | null;
-
   mainMeasureUnitId: number;
   measureUnitId: number;
   unit?: ProductMeasureUnit | null;
-
   showInCofferMenu: boolean;
-
   createdAt: string;
   updatedAt: string | null;
-
   pricing: ProductPricing;
-
-  stockInfo: ProductStockInfo[],
-
+  stockInfo: ProductStockInfo[];
   images: ProductImage[];
 }
 
@@ -135,33 +121,46 @@ interface ProductsApiResponse {
   pagination: ProductsPagination;
 }
 
+interface ProductListApiResponse {
+  success: boolean;
+  data: Product[];
+}
+
 export async function getProducts(
   params?: GetProductsParams,
 ): Promise<ProductsResult> {
-  const response = await apiClient.get<ProductsApiResponse>(
-    "/products",
-    {
-      params,
-    },
-  );
-
-   console.log("PRODUCT API RESPONSE:", response.data);
-
+  const response = await apiClient.get<ProductsApiResponse>("/products", { params });
   return {
     products: response.data.data,
     pagination: response.data.pagination,
   };
 }
 
-interface ProductApiResponse {
-    success : boolean;
-    data: Product;
+async function getProductList(endpoint: string, limit = 12): Promise<Product[]> {
+  const response = await apiClient.get<ProductListApiResponse>(endpoint, {
+    params: { limit },
+  });
+  return response.data.data;
 }
 
-export async function getProduct(productId:number):Promise<Product> {
-    const response = await apiClient.get<ProductApiResponse>(
-        `/products/${productId}`,
-    );
+export function getAmazingProducts(limit = 12): Promise<Product[]> {
+  return getProductList("/products/amazing", limit);
+}
 
-    return response.data.data;
+export function getNewProducts(limit = 12): Promise<Product[]> {
+  return getProductList("/products/new", limit);
+}
+
+export function getBestSellingProducts(limit = 12): Promise<Product[]> {
+  return getProductList("/products/best-selling", limit);
+}
+
+interface ProductApiResponse {
+  success: boolean;
+  data: Product;
+}
+
+export async function getProduct(productId: number): Promise<Product> {
+  const response = await apiClient.get<ProductApiResponse>(`/products/${productId}`);
+  return response.data.data;
 }
