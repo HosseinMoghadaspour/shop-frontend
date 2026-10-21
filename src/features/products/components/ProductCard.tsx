@@ -40,6 +40,7 @@ export function ProductCard({ product }: ProductCardProps) {
   const maximum = product.maxOrder && product.maxOrder > 0
     ? Math.min(product.maxOrder, availableStock)
     : availableStock;
+  const canAdd = initialQuantity <= maximum;
   const canIncrease = quantity + step <= maximum;
 
   async function redirectIfUnauthorized(error: unknown, requestedQuantity: number) {
@@ -50,7 +51,7 @@ export function ProductCard({ product }: ProductCardProps) {
   }
 
   async function handleAdd() {
-    if (!isAvailable || isBusy || isCartUpdating || isCartLoading) return;
+    if (!isAvailable || !canAdd || isBusy || isCartUpdating || isCartLoading) return;
     setIsBusy(true);
     try {
       await addItem(product.id, initialQuantity);
@@ -168,7 +169,7 @@ export function ProductCard({ product }: ProductCardProps) {
             </Button>
           </div>
         ) : (
-          <Button type="button" className="h-9 w-full rounded-xl text-xs font-semibold" disabled={isBusy || isCartUpdating || isCartLoading} onClick={() => void handleAdd()}>
+          <Button type="button" className="h-9 w-full rounded-xl text-xs font-semibold" disabled={isBusy || isCartUpdating || isCartLoading || !canAdd} onClick={() => void handleAdd()}>
             {isBusy ? <LoaderCircle className="ml-1 size-4 animate-spin" /> : <ShoppingCart className="ml-1 size-4" />}
             افزودن به سبد
           </Button>
