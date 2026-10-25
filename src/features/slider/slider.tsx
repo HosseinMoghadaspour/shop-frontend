@@ -14,13 +14,13 @@ import { apiClient } from "@/services/api/client";
 
 interface SliderItem {
   RowID: string;
-  DescBut: string;
-  DescImage: string;
-  Description: string;
+  DescBut: string | null;
+  DescImage: string | null;
+  Description: string | null;
   Status: boolean;
   Type: number;
-  UrlImage: string;
-  UrlSend: string;
+  UrlImage: string | null;
+  UrlSend: string | null;
 }
 
 export function Slider() {
@@ -43,7 +43,7 @@ export function Slider() {
         if (!isMounted) return;
 
         const activeSlides = (response.data ?? []).filter(
-          (slide) => slide.Status && slide.UrlImage,
+          (slide) => Boolean(slide?.Status && slide?.UrlImage?.trim()),
         );
 
         setSlides(activeSlides);
@@ -96,7 +96,8 @@ export function Slider() {
     return () => window.clearTimeout(timeoutId);
   }, [api, slides.length, selectedIndex]);
   // مسیر تصویر از سرور بک‌اند
-  const getImageUrl = (path: string) => {
+  const getImageUrl = (path: string | null | undefined) => {
+    if (!path?.trim()) return "";
     if (/^https?:\/\//i.test(path)) return path;
 
     const baseUrl = (import.meta.env.VITE_API_URL as string | undefined)
@@ -154,16 +155,16 @@ export function Slider() {
         <CarouselContent className="-ms-0">
           {slides.map((slide) => {
             const imageUrl = getImageUrl(slide.UrlImage);
-            const hasButton = Boolean(
-              slide.DescBut.trim() && slide.UrlSend.trim(),
-            );
+            const buttonText = slide.DescBut?.trim() ?? "";
+            const buttonUrl = slide.UrlSend?.trim() ?? "";
+            const hasButton = Boolean(buttonText && buttonUrl);
 
             return (
               <CarouselItem key={slide.RowID} className="basis-full ps-0">
                 <article className="relative isolate aspect-[16/9] overflow-hidden rounded-2xl shadow-sm sm:aspect-[16/7] lg:aspect-[16/5]">
                   <img
                     src={imageUrl}
-                    alt={slide.DescImage || "بنر فروشگاه"}
+                    alt={slide.DescImage?.trim() || "بنر فروشگاه"}
                     className="absolute inset-0 size-full object-cover"
                     fetchPriority="high"
                     onError={(event) => {
@@ -176,13 +177,13 @@ export function Slider() {
 
                   <div className="relative z-10 flex h-full items-center">
                     <div className="max-w-[85%] space-y-3 px-5 py-6 text-white sm:max-w-[65%] sm:px-10 lg:max-w-[55%] lg:px-16">
-                      {slide.DescImage && (
+                      {slide.DescImage?.trim() && (
                         <h2 className="text-xl font-extrabold leading-relaxed drop-shadow sm:text-3xl lg:text-5xl">
                           {slide.DescImage}
                         </h2>
                       )}
 
-                      {slide.Description && (
+                      {slide.Description?.trim() && (
                         <p className="line-clamp-3 max-w-xl text-xs leading-6 text-white/90 sm:text-sm sm:leading-7 lg:text-base">
                           {slide.Description}
                         </p>
@@ -190,10 +191,10 @@ export function Slider() {
 
                       {hasButton && (
                         <a
-                          href={slide.UrlSend}
+                          href={buttonUrl}
                           className="mt-2 inline-flex h-11 items-center justify-center rounded-xl bg-primary px-5 text-sm font-bold text-primary-foreground shadow-lg transition-transform hover:-translate-y-0.5"
                         >
-                          {slide.DescBut}
+                          {buttonText}
                           <ArrowUpLeft className="ms-2 size-4" />
                         </a>
                       )}
