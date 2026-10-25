@@ -11,6 +11,7 @@ export interface OrderDeliveryAddress {
 }
 
 export interface CreateOrderRequest {
+  paymentMethodId: number;
   deliveryAddress:
     | {
         addressId: number;
