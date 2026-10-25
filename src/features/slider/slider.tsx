@@ -180,7 +180,7 @@ export function Slider() {
                       {slide.DescImage?.trim() && (
                         <h2 className="text-xl font-extrabold leading-relaxed drop-shadow sm:text-3xl lg:text-5xl">
                           {slide.DescImage}
-                        </h2>
+                        </div>
                       )}
 
                       {slide.Description?.trim() && (

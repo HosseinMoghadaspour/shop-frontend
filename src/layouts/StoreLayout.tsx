@@ -6,7 +6,7 @@ export function StoreLayout() {
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
       <Header />
-      <main className="mx-auto w-full max-w-[1280px] flex-1">
+      <main className="mx-auto w-full max-w-[1000px] flex-1">
         <Outlet />
       </main>
       <Footer />
