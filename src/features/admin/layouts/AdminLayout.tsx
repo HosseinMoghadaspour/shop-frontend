@@ -89,9 +89,7 @@ export function AdminLayout() {
           </Button>
           <span className="text-sm font-extrabold">پنل مدیریت فروشگاه</span>
         </div>
-        <main className="mx-auto w-full max-w-[1280px]">
-          <Outlet />
-        </main>
+        <Outlet />
       </div>
     </div>
   );
