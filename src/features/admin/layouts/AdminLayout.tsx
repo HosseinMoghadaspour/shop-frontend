@@ -4,6 +4,7 @@ import {
   LayoutDashboard,
   PackageSearch,
   FolderTree,
+  Images,
   Store,
   LogOut,
   Menu,
@@ -18,6 +19,7 @@ const navigation = [
   { to: "/admin", label: "داشبورد", icon: LayoutDashboard, end: true },
   { to: "/admin/products", label: "مدیریت کالاها", icon: PackageSearch },
   { to: "/admin/categories", label: "دسته‌بندی‌ها", icon: FolderTree },
+  { to: "/admin/sliders", label: "مدیریت اسلایدرها", icon: Images },
 ];
 
 export function AdminLayout() {

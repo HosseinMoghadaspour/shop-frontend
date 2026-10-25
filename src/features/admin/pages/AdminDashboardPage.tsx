@@ -8,6 +8,7 @@ import {
   Eye,
   FolderTree,
   ImagePlus,
+  Images,
   Package,
   PackageSearch,
   RefreshCw,
@@ -78,6 +79,7 @@ export function AdminDashboardPage() {
   const quickActions = [
     { title: "مدیریت کالاها", description: "بارگذاری تصویر، انتخاب تصویر اصلی و کنترل نمایش کالاها", to: "/admin/products", icon: PackageSearch, tag: "کالاها", tint: "bg-emerald-50 text-emerald-800" },
     { title: "دسته‌بندی‌های فروشگاه", description: "تنظیم آیکون، ترتیب و وضعیت نمایش دسته‌بندی‌ها", to: "/admin/categories", icon: FolderTree, tag: "دسته‌بندی", tint: "bg-sky-50 text-sky-800" },
+    { title: "مدیریت اسلایدرها", description: "ساخت بنر، بارگذاری تصویر و کنترل نمایش صفحه اصلی", to: "/admin/sliders", icon: Images, tag: "اسلایدر", tint: "bg-violet-50 text-violet-800" },
   ];
 
   return (

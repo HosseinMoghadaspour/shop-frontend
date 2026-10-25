@@ -21,6 +21,7 @@ import { AdminCategoriesPage } from "@/features/admin/pages/AdminCategoryPage";
 import { AdminVerifyPage } from "@/features/auth/pages/admin/AdminVerifyPage";
 import { AdminLayout } from "@/features/admin/layouts/AdminLayout";
 import { AdminDashboardPage } from "@/features/admin/pages/AdminDashboardPage";
+import { AdminSlidersPage } from "@/features/admin/pages/AdminSlidersPage";
 
 function NotFoundPage() {
   return (
@@ -69,6 +70,7 @@ export const router = createBrowserRouter([
           { path: "/admin", element: <AdminDashboardPage /> },
           { path: "/admin/products", element: <AdminProductsPage /> },
           { path: "/admin/categories", element: <AdminCategoriesPage /> },
+          { path: "/admin/sliders", element: <AdminSlidersPage /> },
         ],
       },
     ],
