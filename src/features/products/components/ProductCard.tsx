@@ -105,7 +105,7 @@ export function ProductCard({ product }: ProductCardProps) {
               alt={defaultImage.alt || product.name || "تصویر محصول"}
               loading="lazy"
               onError={(event) => { event.currentTarget.style.display = "none"; }}
-              className="absolute inset-0 h-full w-full object-contain p-3 transition-transform duration-300 group-hover:scale-[1.04] sm:p-4"
+              className="absolute inset-0 h-full w-full object-contain transition-transform duration-300 group-hover:scale-[1.04]"
             />
           ) : (
             <span className="text-xs text-muted-foreground">تصویر محصول</span>
@@ -138,29 +138,27 @@ export function ProductCard({ product }: ProductCardProps) {
           )}
           <p className="text-sm font-extrabold leading-6 text-emerald-700 sm:text-base">
             {formatPrice(pricing.finalPrice)}
-            <span className="mr-1 text-[10px] font-normal text-muted-foreground">تومان</span>
+
           </p>
         </div>
 
-        <div className="mt-1.5 min-h-4">
-          {isAvailable ? (
+        <div className="min-h-4">
+          {isAvailable && availableStock <= 10 && (
             <span className="text-[10px] text-muted-foreground sm:text-xs">
               موجودی: {availableStock.toLocaleString("fa-IR")}
             </span>
-          ) : (
-            <span className="text-[10px] font-medium text-destructive">ناموجود</span>
           )}
         </div>
       </CardContent>
 
       <CardFooter className="p-3 pt-0 sm:p-3.5 sm:pt-0">
         {!isAvailable ? (
-          <Button type="button" variant="secondary" disabled className="h-9 w-full rounded-xl text-xs">
+          <Button type="button" variant="secondary" disabled className="h-9 w-full rounded-xl text-xs mt-2">
             ناموجود
           </Button>
         ) : quantity > 0 ? (
-          <div className="flex h-9 w-full items-center justify-between rounded-xl border-0 bg-emerald-50 px-1 ring-1 ring-emerald-100">
-            <Button type="button" variant="ghost" size="icon" aria-label={`افزایش تعداد ${name}`} className="size-7 rounded-lg text-emerald-700 hover:bg-emerald-100" disabled={isBusy || isCartUpdating || isCartLoading || !canIncrease} onClick={() => void handleIncrease()}>
+          <div className="flex h-9 w-full items-center justify-between rounded-xl border-0 bg-emerald-50 px-1 ring-1 ring-emerald-100 mt-2">
+            <Button type="button" variant="ghost" size="icon" aria-label={`افزایش تعداد ${name}`} className=" size-7 rounded-lg text-emerald-700 hover:bg-emerald-100" disabled={isBusy || isCartUpdating || isCartLoading || !canIncrease} onClick={() => void handleIncrease()}>
               {isBusy ? <LoaderCircle className="size-3.5 animate-spin" /> : <Plus className="size-4" />}
             </Button>
             <span className="min-w-8 text-center text-xs font-bold tabular-nums">{quantity.toLocaleString("fa-IR")}</span>
@@ -169,7 +167,7 @@ export function ProductCard({ product }: ProductCardProps) {
             </Button>
           </div>
         ) : (
-          <Button type="button" className="h-9 w-full rounded-xl bg-emerald-700 text-xs font-bold text-white shadow-sm transition hover:bg-emerald-800" disabled={isBusy || isCartUpdating || isCartLoading || !canAdd} onClick={() => void handleAdd()}>
+          <Button type="button" className="mt-2 h-9 w-full rounded-xl bg-emerald-700 text-xs font-bold text-white shadow-sm transition hover:bg-emerald-800" disabled={isBusy || isCartUpdating || isCartLoading || !canAdd} onClick={() => void handleAdd()}>
             {isBusy ? <LoaderCircle className="ml-1 size-4 animate-spin" /> : <ShoppingCart className="ml-1 size-4" />}
             افزودن به سبد
           </Button>

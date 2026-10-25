@@ -87,6 +87,7 @@ export const useAuthStore =
           isAuthenticated: false,
           isInitialized: true,
           isLoading: false,
+          authKind: null,
         });
       }
     },
@@ -220,14 +221,15 @@ verifyAdminOtp: async (mobile, code) => {
       throw new Error("نشست مدیر معتبر نیست.");
     }
 
-    set({
-      user: result.user,
-      session: result.session,
-      isAuthenticated: true,
-      isInitialized: true,
-      isLoading: false,
-      error: null,
-    });
+  set({
+  user: result.user,
+  session: result.session,
+  authKind: "admin",
+  isAuthenticated: true,
+  isInitialized: true,
+  isLoading: false,
+  error: null,
+});
   } catch (error) {
     set({
       isLoading: false,

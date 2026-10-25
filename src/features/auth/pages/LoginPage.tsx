@@ -94,11 +94,11 @@ export function LoginPage() {
   return (
     <section className="mx-auto flex min-h-[70vh] max-w-md items-center px-4 py-12">
       <Card className="w-full border border-emerald-950/5 shadow-xl shadow-emerald-950/5">
-        <CardHeader className="px-6 pt-7">
+        <CardHeader className="px-6 pt-7 text-center  ">
           <span className="mb-2 flex size-12 items-center justify-center rounded-2xl bg-primary/8 text-primary">
-            <ShoppingBag className="size-6" />
+           <img src="/adinaLogo.png"/>
           </span>
-          <CardTitle className="text-xl font-extrabold">به نوا مارکت خوش آمدید</CardTitle>
+          <CardTitle className="text-xl font-extrabold">به آدینامارکت خوش آمدید</CardTitle>
           <p className="text-sm leading-6 text-muted-foreground">
             برای ادامه خرید، شماره موبایلتان را وارد کنید.
           </p>

@@ -181,7 +181,7 @@ export function Category() {
             return (
               <CarouselItem
                 key={category.id}
-                className="basis-[145px] ps-5 sm:basis-[155px] lg:basis-[160px] mt-2"
+                className="basis-[145px] ps-5 sm:basis-[150px] lg:basis-[150px] mt-2"
               >
                 {category.url ? (
                   <a

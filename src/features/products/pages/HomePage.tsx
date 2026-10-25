@@ -37,10 +37,30 @@ function ProductSection({
   theme?: "plain" | "amazing" | "new" | "best";
 }) {
   const sectionTheme = {
-    plain: { wrapper: "", eyebrow: "text-primary", description: "text-muted-foreground", link: "text-primary" },
-    amazing: { wrapper: "rounded-[2rem] bg-gradient-to-br from-rose-50 via-orange-50 to-amber-100/80 px-4 py-6 sm:px-6 sm:py-8", eyebrow: "text-rose-700", description: "text-rose-950/65", link: "text-rose-700" },
-    new: { wrapper: "rounded-[2rem] bg-gradient-to-br from-sky-50 via-cyan-50 to-teal-100/80 px-4 py-6 sm:px-6 sm:py-8", eyebrow: "text-sky-800", description: "text-slate-600", link: "text-sky-800" },
-    best: { wrapper: "rounded-[2rem] bg-gradient-to-br from-violet-50 via-indigo-50 to-purple-100/80 px-4 py-6 sm:px-6 sm:py-8", eyebrow: "text-violet-800", description: "text-slate-600", link: "text-violet-800" },
+    plain: {
+      wrapper: "",
+      eyebrow: "text-primary",
+      description: "text-muted-foreground",
+      link: "text-primary",
+    },
+    amazing: {
+      wrapper: "rounded-[2rem] bg-red-200/70 px-4 py-6 sm:px-6 sm:py-8",
+      eyebrow: "text-rose-800",
+      description: "text-rose-950/80",
+      link: "text-rose-800",
+    },
+    new: {
+      wrapper: "rounded-[2rem] bg-sky-200/70 px-4 py-6 sm:px-6 sm:py-8",
+      eyebrow: "text-sky-900",
+      description: "text-slate-700",
+      link: "text-sky-900",
+    },
+    best: {
+      wrapper: "rounded-[2rem] bg-violet-200/70 px-4 py-6 sm:px-6 sm:py-8",
+      eyebrow: "text-violet-900",
+      description: "text-slate-700",
+      link: "text-violet-900",
+    },
   }[theme];
 
   return (
@@ -66,14 +86,22 @@ function ProductSection({
       {isLoading ? (
         <ProductGridSkeleton count={5} horizontal={theme !== "plain"} />
       ) : isError ? (
-        <div className={`rounded-2xl p-6 text-center ${theme === "plain" ? "border border-destructive/20 bg-white" : "bg-white/75"}`}>
-          <p className="text-sm font-semibold">دریافت محصولات این بخش با خطا مواجه شد.</p>
-          <Button variant="outline" className="mt-3" onClick={onRetry}>تلاش دوباره</Button>
+        <div
+          className={`rounded-2xl p-6 text-center ${theme === "plain" ? "border border-destructive/20 bg-white" : "bg-white/75"}`}
+        >
+          <p className="text-sm font-semibold">
+            دریافت محصولات این بخش با خطا مواجه شد.
+          </p>
+          <Button variant="outline" className="mt-3" onClick={onRetry}>
+            تلاش دوباره
+          </Button>
         </div>
       ) : products?.length ? (
         <ProductGrid products={products} horizontal={theme !== "plain"} />
       ) : (
-        <div className={`rounded-2xl p-6 text-center text-sm ${theme === "plain" ? "border bg-white text-muted-foreground" : "bg-white/65 text-slate-600"}`}>
+        <div
+          className={`rounded-2xl p-6 text-center text-sm ${theme === "plain" ? "border bg-white text-muted-foreground" : "bg-white/65 text-slate-600"}`}
+        >
           فعلاً محصولی برای نمایش در این بخش وجود ندارد.
         </div>
       )}
@@ -118,17 +146,34 @@ export function HomePage() {
 
         <div className="grid grid-cols-1 gap-3 rounded-3xl bg-gradient-to-r from-emerald-50 via-teal-50 to-cyan-50 p-3 sm:grid-cols-3 sm:gap-4 sm:p-5">
           {[
-            { icon: Truck, title: "ارسال سریع و مطمئن", description: "سفارش‌هایت را با خیال راحت تحویل بگیر." },
-            { icon: ShieldCheck, title: "خریدی امن", description: "از ثبت سفارش تا تحویل، همراه شماییم." },
-            { icon: BadgeCheck, title: "انتخاب‌های باکیفیت", description: "برای یک خرید رضایت‌بخش و به‌یادماندنی." },
+            {
+              icon: Truck,
+              title: "ارسال سریع و مطمئن",
+              description: "سفارش‌هایت را با خیال راحت تحویل بگیر.",
+            },
+            {
+              icon: ShieldCheck,
+              title: "خریدی امن",
+              description: "از ثبت سفارش تا تحویل، همراه شماییم.",
+            },
+            {
+              icon: BadgeCheck,
+              title: "انتخاب‌های باکیفیت",
+              description: "برای یک خرید رضایت‌بخش و به‌یادماندنی.",
+            },
           ].map(({ icon: Icon, title, description }) => (
-            <div key={title} className="flex items-center gap-3 rounded-2xl border-0 bg-white/90 p-3 shadow-sm shadow-emerald-900/5 ring-1 ring-emerald-900/5 sm:gap-4 sm:p-4">
+            <div
+              key={title}
+              className="flex items-center gap-3 rounded-2xl border-0 bg-white/90 p-3 shadow-sm shadow-emerald-900/5 ring-1 ring-emerald-900/5 sm:gap-4 sm:p-4"
+            >
               <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-100 to-teal-100 text-emerald-800 sm:size-11">
                 <Icon className="size-5" />
               </span>
               <div>
                 <h2 className="text-sm font-bold">{title}</h2>
-                <p className="mt-1 text-xs leading-5 text-muted-foreground">{description}</p>
+                <p className="mt-1 text-xs leading-5 text-muted-foreground">
+                  {description}
+                </p>
               </div>
             </div>
           ))}
@@ -172,11 +217,20 @@ export function HomePage() {
         <section>
           <div className="mb-5 flex items-end justify-between gap-3">
             <div>
-              <span className="text-xs font-bold text-emerald-700">منتخب فروشگاه</span>
-              <h2 className="mt-1 text-lg font-extrabold sm:text-2xl">محصولات پیشنهادی</h2>
-              <p className="mt-1 text-xs text-muted-foreground sm:text-sm">چند انتخاب دوست‌داشتنی برای شروع خرید</p>
+              <span className="text-xs font-bold text-emerald-700">
+                منتخب فروشگاه
+              </span>
+              <h2 className="mt-1 text-lg font-extrabold sm:text-2xl">
+                محصولات پیشنهادی
+              </h2>
+              <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
+                چند انتخاب دوست‌داشتنی برای شروع خرید
+              </p>
             </div>
-            <Link to="/products" className="inline-flex shrink-0 items-center gap-1 text-xs font-semibold text-primary transition hover:gap-2 sm:text-sm">
+            <Link
+              to="/products"
+              className="inline-flex shrink-0 items-center gap-1 text-xs font-semibold text-primary transition hover:gap-2 sm:text-sm"
+            >
               همه محصولات <ArrowLeft className="size-4" />
             </Link>
           </div>
@@ -186,12 +240,20 @@ export function HomePage() {
           ) : recommendedQuery.isError ? (
             <div className="rounded-2xl border border-destructive/20 bg-white p-8 text-center">
               <p className="font-semibold">دریافت محصولات با خطا مواجه شد.</p>
-              <Button variant="outline" className="mt-4" onClick={() => void recommendedQuery.refetch()}>تلاش دوباره</Button>
+              <Button
+                variant="outline"
+                className="mt-4"
+                onClick={() => void recommendedQuery.refetch()}
+              >
+                تلاش دوباره
+              </Button>
             </div>
           ) : recommendedQuery.data?.products.length ? (
             <ProductGrid products={recommendedQuery.data.products} />
           ) : (
-            <div className="rounded-2xl border bg-white p-8 text-center text-muted-foreground">هنوز محصولی برای نمایش وجود ندارد.</div>
+            <div className="rounded-2xl border bg-white p-8 text-center text-muted-foreground">
+              هنوز محصولی برای نمایش وجود ندارد.
+            </div>
           )}
         </section>
       </div>
