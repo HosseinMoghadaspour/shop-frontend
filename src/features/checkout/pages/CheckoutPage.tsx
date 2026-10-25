@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   ArrowRight,
@@ -21,6 +21,8 @@ import LocationSelector from "../components/LocationSelector";
 import { useCart } from "@/features/cart/hooks/useCart";
 import { createOrder } from "@/services/orders.api";
 import type { OrderDeliveryAddress } from "@/services/orders.api";
+import { getPaymentMethods } from "@/services/payment.api";
+import type { PaymentMethod } from "@/services/payment.api";
 
 interface CartItem {
   goodId: number | string;
@@ -41,6 +43,9 @@ export function CheckoutPage() {
     null,
   );
   const [provinceId, setProvinceId] = useState<number | null>(null);
+  const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
+  const [selectedPaymentMethodId, setSelectedPaymentMethodId] = useState<number | null>(null);
+  const [paymentMethodsLoading, setPaymentMethodsLoading] = useState(true);
 
   const [form, setForm] = useState<OrderDeliveryAddress>({
     cityId: 0,
@@ -54,6 +59,24 @@ export function CheckoutPage() {
 
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function loadPaymentMethods() {
+      try {
+        const methods = await getPaymentMethods();
+        if (cancelled) return;
+        setPaymentMethods(methods);
+        setSelectedPaymentMethodId((current) => current ?? methods[0]?.rowId ?? null);
+      } catch (err) {
+        if (!cancelled) setError(err instanceof Error ? err.message : "دریافت روش‌های پرداخت انجام نشد.");
+      } finally {
+        if (!cancelled) setPaymentMethodsLoading(false);
+      }
+    }
+    void loadPaymentMethods();
+    return () => { cancelled = true; };
+  }, []);
 
   const selectedAddress = useMemo(() => {
     if (!selectedAddressId || !addresses) {
@@ -137,6 +160,14 @@ export function CheckoutPage() {
     if (cartLoading) {
       return;
     }
+    if (paymentMethodsLoading) {
+      setError("لطفاً تا دریافت روش‌های پرداخت صبر کنید.");
+      return;
+    }
+    if (!selectedPaymentMethodId) {
+      setError("لطفاً روش پرداخت را انتخاب کنید.");
+      return;
+    }
 
     if (!cart || !cart.items || cart.items.length === 0) {
       setError("سبد خرید شما خالی است.");
@@ -179,6 +210,7 @@ export function CheckoutPage() {
       setSubmitting(true);
 
       const order = await createOrder({
+        paymentMethodId: selectedPaymentMethodId,
         deliveryAddress:
           selectedAddressId !== null
             ? {
@@ -488,6 +520,23 @@ export function CheckoutPage() {
             </Card>
           )}
 
+          {/* Payment method */}
+          <Card>
+            <CardHeader><CardTitle>روش پرداخت</CardTitle></CardHeader>
+            <CardContent className="space-y-3">
+              {paymentMethodsLoading ? (
+                <div className="flex items-center gap-2 text-sm text-muted-foreground"><Loader2 className="h-4 w-4 animate-spin" />در حال دریافت روش‌های پرداخت...</div>
+              ) : paymentMethods.length === 0 ? (
+                <p className="text-sm text-destructive">در حال حاضر روش پرداخت فعالی برای فروشگاه تعریف نشده است.</p>
+              ) : paymentMethods.map((method) => (
+                <label key={method.rowId} className={`flex cursor-pointer items-start gap-3 rounded-lg border p-3 transition-colors ${selectedPaymentMethodId === method.rowId ? "border-primary bg-primary/5" : "border-border"}`}>
+                  <input type="radio" name="paymentMethod" className="mt-1" value={method.rowId} checked={selectedPaymentMethodId === method.rowId} onChange={() => setSelectedPaymentMethodId(method.rowId)} disabled={submitting} />
+                  <span className="min-w-0"><span className="block font-medium">{method.name}</span>{method.description && <span className="mt-1 block text-sm text-muted-foreground">{method.description}</span>}</span>
+                </label>
+              ))}
+            </CardContent>
+          </Card>
+
           {/* Products */}
           <Card>
             <CardHeader>
@@ -582,7 +631,7 @@ export function CheckoutPage() {
               <Button
                 className="w-full"
                 size="lg"
-                disabled={submitting}
+                disabled={submitting || paymentMethodsLoading || paymentMethods.length === 0 || selectedPaymentMethodId === null}
                 onClick={handleSubmitOrder}
               >
                 {submitting ? (
