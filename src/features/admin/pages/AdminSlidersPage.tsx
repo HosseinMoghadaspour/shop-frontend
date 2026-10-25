@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { ImagePlus, Loader2, Pencil, RefreshCw, Save, Trash2, Upload } from "lucide-react";
+import { ImagePlus, Loader2, RefreshCw, Save, Trash2, Upload } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -277,7 +277,7 @@ export function AdminSlidersPage() {
         ) : sliders.length === 0 ? (
           <Card><CardContent className="flex flex-col items-center justify-center gap-3 py-12 text-center"><ImagePlus className="size-10 text-muted-foreground" /><p className="font-semibold">هنوز اسلایدری ثبت نشده است.</p><p className="text-sm text-muted-foreground">از فرم بالا اولین اسلایدر را بساز.</p></CardContent></Card>
         ) : sliders.map((slider) => (
-          <SliderEditor key={slider.RowID} slider={slider} busy={busyId === slider.RowID} onBusy={setBusyId} onChanged={loadSliders} onError={setError} onNotice={setNotice} />
+          <SliderEditor key={slider.RowID} slider={slider} busy={busyId !== null} onBusy={setBusyId} onChanged={loadSliders} onError={setError} onNotice={setNotice} />
         ))}
       </section>
     </main>
