@@ -177,9 +177,9 @@ export function Slider() {
                   <div className="relative z-10 flex h-full items-center">
                     <div className="max-w-[85%] space-y-3 px-5 py-6 text-white sm:max-w-[65%] sm:px-10 lg:max-w-[55%] lg:px-16">
                       {slide.DescImage && (
-                        <h2 className="text-xl font-extrabold leading-relaxed drop-shadow sm:text-3xl lg:text-5xl">
+                        <div className="text-xl font-extrabold leading-relaxed drop-shadow ">
                           {slide.DescImage}
-                        </h2>
+                        </div>
                       )}
 
                       {slide.Description && (
