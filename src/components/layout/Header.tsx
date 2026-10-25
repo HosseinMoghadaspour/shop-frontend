@@ -77,7 +77,7 @@ export function Header() {
       className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/95 backdrop-blur-xl"
     >
       {/* ردیف بالا */}
-      <div className="mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8">
         <div className="flex min-h-[76px] items-center justify-between gap-4 lg:gap-8">
           {/* لوگو */}
           <Link
