@@ -149,6 +149,7 @@ export const useAuthStore =
           isAuthenticated: true,
           isInitialized: true,
           isLoading: false,
+          authKind: "customer"
         });
       } catch (error) {
         const message =
@@ -179,6 +180,7 @@ export const useAuthStore =
           isAuthenticated: false,
           isLoading: false,
           error: null,
+          authKind: null,
         });
       }
     },
