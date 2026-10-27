@@ -44,19 +44,19 @@ function ProductSection({
       link: "text-primary",
     },
     amazing: {
-      wrapper: "rounded-[2rem] bg-red-200/70 px-4 py-6 sm:px-6 sm:py-8",
+      wrapper: "rounded-[2rem] bg-red-200/70 px-4 py-6 @sm:px-6 @sm:py-8",
       eyebrow: "text-rose-800",
       description: "text-rose-950/80",
       link: "text-rose-800",
     },
     new: {
-      wrapper: "rounded-[2rem] bg-sky-200/70 px-4 py-6 sm:px-6 sm:py-8",
+      wrapper: "rounded-[2rem] bg-sky-200/70 px-4 py-6 @sm:px-6 @sm:py-8",
       eyebrow: "text-sky-900",
       description: "text-slate-700",
       link: "text-sky-900",
     },
     best: {
-      wrapper: "rounded-[2rem] bg-violet-200/70 px-4 py-6 sm:px-6 sm:py-8",
+      wrapper: "rounded-[2rem] bg-violet-200/70 px-4 py-6 @sm:px-6 @sm:py-8",
       eyebrow: "text-violet-900",
       description: "text-slate-700",
       link: "text-violet-900",
@@ -65,19 +65,19 @@ function ProductSection({
 
   return (
     <section className={sectionTheme.wrapper}>
-      <div className="mb-5 flex items-end justify-between gap-3 sm:mb-6">
+      <div className="mb-5 flex items-end justify-between gap-3 @sm:mb-6">
         <div className="min-w-0">
           <span className={`text-xs font-bold ${sectionTheme.eyebrow}`}>
             {eyebrow}
           </span>
-          <h2 className="mt-1 text-lg font-extrabold sm:text-2xl">{title}</h2>
-          <p className={`mt-1 text-xs sm:text-sm ${sectionTheme.description}`}>
+          <h2 className="mt-1 text-lg font-extrabold @sm:text-2xl">{title}</h2>
+          <p className={`mt-1 text-xs @sm:text-sm ${sectionTheme.description}`}>
             {description}
           </p>
         </div>
         <Link
           to="/products"
-          className={`inline-flex shrink-0 items-center gap-1 text-xs font-semibold transition hover:gap-2 sm:text-sm ${sectionTheme.link}`}
+          className={`inline-flex shrink-0 items-center gap-1 text-xs font-semibold transition hover:gap-2 @sm:text-sm ${sectionTheme.link}`}
         >
           همه محصولات <ArrowLeft className="size-4" />
         </Link>
@@ -135,16 +135,16 @@ export function HomePage() {
 
   return (
     <div className="pb-10">
-      <section className="mx-auto max-w-7xl px-4 pb-8 pt-5 sm:pb-12 sm:pt-8">
-        <div className="relative isolate overflow-hidden rounded-[1.5rem] bg-gradient-to-br from-emerald-950 via-emerald-800 to-teal-700 text-white shadow-xl shadow-emerald-950/15 sm:rounded-[2rem]">
+      <section className="mx-auto max-w-7xl px-4 pb-8 pt-5 @sm:pb-12 @sm:pt-8">
+        <div className="relative isolate overflow-hidden rounded-[1.5rem] bg-gradient-to-br from-emerald-950 via-emerald-800 to-teal-700 text-white shadow-xl shadow-emerald-950/15 @sm:rounded-[2rem]">
           <Slider />
         </div>
 
-        <div className="py-5 sm:py-7">
+        <div className="py-5 @sm:py-7">
           <Category />
         </div>
 
-        <div className="grid grid-cols-1 gap-3 rounded-3xl bg-gradient-to-r from-emerald-50 via-teal-50 to-cyan-50 p-3 sm:grid-cols-3 sm:gap-4 sm:p-5">
+        <div className="grid grid-cols-1 gap-3 rounded-3xl bg-gradient-to-r from-emerald-50 via-teal-50 to-cyan-50 p-3 @sm:grid-cols-3 @sm:gap-4 @sm:p-5">
           {[
             {
               icon: Truck,
@@ -164,9 +164,9 @@ export function HomePage() {
           ].map(({ icon: Icon, title, description }) => (
             <div
               key={title}
-              className="flex items-center gap-3 rounded-2xl border-0 bg-white/90 p-3 shadow-sm shadow-emerald-900/5 ring-1 ring-emerald-900/5 sm:gap-4 sm:p-4"
+              className="flex items-center gap-3 rounded-2xl border-0 bg-white/90 p-3 shadow-sm shadow-emerald-900/5 ring-1 ring-emerald-900/5 @sm:gap-4 @sm:p-4"
             >
-              <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-100 to-teal-100 text-emerald-800 sm:size-11">
+              <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-100 to-teal-100 text-emerald-800 @sm:size-11">
                 <Icon className="size-5" />
               </span>
               <div>
@@ -180,7 +180,7 @@ export function HomePage() {
         </div>
       </section>
 
-      <div className="mx-auto max-w-7xl space-y-10 px-4 sm:space-y-14">
+      <div className="mx-auto max-w-7xl space-y-10 px-4 @sm:space-y-14">
         <ProductSection
           eyebrow="فرصت محدود خرید"
           title="شگفت‌انگیزها"
@@ -220,16 +220,16 @@ export function HomePage() {
               <span className="text-xs font-bold text-emerald-700">
                 منتخب فروشگاه
               </span>
-              <h2 className="mt-1 text-lg font-extrabold sm:text-2xl">
+              <h2 className="mt-1 text-lg font-extrabold @sm:text-2xl">
                 محصولات پیشنهادی
               </h2>
-              <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
+              <p className="mt-1 text-xs text-muted-foreground @sm:text-sm">
                 چند انتخاب دوست‌داشتنی برای شروع خرید
               </p>
             </div>
             <Link
               to="/products"
-              className="inline-flex shrink-0 items-center gap-1 text-xs font-semibold text-primary transition hover:gap-2 sm:text-sm"
+              className="inline-flex shrink-0 items-center gap-1 text-xs font-semibold text-primary transition hover:gap-2 @sm:text-sm"
             >
               همه محصولات <ArrowLeft className="size-4" />
             </Link>
