@@ -54,7 +54,7 @@ export function OrdersuccessPage() {
               </div>
             )}
           </div>
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="grid gap-3 @sm:grid-cols-2">
             {hasOrderId && (
               <Button
                 className="w-full"
