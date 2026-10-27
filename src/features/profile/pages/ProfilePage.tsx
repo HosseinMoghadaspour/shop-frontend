@@ -52,14 +52,14 @@ export function ProfilePage() {
   const mobile = user?.MobileNumber || user?.MobileForSMS || "-";
 
   return (
-    <main className="container mx-auto max-w-5xl px-4 py-8 sm:py-12">
+    <main className="container mx-auto max-w-5xl px-4 py-8 @sm:py-12">
       <div className="mb-6">
-        <h1 className="mt-1 text-2xl font-extrabold sm:text-3xl">حساب کاربری</h1>
+        <h1 className="mt-1 text-2xl font-extrabold @sm:text-3xl">حساب کاربری</h1>
         <p className="mt-2 text-sm text-muted-foreground">
           مدیریت اطلاعات حساب و آدرس‌های شما
         </p>
       </div>
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div className="grid gap-6 @lg:grid-cols-3">
         <Card className="border border-emerald-950/5">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -87,7 +87,7 @@ export function ProfilePage() {
             </Link>
           </CardContent>
         </Card>
-        <Card className="border border-emerald-950/5 lg:col-span-2">
+        <Card className="border border-emerald-950/5 @lg:col-span-2">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <MapPin className="h-5 w-5" />
