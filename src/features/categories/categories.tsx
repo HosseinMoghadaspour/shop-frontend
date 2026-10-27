@@ -102,7 +102,7 @@ export function Category() {
     return (
       <section
         dir="rtl"
-        className="mx-auto w-full max-w-[1600px] px-4 py-5 sm:px-6"
+        className="mx-auto w-full max-w-[1600px] px-4 py-5 @sm:px-6"
       >
         <div className="flex gap-4 overflow-hidden">
           {Array.from({ length: 8 }).map((_, index) => (
@@ -138,7 +138,7 @@ export function Category() {
     <section
       dir="rtl"
       aria-label="دسته‌بندی محصولات فروشگاه"
-      className="mx-auto w-full max-w-[1600px] px-3 py-4 sm:px-5 lg:px-6"
+      className="mx-auto w-full max-w-[1600px] px-3 py-4 @sm:px-5 @lg:px-6"
     >
       <Carousel
         setApi={setApi}
@@ -172,7 +172,7 @@ export function Category() {
                   aria-hidden="true"
                 />
 
-                <h3 className="w-full truncate text-center text-xs font-semibold sm:text-sm  mt-4">
+                <h3 className="w-full truncate text-center text-xs font-semibold @sm:text-sm  mt-4">
                   {category.name}
                 </h3>
               </article>
@@ -181,7 +181,7 @@ export function Category() {
             return (
               <CarouselItem
                 key={category.id}
-                className="basis-[145px] ps-5 sm:basis-[150px] lg:basis-[150px] mt-2"
+                className="basis-[145px] ps-5 @sm:basis-[150px] @lg:basis-[150px] mt-2"
               >
                 {category.url ? (
                   <a
