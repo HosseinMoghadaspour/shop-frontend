@@ -5,7 +5,7 @@ export function Footer() {
   return (
     <footer className="mt-16 border-t border-emerald-950/5 bg-white">
       <div className="mx-auto max-w-7xl px-4 py-12">
-        <div className="grid gap-10 @md:grid-cols-2 @xl:grid-cols-[1.5fr_1fr_1fr_1fr]">
+        <div className="grid gap-10 @@md:grid-cols-2 @@xl:grid-cols-[1.5fr_1fr_1fr_1fr]">
           <div>
             <Link to="/" className="mb-4 flex w-fit items-center gap-2 text-lg font-extrabold text-primary">
               <span className="flex size-9 items-center justify-center rounded-xl bg-primary text-white">
@@ -47,7 +47,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-10 flex flex-col gap-3 border-t pt-6 text-center text-xs text-muted-foreground @md:flex-row @md:items-center @md:justify-between @md:text-right">
+        <div className="mt-10 flex flex-col gap-3 border-t pt-6 text-center text-xs text-muted-foreground @@md:flex-row @@md:items-center @@md:justify-between @@md:text-right">
           <span>© تمامی حقوق برای آدینامارکت محفوظ است.</span>
           <span>ساخته‌شده برای یک خرید بهتر</span>
         </div>
