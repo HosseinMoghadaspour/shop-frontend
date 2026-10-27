@@ -146,7 +146,7 @@ export function CartItem({
         <div className="flex gap-4">
           {/* Image */}
 
-          <div className="flex size-24 shrink-0 items-center justify-center overflow-hidden rounded-2xl border-0 bg-[#f3f6f3] @md:size-28">
+          <div className="flex size-24 shrink-0 items-center justify-center overflow-hidden rounded-2xl border-0 bg-[#f3f6f3] @@md:size-28">
             {imageUrl ? (
               <img
                 src={imageUrl}
