@@ -98,7 +98,7 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <Card className="group flex h-full min-w-0 flex-col overflow-hidden rounded-[1.35rem] border-0 bg-white shadow-[0_3px_18px_rgba(15,23,42,0.06)] ring-1 ring-slate-900/[0.035] transition duration-300 hover:-translate-y-1 hover:shadow-[0_14px_32px_rgba(15,23,42,0.12)]">
       <Link to={`/products/${product.id}`} className="relative block overflow-hidden">
-        <div className="relative h-36 w-full shrink-0 overflow-hidden bg-gradient-to-br from-slate-50 via-white to-emerald-50/70 sm:h-44">
+        <div className="relative h-36 w-full shrink-0 overflow-hidden bg-gradient-to-br from-slate-50 via-white to-emerald-50/70 @sm:h-44">
           {defaultImage ? (
             <img
               src={getApiAssetUrl(defaultImage.url)}
@@ -123,20 +123,20 @@ export function ProductCard({ product }: ProductCardProps) {
         )}
       </Link>
 
-      <CardContent className="flex flex-1 flex-col p-3 sm:p-3.5">
+      <CardContent className="flex flex-1 flex-col p-3 @sm:p-3.5">
         <Link to={`/products/${product.id}`} className="min-w-0">
-          <h2 className="line-clamp-2 min-h-10 text-[11px] font-bold leading-5 text-slate-800 transition-colors group-hover:text-emerald-700 sm:text-[13px]">
+          <h2 className="line-clamp-2 min-h-10 text-[11px] font-bold leading-5 text-slate-800 transition-colors group-hover:text-emerald-700 @sm:text-[13px]">
             {name}
           </h2>
         </Link>
 
         <div className="mt-auto pt-3">
           {pricing.hasDiscount && (
-            <p className="mb-0.5 text-[10px] text-muted-foreground line-through sm:text-xs">
+            <p className="mb-0.5 text-[10px] text-muted-foreground line-through @sm:text-xs">
               {formatPrice(pricing.salePrice)}
             </p>
           )}
-          <p className="text-sm font-extrabold leading-6 text-emerald-700 sm:text-base">
+          <p className="text-sm font-extrabold leading-6 text-emerald-700 @sm:text-base">
             {formatPrice(pricing.finalPrice)}
 
           </p>
@@ -144,14 +144,14 @@ export function ProductCard({ product }: ProductCardProps) {
 
         <div className="min-h-4">
           {isAvailable && availableStock <= 10 && (
-            <span className="text-[10px] text-muted-foreground sm:text-xs">
+            <span className="text-[10px] text-muted-foreground @sm:text-xs">
               موجودی: {availableStock.toLocaleString("fa-IR")}
             </span>
           )}
         </div>
       </CardContent>
 
-      <CardFooter className="p-3 pt-0 sm:p-3.5 sm:pt-0">
+      <CardFooter className="p-3 pt-0 @sm:p-3.5 @sm:pt-0">
         {!isAvailable ? (
           <Button type="button" variant="secondary" disabled className="h-9 w-full rounded-xl text-xs mt-2">
             ناموجود
