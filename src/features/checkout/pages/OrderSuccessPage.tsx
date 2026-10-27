@@ -59,7 +59,7 @@ export function OrderSuccessPage() {
             )}
           </div>
 
-          <div className="flex flex-col gap-3 sm:flex-row">
+          <div className="flex flex-col gap-3 @sm:flex-row">
             <Link to="/products" className="inline-flex h-11 flex-1 items-center justify-center rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90">
               <ShoppingBag className="ml-2 h-4 w-4" />
               ادامه خرید
