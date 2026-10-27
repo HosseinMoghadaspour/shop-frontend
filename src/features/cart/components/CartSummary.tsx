@@ -23,7 +23,7 @@ export function CartSummary({
   const navigate = useNavigate();
 
   return (
-    <Card className="border border-emerald-950/5 @xl:sticky @xl:top-24">
+    <Card className="border border-emerald-950/5 @@xl:sticky @@xl:top-24">
       <CardHeader>
         <CardTitle>خلاصه سفارش</CardTitle>
       </CardHeader>
