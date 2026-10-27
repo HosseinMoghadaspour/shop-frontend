@@ -76,10 +76,10 @@ export function ProductDetailsPage() {
       </div>
 
       <Card className="overflow-hidden border border-emerald-950/5 shadow-sm">
-        <div className="grid gap-8 p-6 md:grid-cols-2 md:p-8">
+        <div className="grid gap-8 p-6 @md:grid-cols-2 @md:p-8">
           {/* Image */}
           <div className="flex items-center justify-center">
-            <div className="relative aspect-square w-full max-w-lg overflow-hidden rounded-3xl bg-[#f3f6f3] p-5 sm:p-8">
+            <div className="relative aspect-square w-full max-w-lg overflow-hidden rounded-3xl bg-[#f3f6f3] p-5 @sm:p-8">
               {defaultImage ? (
                 <img
                   src={getApiAssetUrl(defaultImage.url)}
@@ -111,7 +111,7 @@ export function ProductDetailsPage() {
           {/* Product information */}
           <div className="flex flex-col">
             <div>
-              <h1 className="text-2xl font-extrabold leading-relaxed md:text-3xl">{product.name}</h1>
+              <h1 className="text-2xl font-extrabold leading-relaxed @md:text-3xl">{product.name}</h1>
 
               {product.nameEn && (
                 <p className="mt-2 text-sm text-muted-foreground">
@@ -227,7 +227,7 @@ export function ProductDetailsPage() {
 
         {/* Full description */}
         {(product.fullDescription || product.description) && (
-          <div className="border-t bg-white p-6 md:p-8">
+          <div className="border-t bg-white p-6 @md:p-8">
             <h2 className="mb-4 text-xl font-bold">توضیحات محصول</h2>
 
             <div className="whitespace-pre-line leading-8 text-muted-foreground">
@@ -246,7 +246,7 @@ function ProductDetailsSkeleton() {
       <Skeleton className="mb-6 h-5 w-32" />
 
       <Card>
-        <div className="grid gap-8 p-6 md:grid-cols-2 md:p-8">
+        <div className="grid gap-8 p-6 @md:grid-cols-2 @md:p-8">
           <Skeleton className="aspect-square w-full rounded-xl" />
 
           <div className="space-y-5">
