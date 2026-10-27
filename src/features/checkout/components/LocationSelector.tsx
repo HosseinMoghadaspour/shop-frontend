@@ -33,7 +33,7 @@ export default function LocationSelector({
   });
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2">
+    <div className="grid gap-4 @sm:grid-cols-2">
       {/* Province */}
       <div className="space-y-2">
         <Label>استان</Label>
