@@ -77,8 +77,8 @@ export function Header() {
       className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/95 backdrop-blur-xl"
     >
       {/* ردیف بالا */}
-      <div className="mx-auto w-full max-w-[1280px] px-4 @md:px-6 @xl:px-8">
-        <div className="flex min-h-[76px] items-center justify-between gap-4 @xl:gap-8">
+      <div className="mx-auto w-full max-w-[1280px] px-4 @@md:px-6 @@xl:px-8">
+        <div className="flex min-h-[76px] items-center justify-between gap-4 @@xl:gap-8">
           {/* لوگو */}
           <Link
             to="/"
@@ -88,11 +88,11 @@ export function Header() {
             <img
               src="/adinaLogo.png"
               alt="لوگوی آدینامارکت"
-              className="h-11 w-11 object-contain @md:h-12 @md:w-12"
+              className="h-11 w-11 object-contain @@md:h-12 @@md:w-12"
             />
 
             <span className="flex flex-col">
-              <span className="whitespace-nowrap text-lg font-extrabold tracking-tight text-slate-800 @md:text-xl">
+              <span className="whitespace-nowrap text-lg font-extrabold tracking-tight text-slate-800 @@md:text-xl">
                 آدینامارکت
               </span>
             </span>
@@ -102,7 +102,7 @@ export function Header() {
           <form
             onSubmit={handleSearch}
             role="search"
-            className="hidden h-11 min-w-0 max-w-[680px] flex-1 items-center rounded-full border border-slate-200 bg-white px-3 transition focus-within:border-emerald-600 focus-within:ring-4 focus-within:ring-emerald-600/10 @lg:flex"
+            className="hidden h-11 min-w-0 max-w-[680px] flex-1 items-center rounded-full border border-slate-200 bg-white px-3 transition focus-within:border-emerald-600 focus-within:ring-4 focus-within:ring-emerald-600/10 @@lg:flex"
           >
             <button
               type="button"
@@ -132,7 +132,7 @@ export function Header() {
           </form>
 
           {/* عملیات کاربر */}
-          <div className="flex shrink-0 items-center gap-1 @md:gap-3">
+          <div className="flex shrink-0 items-center gap-1 @@md:gap-3">
             {!isInitialized ? (
               <div className="h-9 w-20 animate-pulse rounded-lg bg-slate-100" />
             ) : isAuthenticated ? (
@@ -140,7 +140,7 @@ export function Header() {
                 <Link
                   to="/profile"
                   title={userName}
-                  className="hidden items-center gap-2 rounded-lg px-2 py-2 text-sm text-slate-600 transition hover:bg-emerald-50 hover:text-emerald-700 @xl:flex"
+                  className="hidden items-center gap-2 rounded-lg px-2 py-2 text-sm text-slate-600 transition hover:bg-emerald-50 hover:text-emerald-700 @@xl:flex"
                 >
                   <UserRound className="size-5" />
                   <span className="max-w-28 truncate">{userName}</span>
@@ -150,7 +150,7 @@ export function Header() {
                   type="button"
                   onClick={() => void handleLogout()}
                   title="خروج از حساب"
-                  className="hidden size-10 items-center justify-center rounded-xl text-slate-600 transition hover:bg-red-50 hover:text-red-600 @md:flex"
+                  className="hidden size-10 items-center justify-center rounded-xl text-slate-600 transition hover:bg-red-50 hover:text-red-600 @@md:flex"
                 >
                   <LogOut className="size-5" />
                 </button>
@@ -158,10 +158,10 @@ export function Header() {
             ) : (
               <Link
                 to="/auth/login"
-                className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm text-slate-700 transition hover:bg-emerald-50 hover:text-emerald-700 @md:px-3"
+                className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm text-slate-700 transition hover:bg-emerald-50 hover:text-emerald-700 @@md:px-3"
               >
                 <UserRound className="size-5" />
-                <span className="hidden @md:inline">ورود / ثبت‌نام</span>
+                <span className="hidden @@md:inline">ورود / ثبت‌نام</span>
               </Link>
             )}
 
@@ -188,7 +188,7 @@ export function Header() {
               aria-label={mobileMenuOpen ? "بستن منو" : "باز کردن منو"}
               aria-expanded={mobileMenuOpen}
               onClick={() => setMobileMenuOpen((open) => !open)}
-              className="flex size-10 items-center justify-center rounded-xl text-slate-700 transition hover:bg-slate-100 @lg:hidden"
+              className="flex size-10 items-center justify-center rounded-xl text-slate-700 transition hover:bg-slate-100 @@lg:hidden"
             >
               {mobileMenuOpen ? (
                 <X className="size-5" />
@@ -203,7 +203,7 @@ export function Header() {
         <form
           onSubmit={handleSearch}
           role="search"
-          className="mb-3 flex h-10 items-center rounded-full border border-slate-200 bg-slate-50 px-3 @lg:hidden"
+          className="mb-3 flex h-10 items-center rounded-full border border-slate-200 bg-slate-50 px-3 @@lg:hidden"
         >
           <Search className="size-4 shrink-0 text-emerald-700" />
 
@@ -228,7 +228,7 @@ export function Header() {
 
         <nav
           aria-label="منوی اصلی"
-          className="hidden h-[42px] items-center justify-center gap-1 @lg:flex"
+          className="hidden h-[42px] items-center justify-center gap-1 @@lg:flex"
         >
           {navItems.map((item) => (
             <NavLink
@@ -254,7 +254,7 @@ export function Header() {
         {mobileMenuOpen && (
           <nav
             aria-label="منوی موبایل"
-            className="border-t border-slate-100 py-2 @lg:hidden"
+            className="border-t border-slate-100 py-2 @@lg:hidden"
           >
             {navItems.map((item) => (
               <NavLink
