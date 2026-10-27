@@ -3,7 +3,7 @@ import { ShoppingBag } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="mt-16 border-t border-emerald-950/5 bg-white">
+    <footer className="mt-16 border-t border-emerald-950/5 bg-[#AEDBC9]">
       <div className="mx-auto max-w-7xl px-4 py-12">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1fr]">
           <div>

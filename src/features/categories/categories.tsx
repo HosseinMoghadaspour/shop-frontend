@@ -157,8 +157,8 @@ export function Category() {
             const card = (
               <article
                 className={[
-                  "flex h-[125px] flex-col items-center justify-center",
-                  "gap-2 rounded-xl border px-3 py-3",
+                  "flex h-[100px] flex-col items-center justify-center",
+                  "gap-1.5 rounded-lg border px-2 py-2",
                   "border-emerald-600 bg-gradient-to-b from-white to-slate-50",
                   "text-[#215E21] shadow-sm transition-all duration-300",
                   "hover:-translate-y-0.5 hover:border-emerald-300",
@@ -167,12 +167,12 @@ export function Category() {
                 ].join(" ")}
               >
                 <Icon
-                  className="size-10 shrink-0 transition-colors"
+                  className="size-7 shrink-0 transition-colors"
                   strokeWidth={1.8}
                   aria-hidden="true"
                 />
 
-                <h3 className="w-full truncate text-center text-xs font-semibold sm:text-sm  mt-4">
+                <h3 className="w-full truncate text-center text-xs font-semibold sm:text-sm mt-2">
                   {category.name}
                 </h3>
               </article>
@@ -181,7 +181,7 @@ export function Category() {
             return (
               <CarouselItem
                 key={category.id}
-                className="basis-[145px] ps-5 sm:basis-[150px] lg:basis-[150px] mt-2"
+                className="basis-[110px] ps-2 sm:basis-[120px] lg:basis-[130px]"
               >
                 {category.url ? (
                   <a

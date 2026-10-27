@@ -42,8 +42,8 @@ export function Slider() {
 
         if (!isMounted) return;
 
-        const activeSlides = (response.data ?? []).filter(
-          (slide) => Boolean(slide?.Status && slide?.UrlImage?.trim()),
+        const activeSlides = (response.data ?? []).filter((slide) =>
+          Boolean(slide?.Status && slide?.UrlImage?.trim()),
         );
 
         setSlides(activeSlides);
@@ -110,7 +110,7 @@ export function Slider() {
   if (isLoading) {
     return (
       <section
-        className="mx-auto w-full max-w-[1600px] px-4 pt-4 sm:px-6 lg:px-8"
+        className=" w-full max-w-[1600px] bg-white"
         aria-label="در حال بارگذاری بنرها"
       >
         <Skeleton className="aspect-[16/7] w-full rounded-2xl sm:aspect-[16/6] lg:aspect-[16/5]" />
@@ -140,7 +140,7 @@ export function Slider() {
   return (
     <section
       dir="rtl"
-      className=" w-full max-w-[1600px] sm:px-6 lg:px-8"
+      className=" w-full max-w-[1600px] bg-white"
       aria-label="بنرهای فروشگاه"
     >
       <Carousel
@@ -152,7 +152,7 @@ export function Slider() {
         }}
         className="group relative"
       >
-        <CarouselContent className="-ms-0">
+        <CarouselContent>
           {slides.map((slide) => {
             const imageUrl = getImageUrl(slide.UrlImage);
             const buttonText = slide.DescBut?.trim() ?? "";
@@ -160,8 +160,8 @@ export function Slider() {
             const hasButton = Boolean(buttonText && buttonUrl);
 
             return (
-              <CarouselItem key={slide.RowID} className="basis-full ps-0">
-                <article className="relative isolate aspect-[16/9] overflow-hidden rounded-2xl shadow-sm sm:aspect-[16/7] lg:aspect-[16/5]">
+              <CarouselItem key={slide.RowID} className="basis-full">
+                <article className="relative isolate aspect-[16/10] overflow-hidden sm:aspect-[16/7] lg:aspect-[16/7]">
                   <img
                     src={imageUrl}
                     alt={slide.DescImage?.trim() || "بنر فروشگاه"}
@@ -171,14 +171,10 @@ export function Slider() {
                       event.currentTarget.style.visibility = "hidden";
                     }}
                   />
-
-                  {/* لایه گرادیانی برای خوانایی نوشته */}
-                  <div className="absolute inset-0 bg-gradient-to-l from-black/75 via-black/30 to-transparent" />
-
                   <div className="relative z-10 flex h-full items-center">
-                    <div className="max-w-[85%] space-y-3 px-5 py-6 text-white sm:max-w-[65%] sm:px-10 lg:max-w-[55%] lg:px-16">
+                    <div className="max-w-full space-y-3 px-5 py-6 text-white lg:max-w-[55%] lg:px-16">
                       {slide.DescImage?.trim() && (
-                        <h2 className="text-xl font-extrabold leading-relaxed drop-shadow sm:text-3xl lg:text-5xl">
+                        <div className="hidden lg:flex  text-xl font-extrabold leading-relaxed drop-shadow ">
                           {slide.DescImage}
                         </div>
                       )}
@@ -192,7 +188,7 @@ export function Slider() {
                       {hasButton && (
                         <a
                           href={buttonUrl}
-                          className="mt-2 inline-flex h-11 items-center justify-center rounded-xl bg-primary px-5 text-sm font-bold text-primary-foreground shadow-lg transition-transform hover:-translate-y-0.5"
+                          className="mt-2 hidden lg:flex lg:inline-flex h-11 items-center justify-center rounded-xl bg-primary px-5 text-sm font-bold text-primary-foreground shadow-lg transition-transform hover:-translate-y-0.5"
                         >
                           {buttonText}
                           <ArrowUpLeft className="ms-2 size-4" />
@@ -210,12 +206,12 @@ export function Slider() {
           <>
             <CarouselPrevious
               aria-label="بنر قبلی"
-              className="start-1 z-20 size-9 border-white/30 bg-background/80 shadow-lg backdrop-blur transition-opacity sm:size-11 sm:opacity-0 sm:group-hover:opacity-100"
+              className="start-1 z-20 hidden size-9 border-white/30 bg-background/80 shadow-lg backdrop-blur transition-opacity lg:group-hover:opacity-100 lg:flex"
             />
 
             <CarouselNext
               aria-label="بنر بعدی"
-              className="end-1 z-20 size-9 border-white/30 bg-background/80 shadow-lg backdrop-blur transition-opacity sm:size-11 sm:opacity-0 sm:group-hover:opacity-100"
+              className="end-1 z-20 hidden size-9 border-white/30 bg-background/80 shadow-lg backdrop-blur transition-opacity lg:group-hover:opacity-100 lg:flex"
             />
 
             <div className="absolute inset-x-0 bottom-3 z-20 flex items-center justify-center gap-2 sm:bottom-5">

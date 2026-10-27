@@ -34,7 +34,7 @@ function ProductSection({
   isLoading: boolean;
   isError: boolean;
   onRetry: () => void;
-  theme?: "plain" | "amazing" | "new" | "best";
+  theme?: "plain" | "amazing" | "new" | "best" | "sug";
 }) {
   const sectionTheme = {
     plain: {
@@ -60,6 +60,12 @@ function ProductSection({
       eyebrow: "text-violet-900",
       description: "text-slate-700",
       link: "text-violet-900",
+    },
+    sug: {
+      wrapper: "rounded-[2rem] bg-teal-200/70 px-4 py-6 sm:px-6 sm:py-8",
+      eyebrow: "text-teal-900",
+      description: "text-slate-700",
+      link: "text-teal-900",
     },
   }[theme];
 
@@ -214,48 +220,16 @@ export function HomePage() {
           theme="best"
         />
 
-        <section>
-          <div className="mb-5 flex items-end justify-between gap-3">
-            <div>
-              <span className="text-xs font-bold text-emerald-700">
-                منتخب فروشگاه
-              </span>
-              <h2 className="mt-1 text-lg font-extrabold sm:text-2xl">
-                محصولات پیشنهادی
-              </h2>
-              <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
-                چند انتخاب دوست‌داشتنی برای شروع خرید
-              </p>
-            </div>
-            <Link
-              to="/products"
-              className="inline-flex shrink-0 items-center gap-1 text-xs font-semibold text-primary transition hover:gap-2 sm:text-sm"
-            >
-              همه محصولات <ArrowLeft className="size-4" />
-            </Link>
-          </div>
-
-          {recommendedQuery.isLoading ? (
-            <ProductGridSkeleton />
-          ) : recommendedQuery.isError ? (
-            <div className="rounded-2xl border border-destructive/20 bg-white p-8 text-center">
-              <p className="font-semibold">دریافت محصولات با خطا مواجه شد.</p>
-              <Button
-                variant="outline"
-                className="mt-4"
-                onClick={() => void recommendedQuery.refetch()}
-              >
-                تلاش دوباره
-              </Button>
-            </div>
-          ) : recommendedQuery.data?.products.length ? (
-            <ProductGrid products={recommendedQuery.data.products} />
-          ) : (
-            <div className="rounded-2xl border bg-white p-8 text-center text-muted-foreground">
-              هنوز محصولی برای نمایش وجود ندارد.
-            </div>
-          )}
-        </section>
+        <ProductSection
+          eyebrow="پیشنهادات"
+          title="محصولات پیشنهادی"
+          description="چند انتخاب دوست‌داشتنی برای شروع خرید"
+          products={recommendedQuery.data?.products}
+          isLoading={recommendedQuery.isLoading}
+          isError={recommendedQuery.isError}
+          onRetry={() => void recommendedQuery.refetch()}
+          theme="sug"
+        />
       </div>
     </div>
   );

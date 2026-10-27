@@ -11,7 +11,11 @@ import type { Product } from "@/services/products.api";
 import { useCartStore } from "@/stores/cart.store";
 import { isUnauthorizedError } from "@/services/api/client";
 import { setPendingCartAction } from "@/features/cart/utils/pending-cart";
-import { getInitialQuantity, getMinimumQuantity, getQuantityStep } from "@/features/cart/utils/quantity";
+import {
+  getInitialQuantity,
+  getMinimumQuantity,
+  getQuantityStep,
+} from "@/features/cart/utils/quantity";
 
 interface ProductCardProps {
   product: Product;
@@ -30,20 +34,29 @@ export function ProductCard({ product }: ProductCardProps) {
   const { name, pricing, isSpecialSale, amazingSale } = product;
   const stockInfo = Array.isArray(product.stockInfo) ? product.stockInfo : [];
   const availableStock = stockInfo[0]?.quantity ?? product.stock ?? 0;
-  const isAvailable = availableStock > 0 && product.isActive && product.isShowInOnlineShop;
-  const defaultImage = product.images?.find((image) => image.isDefault) ?? product.images?.[0];
+  const isAvailable =
+    availableStock > 0 && product.isActive && product.isShowInOnlineShop;
+  const defaultImage =
+    product.images?.find((image) => image.isDefault) ?? product.images?.[0];
   const cartItem = cart?.items.find((item) => item.goodId === product.id);
   const quantity = cartItem?.quantity ?? 0;
   const step = getQuantityStep(product.unit?.weightOrAmount);
-  const minimum = getMinimumQuantity(product.unit?.weightOrAmount, product.minOrder);
+  const minimum = getMinimumQuantity(
+    product.unit?.weightOrAmount,
+    product.minOrder,
+  );
   const initialQuantity = getInitialQuantity(product.minOrder);
-  const maximum = product.maxOrder && product.maxOrder > 0
-    ? Math.min(product.maxOrder, availableStock)
-    : availableStock;
+  const maximum =
+    product.maxOrder && product.maxOrder > 0
+      ? Math.min(product.maxOrder, availableStock)
+      : availableStock;
   const canAdd = initialQuantity <= maximum;
   const canIncrease = quantity + step <= maximum;
 
-  async function redirectIfUnauthorized(error: unknown, requestedQuantity: number) {
+  async function redirectIfUnauthorized(
+    error: unknown,
+    requestedQuantity: number,
+  ) {
     if (isUnauthorizedError(error)) {
       setPendingCartAction({ goodId: product.id, quantity: requestedQuantity });
       navigate(`/auth/login?returnTo=${encodeURIComponent("/")}`);
@@ -51,7 +64,8 @@ export function ProductCard({ product }: ProductCardProps) {
   }
 
   async function handleAdd() {
-    if (!isAvailable || !canAdd || isBusy || isCartUpdating || isCartLoading) return;
+    if (!isAvailable || !canAdd || isBusy || isCartUpdating || isCartLoading)
+      return;
     setIsBusy(true);
     try {
       await addItem(product.id, initialQuantity);
@@ -96,15 +110,30 @@ export function ProductCard({ product }: ProductCardProps) {
   }
 
   return (
-    <Card className="group flex h-full min-w-0 flex-col overflow-hidden rounded-[1.35rem] border-0 bg-white shadow-[0_3px_18px_rgba(15,23,42,0.06)] ring-1 ring-slate-900/[0.035] transition duration-300 hover:-translate-y-1 hover:shadow-[0_14px_32px_rgba(15,23,42,0.12)]">
-      <Link to={`/products/${product.id}`} className="relative block overflow-hidden">
-        <div className="relative h-36 w-full shrink-0 overflow-hidden bg-gradient-to-br from-slate-50 via-white to-emerald-50/70 sm:h-44">
+    <Card
+      className="
+  group flex h-[330px] min-w-0 flex-col
+  overflow-hidden rounded-2xl border-0 bg-white
+  shadow-[0_3px_18px_rgba(15,23,42,0.06)]
+  ring-1 ring-slate-900/[0.035]
+  transition-shadow duration-300
+  hover:shadow-[0_14px_32px_rgba(15,23,42,0.12)]
+  sm:h-[380px]
+"
+    >
+      <Link
+        to={`/products/${product.id}`}
+        className="relative block overflow-hidden"
+      >
+        <div className="relative h-30 w-full shrink-0 overflow-hidden bg-gradient-to-br from-slate-50 via-white to-emerald-50/70 lg:h-44">
           {defaultImage ? (
             <img
               src={getApiAssetUrl(defaultImage.url)}
               alt={defaultImage.alt || product.name || "تصویر محصول"}
               loading="lazy"
-              onError={(event) => { event.currentTarget.style.display = "none"; }}
+              onError={(event) => {
+                event.currentTarget.style.display = "none";
+              }}
               className="absolute inset-0 h-full w-full object-contain transition-transform duration-300 group-hover:scale-[1.04]"
             />
           ) : (
@@ -117,7 +146,10 @@ export function ProductCard({ product }: ProductCardProps) {
           </Badge>
         )}
         {pricing.hasDiscount && pricing.discountPercent !== null && (
-          <Badge variant="destructive" className="absolute left-2 top-2 rounded-full border-0 bg-rose-500 px-2.5 py-1 text-[10px] font-bold text-white shadow-sm">
+          <Badge
+            variant="destructive"
+            className="absolute left-2 top-2 rounded-full border-0 bg-rose-500 px-2.5 py-1 text-[10px] font-bold text-white shadow-sm"
+          >
             {pricing.discountPercent.toLocaleString("fa-IR")}٪
           </Badge>
         )}
@@ -138,7 +170,6 @@ export function ProductCard({ product }: ProductCardProps) {
           )}
           <p className="text-sm font-extrabold leading-6 text-emerald-700 sm:text-base">
             {formatPrice(pricing.finalPrice)}
-
           </p>
         </div>
 
@@ -153,22 +184,60 @@ export function ProductCard({ product }: ProductCardProps) {
 
       <CardFooter className="p-3 pt-0 sm:p-3.5 sm:pt-0">
         {!isAvailable ? (
-          <Button type="button" variant="secondary" disabled className="h-9 w-full rounded-xl text-xs mt-2">
+          <Button
+            type="button"
+            variant="secondary"
+            disabled
+            className="h-9 w-full rounded-xl text-xs mt-2"
+          >
             ناموجود
           </Button>
         ) : quantity > 0 ? (
           <div className="flex h-9 w-full items-center justify-between rounded-xl border-0 bg-emerald-50 px-1 ring-1 ring-emerald-100 mt-2">
-            <Button type="button" variant="ghost" size="icon" aria-label={`افزایش تعداد ${name}`} className=" size-7 rounded-lg text-emerald-700 hover:bg-emerald-100" disabled={isBusy || isCartUpdating || isCartLoading || !canIncrease} onClick={() => void handleIncrease()}>
-              {isBusy ? <LoaderCircle className="size-3.5 animate-spin" /> : <Plus className="size-4" />}
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              aria-label={`افزایش تعداد ${name}`}
+              className=" size-7 rounded-lg text-emerald-700 hover:bg-emerald-100"
+              disabled={
+                isBusy || isCartUpdating || isCartLoading || !canIncrease
+              }
+              onClick={() => void handleIncrease()}
+            >
+              {isBusy ? (
+                <LoaderCircle className="size-3.5 animate-spin" />
+              ) : (
+                <Plus className="size-4" />
+              )}
             </Button>
-            <span className="min-w-8 text-center text-xs font-bold tabular-nums">{quantity.toLocaleString("fa-IR")}</span>
-            <Button type="button" variant="ghost" size="icon" aria-label={`کاهش تعداد ${name}`} className="size-7 rounded-lg text-primary hover:bg-primary/10" disabled={isBusy || isCartUpdating || isCartLoading} onClick={() => void handleDecrease()}>
+            <span className="min-w-8 text-center text-xs font-bold tabular-nums">
+              {quantity.toLocaleString("fa-IR")}
+            </span>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              aria-label={`کاهش تعداد ${name}`}
+              className="size-7 rounded-lg text-primary hover:bg-primary/10"
+              disabled={isBusy || isCartUpdating || isCartLoading}
+              onClick={() => void handleDecrease()}
+            >
               <Minus className="size-4" />
             </Button>
           </div>
         ) : (
-          <Button type="button" className="mt-2 h-9 w-full rounded-xl bg-emerald-700 text-xs font-bold text-white shadow-sm transition hover:bg-emerald-800" disabled={isBusy || isCartUpdating || isCartLoading || !canAdd} onClick={() => void handleAdd()}>
-            {isBusy ? <LoaderCircle className="ml-1 size-4 animate-spin" /> : <ShoppingCart className="ml-1 size-4" />}
+          <Button
+            type="button"
+            className="mt-2 h-9 w-full rounded-xl bg-emerald-700 text-xs font-bold text-white shadow-sm transition hover:bg-emerald-800"
+            disabled={isBusy || isCartUpdating || isCartLoading || !canAdd}
+            onClick={() => void handleAdd()}
+          >
+            {isBusy ? (
+              <LoaderCircle className="ml-1 size-4 animate-spin" />
+            ) : (
+              <ShoppingCart className="ml-1 size-4" />
+            )}
             افزودن به سبد
           </Button>
         )}

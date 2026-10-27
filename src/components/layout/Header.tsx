@@ -74,7 +74,7 @@ export function Header() {
   return (
     <header
       dir="rtl"
-      className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/95 backdrop-blur-xl"
+      className="sticky top-0 z-50 border-b border-slate-200/80 bg-[#AEDBC9] backdrop-blur-xl"
     >
       {/* ردیف بالا */}
       <div className="mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8">
