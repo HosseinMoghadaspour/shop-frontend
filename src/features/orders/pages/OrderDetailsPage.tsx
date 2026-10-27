@@ -81,7 +81,7 @@ export function OrderDetailsPage() {
 
   if (isLoading) {
     return (
-      <main className="container mx-auto px-4 py-8 sm:py-12">
+      <main className="container mx-auto px-4 py-8 @sm:py-12">
         <div className="rounded-2xl border bg-white p-8 text-center shadow-sm">
           در حال دریافت اطلاعات سفارش...
         </div>
@@ -91,7 +91,7 @@ export function OrderDetailsPage() {
 
   if (error || !order) {
     return (
-      <main className="container mx-auto px-4 py-8 sm:py-12">
+      <main className="container mx-auto px-4 py-8 @sm:py-12">
         <div className="rounded-2xl border bg-white p-8 text-center shadow-sm">
           <p className="mb-4 text-red-600">{error || "سفارش پیدا نشد."}</p>
 
@@ -104,8 +104,8 @@ export function OrderDetailsPage() {
   }
 
   return (
-    <main className="container mx-auto max-w-4xl px-4 py-8 sm:py-12">
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-emerald-950/5 bg-white p-5 sm:p-6">
+    <main className="container mx-auto max-w-4xl px-4 py-8 @sm:py-12">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-emerald-950/5 bg-white p-5 @sm:p-6">
         <div>
           <p className="text-sm text-muted-foreground">سفارش شماره</p>
 
@@ -122,7 +122,7 @@ export function OrderDetailsPage() {
         </Link>
       </div>
 
-      <div className="mb-6 grid gap-4 rounded-2xl border border-emerald-950/5 bg-white p-5 sm:grid-cols-3">
+      <div className="mb-6 grid gap-4 rounded-2xl border border-emerald-950/5 bg-white p-5 @sm:grid-cols-3">
         <div>
           <p className="text-sm text-muted-foreground">تاریخ سفارش</p>
 
@@ -155,7 +155,7 @@ export function OrderDetailsPage() {
           {items.map((item) => (
             <div
               key={`${item.OrderH_ID}-${item.Good_ID}`}
-              className="flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between"
+              className="flex flex-col gap-3 p-5 @sm:flex-row @sm:items-center @sm:justify-between"
             >
               <div>
                 <p className="font-medium">
