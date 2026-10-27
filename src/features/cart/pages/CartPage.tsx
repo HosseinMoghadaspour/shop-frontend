@@ -90,8 +90,8 @@ export function CartPage() {
 
   if (!cart || cart.items.length === 0) {
     return (
-      <div className="mx-auto max-w-7xl px-4 py-8 @md:py-12">
-        <h1 className="mb-6 text-2xl font-extrabold @md:text-3xl">سبد خرید</h1>
+      <div className="mx-auto max-w-7xl px-4 py-8 @@md:py-12">
+        <h1 className="mb-6 text-2xl font-extrabold @@md:text-3xl">سبد خرید</h1>
 
         <EmptyCart />
       </div>
@@ -207,12 +207,12 @@ export function CartPage() {
   // ----------------------------------------
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 @md:py-12">
+    <div className="mx-auto max-w-7xl px-4 py-8 @@md:py-12">
       {/* Header */}
 
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-extrabold @md:text-3xl">سبد خرید</h1>
+          <h1 className="text-2xl font-extrabold @@md:text-3xl">سبد خرید</h1>
 
           <p className="mt-1 text-sm text-muted-foreground">
             {cart.itemsCount.toLocaleString("fa-IR", {
@@ -245,7 +245,7 @@ export function CartPage() {
 
       {/* Content */}
 
-      <div className="grid gap-6 @xl:grid-cols-[1fr_360px]">
+      <div className="grid gap-6 @@xl:grid-cols-[1fr_360px]">
         {/* Items */}
 
         <div className="space-y-4">
