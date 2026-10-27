@@ -110,10 +110,10 @@ export function Slider() {
   if (isLoading) {
     return (
       <section
-        className="mx-auto w-full max-w-[1600px] px-4 pt-4 sm:px-6 lg:px-8"
+        className="mx-auto w-full max-w-[1600px] px-4 pt-4 @sm:px-6 @lg:px-8"
         aria-label="در حال بارگذاری بنرها"
       >
-        <Skeleton className="aspect-[16/7] w-full rounded-2xl sm:aspect-[16/6] lg:aspect-[16/5]" />
+        <Skeleton className="aspect-[16/7] w-full rounded-2xl @sm:aspect-[16/6] @lg:aspect-[16/5]" />
       </section>
     );
   }
@@ -140,7 +140,7 @@ export function Slider() {
   return (
     <section
       dir="rtl"
-      className=" w-full max-w-[1600px] sm:px-6 lg:px-8"
+      className=" w-full max-w-[1600px] @sm:px-6 @lg:px-8"
       aria-label="بنرهای فروشگاه"
     >
       <Carousel
@@ -161,7 +161,7 @@ export function Slider() {
 
             return (
               <CarouselItem key={slide.RowID} className="basis-full ps-0">
-                <article className="relative isolate aspect-[16/9] overflow-hidden rounded-2xl shadow-sm sm:aspect-[16/7] lg:aspect-[16/5]">
+                <article className="relative isolate aspect-[16/9] overflow-hidden rounded-2xl shadow-sm @sm:aspect-[16/7] @lg:aspect-[16/5]">
                   <img
                     src={imageUrl}
                     alt={slide.DescImage?.trim() || "بنر فروشگاه"}
@@ -176,15 +176,15 @@ export function Slider() {
                   <div className="absolute inset-0 bg-gradient-to-l from-black/75 via-black/30 to-transparent" />
 
                   <div className="relative z-10 flex h-full items-center">
-                    <div className="max-w-[85%] space-y-3 px-5 py-6 text-white sm:max-w-[65%] sm:px-10 lg:max-w-[55%] lg:px-16">
+                    <div className="max-w-[85%] space-y-3 px-5 py-6 text-white @sm:max-w-[65%] @sm:px-10 @lg:max-w-[55%] @lg:px-16">
                       {slide.DescImage?.trim() && (
-                        <h2 className="text-xl font-extrabold leading-relaxed drop-shadow sm:text-3xl lg:text-5xl">
+                        <h2 className="text-xl font-extrabold leading-relaxed drop-shadow @sm:text-3xl @lg:text-5xl">
                           {slide.DescImage}
                         </div>
                       )}
 
                       {slide.Description?.trim() && (
-                        <p className="line-clamp-3 max-w-xl text-xs leading-6 text-white/90 sm:text-sm sm:leading-7 lg:text-base">
+                        <p className="line-clamp-3 max-w-xl text-xs leading-6 text-white/90 @sm:text-sm @sm:leading-7 @lg:text-base">
                           {slide.Description}
                         </p>
                       )}
@@ -210,15 +210,15 @@ export function Slider() {
           <>
             <CarouselPrevious
               aria-label="بنر قبلی"
-              className="start-1 z-20 size-9 border-white/30 bg-background/80 shadow-lg backdrop-blur transition-opacity sm:size-11 sm:opacity-0 sm:group-hover:opacity-100"
+              className="start-1 z-20 size-9 border-white/30 bg-background/80 shadow-lg backdrop-blur transition-opacity @sm:size-11 @sm:opacity-0 @sm:group-hover:opacity-100"
             />
 
             <CarouselNext
               aria-label="بنر بعدی"
-              className="end-1 z-20 size-9 border-white/30 bg-background/80 shadow-lg backdrop-blur transition-opacity sm:size-11 sm:opacity-0 sm:group-hover:opacity-100"
+              className="end-1 z-20 size-9 border-white/30 bg-background/80 shadow-lg backdrop-blur transition-opacity @sm:size-11 @sm:opacity-0 @sm:group-hover:opacity-100"
             />
 
-            <div className="absolute inset-x-0 bottom-3 z-20 flex items-center justify-center gap-2 sm:bottom-5">
+            <div className="absolute inset-x-0 bottom-3 z-20 flex items-center justify-center gap-2 @sm:bottom-5">
               {slides.map((slide, index) => (
                 <button
                   key={slide.RowID}
