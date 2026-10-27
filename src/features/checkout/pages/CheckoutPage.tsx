@@ -291,7 +291,7 @@ export function CheckoutPage() {
   }
 
   return (
-    <div className="container mx-auto max-w-7xl px-4 py-8 sm:py-12" dir="rtl">
+    <div className="container mx-auto max-w-7xl px-4 py-8 @sm:py-12" dir="rtl">
       {/* Header */}
       <div className="mb-6 flex items-center gap-3">
         <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
@@ -316,9 +316,9 @@ export function CheckoutPage() {
         </Card>
       )}
 
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div className="grid gap-6 @lg:grid-cols-3">
         {/* Main */}
-        <div className="space-y-6 lg:col-span-2">
+        <div className="space-y-6 @lg:col-span-2">
           {/* Address selector */}
           <AddressSelector
             selectedAddressId={selectedAddressId}
@@ -349,7 +349,7 @@ export function CheckoutPage() {
                 </div>
 
                 {/* Recipient */}
-                <div className="grid gap-4 sm:grid-cols-2">
+                <div className="grid gap-4 @sm:grid-cols-2">
                   <div className="space-y-2">
                     <Label htmlFor="deliverToName">نام تحویل‌گیرنده</Label>
 
@@ -596,7 +596,7 @@ export function CheckoutPage() {
 
         {/* Summary */}
         <div>
-          <Card className="border border-emerald-950/5 lg:sticky lg:top-24">
+          <Card className="border border-emerald-950/5 @lg:sticky @lg:top-24">
             <CardHeader>
               <CardTitle>خلاصه سفارش</CardTitle>
             </CardHeader>
