@@ -5,12 +5,10 @@ import {
   PackageSearch,
   FolderTree,
   Images,
-  Store,
   LogOut,
   Menu,
   X,
   ChevronLeft,
-  Leaf,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/stores/auth.store";
