@@ -12,6 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { ShieldCheck, ShoppingBag } from "lucide-react";
 
 import { useAuthStore } from "@/stores/auth.store";
@@ -110,12 +111,9 @@ export function LoginPage() {
             className="space-y-5"
           >
             <div className="space-y-2">
-              <label
-                htmlFor="mobile"
-                className="text-sm font-medium"
-              >
+              <Label htmlFor="mobile">
                 شماره موبایل
-              </label>
+              </Label>
 
               <Input
                 id="mobile"
