@@ -12,6 +12,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -334,9 +335,9 @@ export function AdminProductsPage() {
                         disabled={busyAction === `visibility-${product.id}` || !product.isActive}
                         aria-label={`تغییر نمایش ${product.name ?? product.code ?? product.id}`}
                       />
-                      <label htmlFor={`visibility-${product.id}`} className="cursor-pointer text-sm font-medium">
+                      <Label htmlFor={`visibility-${product.id}`} className="cursor-pointer text-sm font-medium">
                         نمایش در سایت
-                      </label>
+                      </Label>
                       <Badge variant={product.isVisible ? "default" : "secondary"} className={product.isVisible ? "bg-emerald-700 hover:bg-emerald-700" : ""}>
                         {product.isVisible ? "نمایش داده می‌شود" : "مخفی است"}
                       </Badge>
@@ -350,10 +351,10 @@ export function AdminProductsPage() {
 
                   <div className="shrink-0">
                     <Button className="relative w-full lg:w-auto" disabled={busyAction === `upload-${product.id}`}>
-                      <label className="flex cursor-pointer items-center justify-center gap-2">
+                      <Label className="flex cursor-pointer items-center justify-center gap-2">
                         <Upload className="size-4" />
                         {busyAction === `upload-${product.id}` ? "در حال آپلود..." : "افزودن تصاویر"}
-                        <input
+                        <Input
                           type="file"
                           accept="image/jpeg,image/png,image/webp,image/avif"
                           multiple
@@ -364,7 +365,7 @@ export function AdminProductsPage() {
                             void handleUpload(product, input.files, input);
                           }}
                         />
-                      </label>
+                      </Label>
                     </Button>
                   </div>
                 </CardHeader>
