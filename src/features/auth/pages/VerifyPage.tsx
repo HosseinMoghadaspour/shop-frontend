@@ -174,14 +174,15 @@ export function VerifyPage() {
               <ShieldCheck className="size-4 text-primary" />
               کد تأیید فقط برای ورود به حساب شماست.
             </div>
-            <button
+            <Button
               type="button"
+              variant="link"
               onClick={() => navigate("/auth/login", { replace: true })}
-              className="mx-auto flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+              className="mx-auto h-auto gap-1 p-0 text-xs font-medium"
             >
               <ArrowRight className="size-3.5" />
               ویرایش شماره موبایل
-            </button>
+            </Button>
           </form>
         </CardContent>
       </Card>
