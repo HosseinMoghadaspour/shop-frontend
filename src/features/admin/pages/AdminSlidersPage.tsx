@@ -50,6 +50,7 @@ function SliderEditor({
   const [title, setTitle] = useState(slider.DescImage ?? "");
   const [description, setDescription] = useState(slider.Description ?? "");
   const [buttonText, setButtonText] = useState(slider.DescBut ?? "");
+  const [buttonColor, setButtonColor] = useState(slider.ButtonColor ?? "#047857");
   const [targetUrl, setTargetUrl] = useState(slider.UrlSend ?? "");
   const [active, setActive] = useState(Boolean(slider.Status));
   const [file, setFile] = useState<File | null>(null);
@@ -63,6 +64,7 @@ function SliderEditor({
         DescImage: title,
         Description: description,
         DescBut: buttonText,
+        ButtonColor: buttonColor,
         UrlSend: targetUrl,
         Status: active,
       });
@@ -138,6 +140,42 @@ function SliderEditor({
                 <Input value={targetUrl} onChange={(event) => setTargetUrl(event.target.value)} placeholder="/products" />
               </Label>
             </div>
+            <div className="rounded-xl border p-3">
+              <Label htmlFor={`slider-button-color-${slider.RowID}`} className="mb-2 block text-sm font-medium">
+                رنگ دکمه (با توجه به تصویر انتخاب کن)
+              </Label>
+              <div className="flex flex-wrap items-center gap-3">
+                <Input
+                  id={`slider-button-color-${slider.RowID}`}
+                  type="color"
+                  value={buttonColor}
+                  onChange={(event) => setButtonColor(event.target.value.toUpperCase())}
+                  className="h-11 w-16 cursor-pointer p-1"
+                  aria-label="انتخاب رنگ دکمه اسلایدر"
+                />
+                <Input
+                  value={buttonColor}
+                  onChange={(event) => {
+                    const value = event.target.value;
+                    if (/^#[0-9a-fA-F]{0,6}$/.test(value)) setButtonColor(value.toUpperCase());
+                  }}
+                  onBlur={() => {
+                    if (!/^#[0-9A-F]{6}$/.test(buttonColor)) setButtonColor("#047857");
+                  }}
+                  maxLength={7}
+                  className="w-32 font-mono uppercase"
+                  aria-label="کد رنگ دکمه"
+                />
+                <span className="text-xs text-muted-foreground">پیش‌نمایش:</span>
+                <span
+                  className="inline-flex h-10 items-center rounded-lg px-4 text-sm font-bold text-white shadow"
+                  style={{ backgroundColor: /^#[0-9A-F]{6}$/.test(buttonColor) ? buttonColor : "#047857" }}
+                >
+                  {buttonText.trim() || "مشاهده محصولات"}
+                </span>
+              </div>
+              <p className="mt-2 text-xs text-muted-foreground">رنگ را از انتخابگر بردار یا کد HEX وارد کن؛ تغییر بعد از ذخیره در سایت نمایش داده می‌شود.</p>
+            </div>
             <div className="flex items-center justify-between rounded-xl border p-3">
               <div>
                 <p className="text-sm font-semibold">نمایش در صفحه اصلی</p>
@@ -170,6 +208,7 @@ export function AdminSlidersPage() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [buttonText, setButtonText] = useState("");
+  const [buttonColor, setButtonColor] = useState("#047857");
   const [targetUrl, setTargetUrl] = useState("");
   const [newFile, setNewFile] = useState<File | null>(null);
 
@@ -205,12 +244,14 @@ export function AdminSlidersPage() {
         DescImage: title,
         Description: description,
         DescBut: buttonText,
+        ButtonColor: buttonColor,
         UrlSend: targetUrl,
       });
       await uploadAdminSliderImage(slider.RowID, newFile);
       setTitle("");
       setDescription("");
       setButtonText("");
+      setButtonColor("#047857");
       setTargetUrl("");
       setNewFile(null);
       const fileInput = document.getElementById("new-slider-image") as HTMLInputElement | null;
@@ -254,6 +295,14 @@ export function AdminSlidersPage() {
               <div className="grid gap-3 sm:grid-cols-2">
                 <Label className="space-y-1.5 text-sm font-medium">تیتر روی تصویر<Input value={title} onChange={(event) => setTitle(event.target.value)} maxLength={2000} placeholder="عنوان بنر" /></Label>
                 <Label className="space-y-1.5 text-sm font-medium">متن دکمه<Input value={buttonText} onChange={(event) => setButtonText(event.target.value)} maxLength={100} placeholder="مشاهده" /></Label>
+                <div className="space-y-1.5 text-sm font-medium">
+                  <Label htmlFor="new-slider-button-color">رنگ دکمه</Label>
+                  <div className="flex items-center gap-2">
+                    <Input id="new-slider-button-color" type="color" value={buttonColor} onChange={(event) => setButtonColor(event.target.value.toUpperCase())} className="h-10 w-14 cursor-pointer p-1" aria-label="انتخاب رنگ دکمه اسلایدر جدید" />
+                    <Input value={buttonColor} onChange={(event) => { const value = event.target.value; if (/^#[0-9a-fA-F]{0,6}$/.test(value)) setButtonColor(value.toUpperCase()); }} onBlur={() => { if (!/^#[0-9A-F]{6}$/.test(buttonColor)) setButtonColor("#047857"); }} maxLength={7} className="w-32 font-mono uppercase" aria-label="کد رنگ دکمه اسلایدر جدید" />
+                    <span className="inline-flex h-9 items-center rounded-lg px-3 text-xs font-bold text-white" style={{ backgroundColor: buttonColor }}>پیش‌نمایش دکمه</span>
+                  </div>
+                </div>
                 <Label className="space-y-1.5 text-sm font-medium sm:col-span-2">توضیحات<Textarea value={description} onChange={(event) => setDescription(event.target.value)} rows={2} placeholder="توضیح کوتاه بنر" /></Label>
                 <Label className="space-y-1.5 text-sm font-medium sm:col-span-2">لینک دکمه<Input value={targetUrl} onChange={(event) => setTargetUrl(event.target.value)} placeholder="/products" /></Label>
               </div>

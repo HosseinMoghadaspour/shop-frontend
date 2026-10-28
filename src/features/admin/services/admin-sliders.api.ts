@@ -5,6 +5,7 @@ export interface AdminSlider {
   UrlImage: string | null;
   DescImage: string | null;
   DescBut: string | null;
+  ButtonColor: string | null;
   UrlSend: string | null;
   Status: boolean | null;
   Type: number | null;
@@ -34,6 +35,7 @@ export async function createAdminSlider(data: {
   DescImage: string;
   Description: string;
   DescBut: string;
+  ButtonColor: string;
   UrlSend: string;
 }) {
   try {
@@ -53,6 +55,7 @@ export async function updateAdminSlider(
     DescImage: string;
     Description: string;
     DescBut: string;
+    ButtonColor: string;
     UrlSend: string;
     Status: boolean;
   },
