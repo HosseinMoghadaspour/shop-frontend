@@ -121,7 +121,7 @@ export function Header() {
               onChange={(e) => setSearch(e.target.value)}
               placeholder="جستجوی محصول، برند یا دسته‌بندی..."
               aria-label="جستجوی محصولات"
-              className="min-w-0 flex-1 bg-transparent px-4 text-sm text-slate-700 outline-none placeholder:text-slate-400"
+              className="h-full w-auto min-w-0 flex-1 rounded-none border-0 bg-transparent px-4 text-sm text-slate-700 shadow-none outline-none focus-visible:border-transparent focus-visible:ring-0 placeholder:text-slate-400"
             />
 
             <Button variant="ghost"
@@ -215,7 +215,7 @@ export function Header() {
             onChange={(e) => setSearch(e.target.value)}
             placeholder="جستجوی محصولات..."
             aria-label="جستجوی محصولات"
-            className="min-w-0 flex-1 bg-transparent px-3 text-sm outline-none placeholder:text-slate-400"
+            className="h-full w-auto min-w-0 flex-1 rounded-none border-0 bg-transparent px-3 text-sm shadow-none outline-none focus-visible:border-transparent focus-visible:ring-0 placeholder:text-slate-400"
           />
 
           <Button variant="ghost"
