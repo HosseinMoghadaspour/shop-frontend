@@ -5,6 +5,7 @@ import { ArrowRight, ShieldCheck } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Card,
   CardContent,
@@ -109,12 +110,12 @@ export function AdminVerifyPage() {
           <CardContent className="px-6 pb-8">
             <form onSubmit={handleSubmit} className="space-y-5">
               <div className="space-y-2">
-                <label
+                <Label
                   htmlFor="admin-otp"
                   className="text-sm font-medium"
                 >
                   کد تأیید
-                </label>
+                </Label>
 
                 <Input
                   id="admin-otp"
