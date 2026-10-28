@@ -189,7 +189,7 @@ export function Slider() {
                       {hasButton && (
                         <a
                           href={buttonUrl}
-                          className="mt-2 hidden lg:inline-flex h-11 items-center justify-center rounded-xl px-5 text-sm font-bold text-white shadow-lg transition-transform hover:-translate-y-0.5" style={{ backgroundColor: slide.ButtonColor && /^#[0-9a-fA-F]{6}$/.test(slide.ButtonColor) ? slide.ButtonColor : undefined }}
+                          className={`mt-2 hidden lg:inline-flex h-11 items-center justify-center rounded-xl px-5 text-sm font-bold shadow-lg transition-transform hover:-translate-y-0.5 ${slide.ButtonColor && /^#[0-9a-fA-F]{6}$/.test(slide.ButtonColor) ? "text-white" : "bg-primary text-primary-foreground"}`} style={{ backgroundColor: slide.ButtonColor && /^#[0-9a-fA-F]{6}$/.test(slide.ButtonColor) ? slide.ButtonColor : undefined }}
                         >
                           {buttonText}
                           <ArrowUpLeft className="ms-2 size-4" />
