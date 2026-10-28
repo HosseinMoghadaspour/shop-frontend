@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ShieldCheck, ShoppingBag } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
 
 import { useAuthStore } from "@/stores/auth.store";
 
