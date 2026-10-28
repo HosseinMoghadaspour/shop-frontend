@@ -54,9 +54,9 @@ export function AdminLayout() {
             <p className="text-base font-extrabold tracking-tight">فروشگاه آدینامارکت</p>
             <p className="mt-1 text-xs text-slate-500">پنل مدیریت فروشگاه</p>
           </div>
-          <button type="button" className="mr-auto rounded-lg p-2 text-slate-500 hover:bg-slate-100 lg:hidden" onClick={() => setMobileOpen(false)} aria-label="بستن منو">
+          <Button type="button" variant="ghost" size="icon" className="mr-auto text-slate-500 hover:bg-slate-100 lg:hidden" onClick={() => setMobileOpen(false)} aria-label="بستن منو">
             <X className="size-5" />
-          </button>
+          </Button>
         </div>
 
         <div className="px-4 pt-7">
@@ -86,7 +86,7 @@ export function AdminLayout() {
 
       <div className="min-h-screen lg:mr-[270px]">
         <div className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-slate-200/80 bg-white/95 px-4 backdrop-blur lg:hidden">
-          <Button variant="outline" size="icon" aria-label="باز کردن منو" onClick={() => setMobileOpen(true)}>
+          <Button type="button" variant="outline" size="icon" aria-label="باز کردن منو" onClick={() => setMobileOpen(true)}>
             <Menu className="size-5" />
           </Button>
           <span className="text-sm font-extrabold">پنل مدیریت فروشگاه</span>
