@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -114,28 +115,28 @@ function SliderEditor({
                 </div>
               )}
             </div>
-            <label className="block text-sm font-medium">جایگزینی تصویر (JPEG، PNG، WebP یا AVIF؛ حداکثر ۸ مگابایت)</label>
+            <Label className="block text-sm font-medium">جایگزینی تصویر (JPEG، PNG، WebP یا AVIF؛ حداکثر ۸ مگابایت)</Label>
             <Input type="file" accept="image/jpeg,image/png,image/webp,image/avif" onChange={(event) => setFile(event.target.files?.[0] ?? null)} />
             {file && <p className="text-xs text-muted-foreground">فایل انتخاب‌شده: {file.name}</p>}
           </div>
           <div className="space-y-3">
-            <label className="block space-y-1.5 text-sm font-medium">
+            <Label className="block space-y-1.5 text-sm font-medium">
               تیتر روی تصویر
               <Input value={title} onChange={(event) => setTitle(event.target.value)} maxLength={2000} placeholder="مثلاً پیشنهادهای ویژه" />
-            </label>
-            <label className="block space-y-1.5 text-sm font-medium">
+            </Label>
+            <Label className="block space-y-1.5 text-sm font-medium">
               توضیحات
               <Textarea value={description} onChange={(event) => setDescription(event.target.value)} rows={3} placeholder="متن کوتاه روی بنر" />
-            </label>
+            </Label>
             <div className="grid gap-3 sm:grid-cols-2">
-              <label className="block space-y-1.5 text-sm font-medium">
+              <Label className="block space-y-1.5 text-sm font-medium">
                 متن دکمه
                 <Input value={buttonText} onChange={(event) => setButtonText(event.target.value)} maxLength={100} placeholder="مشاهده محصولات" />
-              </label>
-              <label className="block space-y-1.5 text-sm font-medium">
+              </Label>
+              <Label className="block space-y-1.5 text-sm font-medium">
                 لینک دکمه
                 <Input value={targetUrl} onChange={(event) => setTargetUrl(event.target.value)} placeholder="/products" />
-              </label>
+              </Label>
             </div>
             <div className="flex items-center justify-between rounded-xl border p-3">
               <div>
@@ -246,15 +247,15 @@ export function AdminSlidersPage() {
           <form onSubmit={(event) => void createSlider(event)} className="space-y-4">
             <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
               <div className="space-y-2">
-                <label className="block text-sm font-medium" htmlFor="new-slider-image">تصویر اسلایدر (الزامی)</label>
+                <Label className="block text-sm font-medium" htmlFor="new-slider-image">تصویر اسلایدر (الزامی)</Label>
                 <Input id="new-slider-image" type="file" accept="image/jpeg,image/png,image/webp,image/avif" onChange={(event) => setNewFile(event.target.files?.[0] ?? null)} />
                 <p className="text-xs text-muted-foreground">تصویر به WebP تبدیل و با اندازه مناسب ذخیره می‌شود. حداکثر حجم فایل ۸ مگابایت است.</p>
               </div>
               <div className="grid gap-3 sm:grid-cols-2">
-                <label className="space-y-1.5 text-sm font-medium">تیتر روی تصویر<Input value={title} onChange={(event) => setTitle(event.target.value)} maxLength={2000} placeholder="عنوان بنر" /></label>
-                <label className="space-y-1.5 text-sm font-medium">متن دکمه<Input value={buttonText} onChange={(event) => setButtonText(event.target.value)} maxLength={100} placeholder="مشاهده" /></label>
-                <label className="space-y-1.5 text-sm font-medium sm:col-span-2">توضیحات<Textarea value={description} onChange={(event) => setDescription(event.target.value)} rows={2} placeholder="توضیح کوتاه بنر" /></label>
-                <label className="space-y-1.5 text-sm font-medium sm:col-span-2">لینک دکمه<Input value={targetUrl} onChange={(event) => setTargetUrl(event.target.value)} placeholder="/products" /></label>
+                <Label className="space-y-1.5 text-sm font-medium">تیتر روی تصویر<Input value={title} onChange={(event) => setTitle(event.target.value)} maxLength={2000} placeholder="عنوان بنر" /></Label>
+                <Label className="space-y-1.5 text-sm font-medium">متن دکمه<Input value={buttonText} onChange={(event) => setButtonText(event.target.value)} maxLength={100} placeholder="مشاهده" /></Label>
+                <Label className="space-y-1.5 text-sm font-medium sm:col-span-2">توضیحات<Textarea value={description} onChange={(event) => setDescription(event.target.value)} rows={2} placeholder="توضیح کوتاه بنر" /></Label>
+                <Label className="space-y-1.5 text-sm font-medium sm:col-span-2">لینک دکمه<Input value={targetUrl} onChange={(event) => setTargetUrl(event.target.value)} placeholder="/products" /></Label>
               </div>
             </div>
             <div className="flex justify-end border-t pt-4">
