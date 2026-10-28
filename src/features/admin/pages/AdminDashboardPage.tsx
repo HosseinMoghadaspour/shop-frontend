@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowLeft,
-  ArrowUpLeft,
   CheckCircle2,
   CircleAlert,
   Eye,
