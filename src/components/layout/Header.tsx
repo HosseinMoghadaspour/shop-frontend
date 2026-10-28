@@ -10,6 +10,8 @@ import {
   X,
 } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useAuthStore } from "@/stores/auth.store";
 import { useCartStore } from "@/stores/cart.store";
 
@@ -104,31 +106,31 @@ export function Header() {
             role="search"
             className="hidden h-11 min-w-0 max-w-[680px] flex-1 items-center rounded-full border border-slate-200 bg-white px-3 transition focus-within:border-emerald-600 focus-within:ring-4 focus-within:ring-emerald-600/10 md:flex"
           >
-            <button
+            <Button variant="ghost"
               type="button"
               onClick={() => navigate("/categories")}
               className="flex shrink-0 items-center gap-1.5 border-l border-slate-200 pl-3 text-xs text-slate-500 transition hover:text-emerald-700"
             >
               همه دسته‌ها
               <ChevronDown className="size-3.5" />
-            </button>
+            </Button>
 
-            <input
+            <Input
               type="search"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="جستجوی محصول، برند یا دسته‌بندی..."
               aria-label="جستجوی محصولات"
-              className="min-w-0 flex-1 bg-transparent px-4 text-sm text-slate-700 outline-none placeholder:text-slate-400"
+              className="h-full w-auto min-w-0 flex-1 rounded-none border-0 bg-transparent px-4 text-sm text-slate-700 shadow-none outline-none focus-visible:border-transparent focus-visible:ring-0 placeholder:text-slate-400"
             />
 
-            <button
+            <Button variant="ghost"
               type="submit"
               aria-label="جستجو"
               className="flex size-8 shrink-0 items-center justify-center rounded-full text-emerald-700 transition hover:bg-emerald-50"
             >
               <Search className="size-5" />
-            </button>
+            </Button>
           </form>
 
           {/* عملیات کاربر */}
@@ -146,14 +148,14 @@ export function Header() {
                   <span className="max-w-28 truncate">{userName}</span>
                 </Link>
 
-                <button
+                <Button variant="ghost"
                   type="button"
                   onClick={() => void handleLogout()}
                   title="خروج از حساب"
                   className="hidden size-10 items-center justify-center rounded-xl text-slate-600 transition hover:bg-red-50 hover:text-red-600 sm:flex"
                 >
                   <LogOut className="size-5" />
-                </button>
+                </Button>
               </>
             ) : (
               <Link
@@ -183,7 +185,7 @@ export function Header() {
             </Link>
 
             {/* منوی موبایل */}
-            <button
+            <Button variant="ghost"
               type="button"
               aria-label={mobileMenuOpen ? "بستن منو" : "باز کردن منو"}
               aria-expanded={mobileMenuOpen}
@@ -195,7 +197,7 @@ export function Header() {
               ) : (
                 <Menu className="size-5" />
               )}
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -207,21 +209,21 @@ export function Header() {
         >
           <Search className="size-4 shrink-0 text-emerald-700" />
 
-          <input
+          <Input
             type="search"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="جستجوی محصولات..."
             aria-label="جستجوی محصولات"
-            className="min-w-0 flex-1 bg-transparent px-3 text-sm outline-none placeholder:text-slate-400"
+            className="h-full w-auto min-w-0 flex-1 rounded-none border-0 bg-transparent px-3 text-sm shadow-none outline-none focus-visible:border-transparent focus-visible:ring-0 placeholder:text-slate-400"
           />
 
-          <button
+          <Button variant="ghost"
             type="submit"
             className="text-xs font-medium text-emerald-700"
           >
             جستجو
-          </button>
+          </Button>
         </form>
 
         {/* ردیف پایین دسکتاپ */}
@@ -285,7 +287,7 @@ export function Header() {
                   حساب کاربری ({userName})
                 </Link>
 
-                <button
+                <Button variant="ghost"
                   type="button"
                   onClick={() => {
                     setMobileMenuOpen(false);
@@ -295,7 +297,7 @@ export function Header() {
                 >
                   <LogOut className="size-4" />
                   خروج از حساب
-                </button>
+                </Button>
               </>
             )}
           </nav>

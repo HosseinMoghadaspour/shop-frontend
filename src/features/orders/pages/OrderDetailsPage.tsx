@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 import {
   getOrderById,
@@ -151,38 +152,37 @@ export function OrderDetailsPage() {
           <h2 className="font-bold">اقلام سفارش</h2>
         </div>
 
-        <div className="divide-y">
-          {items.map((item) => (
-            <div
-              key={`${item.OrderH_ID}-${item.Good_ID}`}
-              className="flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between"
-            >
-              <div>
-                <p className="font-medium">
-                  {item.Good?.RowName || `کالای ${item.Good_ID}`}
-                </p>
-
-                {item.Good?.RowCode && (
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    کد کالا: {item.Good.RowCode}
-                  </p>
-                )}
-              </div>
-
-              <div className="text-sm">
-                <p>تعداد: {item.OutputValue.toLocaleString("fa-IR")}</p>
-
-                <p className="text-muted-foreground">
-                  قیمت واحد: {formatPrice(item.UnitPrice)} تومان
-                </p>
-              </div>
-
-              <div className="font-bold">
-                {formatPrice(item.TotalPrice)} تومان
-              </div>
-            </div>
-          ))}
-        </div>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>کالا</TableHead>
+              <TableHead>تعداد</TableHead>
+              <TableHead>قیمت واحد</TableHead>
+              <TableHead className="text-end">مبلغ کل</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {items.map((item) => (
+              <TableRow key={`${item.OrderH_ID}-${item.Good_ID}`}>
+                <TableCell>
+                  <div className="font-medium">
+                    {item.Good?.RowName || `کالای ${item.Good_ID}`}
+                  </div>
+                  {item.Good?.RowCode && (
+                    <div className="mt-1 text-xs text-muted-foreground">
+                      کد کالا: {item.Good.RowCode}
+                    </div>
+                  )}
+                </TableCell>
+                <TableCell>{item.OutputValue.toLocaleString("fa-IR")}</TableCell>
+                <TableCell>{formatPrice(item.UnitPrice)} تومان</TableCell>
+                <TableCell className="text-end font-bold">
+                  {formatPrice(item.TotalPrice)} تومان
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </section>
 
       <section className="mt-6 rounded-2xl border border-emerald-950/5 bg-white p-5">

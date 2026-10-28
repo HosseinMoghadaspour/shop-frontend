@@ -3,6 +3,9 @@ import { Link } from "react-router-dom";
 import { MapPin, ClipboardList, UserRound } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useAuthStore } from "@/stores/auth.store";
 import { getMyAddresses, type DeliveryAddress } from "@/services/addresses.api";
 
@@ -97,15 +100,17 @@ export function ProfilePage() {
 
           <CardContent>
             {isLoadingAddresses && (
-              <div className="rounded-lg border p-6 text-center text-sm text-muted-foreground">
-                در حال دریافت آدرس‌ها...
+              <div className="space-y-3 rounded-lg border p-5" aria-label="در حال دریافت آدرس‌ها">
+                <Skeleton className="h-4 w-1/3" />
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-2/3" />
               </div>
             )}
 
             {!isLoadingAddresses && addressError && (
-              <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-6 text-center text-sm text-destructive">
-                {addressError}
-              </div>
+              <Alert variant="destructive">
+                <AlertDescription>{addressError}</AlertDescription>
+              </Alert>
             )}
 
             {!isLoadingAddresses && !addressError && addresses.length === 0 && (
@@ -132,9 +137,9 @@ export function ProfilePage() {
                       </div>
 
                       {address.isActive && (
-                        <span className="rounded-full bg-green-100 px-3 py-1 text-xs text-green-700">
+                        <Badge variant="secondary" className="bg-emerald-50 text-emerald-700 hover:bg-emerald-50">
                           فعال
-                        </span>
+                        </Badge>
                       )}
                     </div>
 

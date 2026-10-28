@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowLeft,
-  ArrowUpLeft,
   CheckCircle2,
   CircleAlert,
   Eye,
@@ -102,10 +101,10 @@ export function AdminDashboardPage() {
           )}
         </section>
 
-        <section className="grid gap-6 xl:grid-cols-[minmax(0,1.45fr)_minmax(300px,0.75fr)]">
+        <section className="grid gap-6">
           <div>
             <div className="mb-4"><h2 className="text-lg font-extrabold">دسترسی سریع</h2><p className="mt-1 text-sm text-slate-500">بخش‌هایی که بیشتر استفاده می‌کنید</p></div>
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-4 md:grid-cols-3">
               {quickActions.map(({ title, description, to, icon: Icon, tag, tint }) => (
                 <Link key={to} to={to} className="group rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2">
                   <Card className="h-full border-slate-200/80 shadow-sm transition duration-200 group-hover:-translate-y-1 group-hover:border-emerald-200 group-hover:shadow-lg group-hover:shadow-emerald-950/[0.04]">

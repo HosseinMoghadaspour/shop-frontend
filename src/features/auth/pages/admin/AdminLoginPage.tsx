@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ShieldCheck } from "lucide-react";
+
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuthStore } from "@/stores/auth.store";
 
@@ -70,9 +71,9 @@ export function AdminLoginPage() {
           <CardContent className="px-6 pb-8">
             <form onSubmit={handleSubmit} className="space-y-5">
               <div className="space-y-2">
-                <label htmlFor="admin-mobile" className="text-sm font-medium leading-6 text-muted-foreground">
+                <Label htmlFor="admin-mobile" className="text-sm font-medium leading-6 text-muted-foreground">
                   شماره موبایل مدیر
-                </label>
+                </Label>
 
                 <Input
                   id="admin-mobile"

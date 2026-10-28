@@ -1,5 +1,7 @@
 
 import { useMemo, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Folder,
   ShoppingBag,
@@ -80,11 +82,11 @@ export function CategoryIconPicker({
           size={18}
           className="absolute right-3 top-1/2 -translate-y-1/2"
         />
-        <input
+        <Input
           value={search}
           onChange={(event) => setSearch(event.target.value)}
           placeholder="جست‌وجوی آیکون..."
-          className="w-full rounded-lg border py-2 pr-10 pl-3"
+          className="h-10 w-full rounded-lg pr-10 pl-3"
         />
       </div>
 
@@ -93,14 +95,15 @@ export function CategoryIconPicker({
           const selected = value === name;
 
           return (
-            <button
+            <Button
+              variant={selected ? "secondary" : "outline"}
               key={name}
               type="button"
               title={name}
               aria-label={`انتخاب آیکون ${name}`}
               aria-pressed={selected}
               onClick={() => onChange(name as IconName)}
-              className={`relative flex min-h-20 flex-col
+              className={`relative flex h-auto min-h-20 flex-col
                 items-center justify-center gap-2 rounded-lg
                 border p-2 transition
                 ${
