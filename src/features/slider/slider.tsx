@@ -15,6 +15,7 @@ import { apiClient } from "@/services/api/client";
 interface SliderItem {
   RowID: string;
   DescBut: string | null;
+  ButtonColor: string | null;
   DescImage: string | null;
   Description: string | null;
   Status: boolean;
@@ -188,7 +189,7 @@ export function Slider() {
                       {hasButton && (
                         <a
                           href={buttonUrl}
-                          className="mt-2 hidden lg:flex lg:inline-flex h-11 items-center justify-center rounded-xl bg-primary px-5 text-sm font-bold text-primary-foreground shadow-lg transition-transform hover:-translate-y-0.5"
+                          className="mt-2 hidden lg:inline-flex h-11 items-center justify-center rounded-xl px-5 text-sm font-bold text-white shadow-lg transition-transform hover:-translate-y-0.5" style={{ backgroundColor: slide.ButtonColor && /^#[0-9a-fA-F]{6}$/.test(slide.ButtonColor) ? slide.ButtonColor : undefined }}
                         >
                           {buttonText}
                           <ArrowUpLeft className="ms-2 size-4" />
