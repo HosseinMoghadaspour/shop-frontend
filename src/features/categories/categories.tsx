@@ -118,7 +118,7 @@ export function Category() {
 
   if (hasError) {
     return (
-      <section dir="rtl" className="mx-auto w-full px-4 py-5">
+      <section className="mx-auto w-full px-4 py-5">
         <div className="flex flex-col items-center gap-3 rounded-xl border p-6 text-center">
           <p className="text-sm text-muted-foreground">
             دریافت دسته‌بندی‌های فروشگاه با مشکل مواجه شد.
@@ -136,7 +136,6 @@ export function Category() {
 
   return (
     <section
-      dir="rtl"
       aria-label="دسته‌بندی محصولات فروشگاه"
       className="mx-auto w-full max-w-[1600px] px-3 py-4 sm:px-5 lg:px-6"
     >

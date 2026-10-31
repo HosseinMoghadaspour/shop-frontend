@@ -18,7 +18,7 @@ export function ProductGrid({
           overflow-x-auto overscroll-x-contain pb-3
           [scrollbar-color:#cbd5e1_transparent]
           [scrollbar-width:thin]
-          sm:gap-4
+          sm:gap-0
         "
       >
         {products.map((product) => (
@@ -28,7 +28,7 @@ export function ProductGrid({
             className="
               w-[clamp(145px,42vw,190px)]
               shrink-0 snap-start
-              sm:w-[clamp(190px,24vw,230px)]
+              sm:w-[clamp(190px,24vw,210px)]
             "
           >
             <ProductCard product={product} />
@@ -42,7 +42,7 @@ export function ProductGrid({
     <div
       className="
         grid grid-cols-2 items-stretch gap-2.5
-        sm:grid-cols-3 sm:gap-4
+        sm:grid-cols-3 sm:gap-2
         lg:grid-cols-4
         xl:grid-cols-5
       "

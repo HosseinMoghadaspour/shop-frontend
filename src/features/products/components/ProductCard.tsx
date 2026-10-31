@@ -23,33 +23,46 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const navigate = useNavigate();
+
   const cart = useCartStore((state) => state.cart);
   const isCartLoading = useCartStore((state) => state.isLoading);
   const addItem = useCartStore((state) => state.addItem);
   const updateItem = useCartStore((state) => state.updateItem);
   const removeItem = useCartStore((state) => state.removeItem);
   const isCartUpdating = useCartStore((state) => state.isUpdating);
+
   const [isBusy, setIsBusy] = useState(false);
 
   const { name, pricing, isSpecialSale, amazingSale } = product;
+
   const stockInfo = Array.isArray(product.stockInfo) ? product.stockInfo : [];
+
   const availableStock = stockInfo[0]?.quantity ?? product.stock ?? 0;
+
   const isAvailable =
     availableStock > 0 && product.isActive && product.isShowInOnlineShop;
+
   const defaultImage =
     product.images?.find((image) => image.isDefault) ?? product.images?.[0];
+
   const cartItem = cart?.items.find((item) => item.goodId === product.id);
+
   const quantity = cartItem?.quantity ?? 0;
+
   const step = getQuantityStep(product.unit?.weightOrAmount);
+
   const minimum = getMinimumQuantity(
     product.unit?.weightOrAmount,
     product.minOrder,
   );
+
   const initialQuantity = getInitialQuantity(product.minOrder);
+
   const maximum =
     product.maxOrder && product.maxOrder > 0
       ? Math.min(product.maxOrder, availableStock)
       : availableStock;
+
   const canAdd = initialQuantity <= maximum;
   const canIncrease = quantity + step <= maximum;
 
@@ -58,15 +71,22 @@ export function ProductCard({ product }: ProductCardProps) {
     requestedQuantity: number,
   ) {
     if (isUnauthorizedError(error)) {
-      setPendingCartAction({ goodId: product.id, quantity: requestedQuantity });
+      setPendingCartAction({
+        goodId: product.id,
+        quantity: requestedQuantity,
+      });
+
       navigate(`/auth/login?returnTo=${encodeURIComponent("/")}`);
     }
   }
 
   async function handleAdd() {
-    if (!isAvailable || !canAdd || isBusy || isCartUpdating || isCartLoading)
+    if (!isAvailable || !canAdd || isBusy || isCartUpdating || isCartLoading) {
       return;
+    }
+
     setIsBusy(true);
+
     try {
       await addItem(product.id, initialQuantity);
     } catch (error) {
@@ -77,8 +97,12 @@ export function ProductCard({ product }: ProductCardProps) {
   }
 
   async function handleIncrease() {
-    if (isBusy || isCartUpdating || isCartLoading || !canIncrease) return;
+    if (isBusy || isCartUpdating || isCartLoading || !canIncrease) {
+      return;
+    }
+
     setIsBusy(true);
+
     try {
       if (cartItem) {
         await updateItem(product.id, Number((quantity + step).toFixed(3)));
@@ -93,17 +117,22 @@ export function ProductCard({ product }: ProductCardProps) {
   }
 
   async function handleDecrease() {
-    if (!cartItem || isBusy || isCartUpdating || isCartLoading) return;
+    if (!cartItem || isBusy || isCartUpdating || isCartLoading) {
+      return;
+    }
+
     setIsBusy(true);
+
     try {
       const next = Number((quantity - step).toFixed(3));
+
       if (next < minimum) {
         await removeItem(product.id);
       } else {
         await updateItem(product.id, next);
       }
     } catch {
-      // The cart store keeps the error for the existing cart UI.
+      // خطا در رابط فعلی سبد خرید مدیریت می‌شود.
     } finally {
       setIsBusy(false);
     }
@@ -112,20 +141,31 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <Card
       className="
-  group flex h-[330px] min-w-0 flex-col
-  overflow-hidden rounded-2xl border-0 bg-white
-  shadow-[0_3px_18px_rgba(15,23,42,0.06)]
-  ring-1 ring-slate-900/[0.035]
-  transition-shadow duration-300
-  hover:shadow-[0_14px_32px_rgba(15,23,42,0.12)]
-  sm:h-[380px]
-"
+    group flex h-[330px] w-full max-w-[190px] min-w-0 flex-col
+    overflow-hidden rounded-2xl border-0 bg-white
+    shadow-[0_3px_18px_rgba(15,23,42,0.06)]
+    ring-1 ring-slate-900/[0.035]
+    transition-shadow duration-300
+    hover:shadow-[0_14px_32px_rgba(15,23,42,0.12)]
+    sm:h-[290px]
+  "
     >
+      {/* تصویر محصول */}
       <Link
         to={`/products/${product.id}`}
-        className="relative block overflow-hidden"
+        className="
+          relative block shrink-0 overflow-hidden
+          rounded-t-xl
+        "
       >
-        <div className="relative h-30 w-full shrink-0 overflow-hidden bg-gradient-to-br from-slate-50 via-white to-emerald-50/70 lg:h-44">
+        <div
+          className="
+            relative flex h-[112px] w-full
+            items-center justify-center overflow-hidden
+            bg-gradient-to-br from-slate-50 via-white to-emerald-50/70
+            sm:h-[125px]
+          "
+        >
           {defaultImage ? (
             <img
               src={getApiAssetUrl(defaultImage.url)}
@@ -134,72 +174,140 @@ export function ProductCard({ product }: ProductCardProps) {
               onError={(event) => {
                 event.currentTarget.style.display = "none";
               }}
-              className="absolute inset-0 h-full w-full object-contain transition-transform duration-300 group-hover:scale-[1.04]"
+              className="
+                absolute inset-0 m-auto
+                h-[90%] w-[90%]
+                object-contain object-center
+                transition-transform duration-300
+                group-hover:scale-105
+              "
             />
           ) : (
-            <span className="text-xs text-muted-foreground">تصویر محصول</span>
+            <span className="text-[10px] text-muted-foreground">
+              تصویر محصول
+            </span>
           )}
         </div>
+
+        {/* برچسب فروش ویژه */}
         {(isSpecialSale || amazingSale) && (
-          <Badge className="absolute right-2 top-2 rounded-full border-0 bg-emerald-600 px-2.5 py-1 text-[10px] font-bold text-white shadow-sm">
+          <Badge
+            className="
+              absolute right-1.5 top-1.5
+              rounded-full border-0
+              bg-emerald-600 px-2 py-0.5
+              text-[9px] font-bold text-white
+              shadow-sm
+            "
+          >
             {amazingSale ? "شگفت‌انگیز" : "فروش ویژه"}
           </Badge>
         )}
+
+        {/* درصد تخفیف */}
         {pricing.hasDiscount && pricing.discountPercent !== null && (
           <Badge
             variant="destructive"
-            className="absolute left-2 top-2 rounded-full border-0 bg-rose-500 px-2.5 py-1 text-[10px] font-bold text-white shadow-sm"
+            className="
+                absolute left-1.5 top-1.5
+                rounded-full border-0
+                bg-rose-500 px-1.5 py-0.5
+                text-[9px] font-bold text-white
+                shadow-sm
+              "
           >
             {pricing.discountPercent.toLocaleString("fa-IR")}٪
           </Badge>
         )}
       </Link>
 
-      <CardContent className="flex flex-1 flex-col p-3 sm:p-3.5">
+      {/* اطلاعات محصول */}
+      <CardContent
+        className="
+          flex min-h-0 flex-1 flex-col
+          px-2.5 pb-1.5 pt-2
+        "
+      >
         <Link to={`/products/${product.id}`} className="min-w-0">
-          <h2 className="line-clamp-2 min-h-10 text-[11px] font-bold leading-5 text-slate-800 transition-colors group-hover:text-emerald-700 sm:text-[13px]">
+          <h2
+            className="
+              line-clamp-2 min-h-[36px]
+              text-[11px] font-bold leading-[18px]
+              text-slate-800
+              transition-colors
+              group-hover:text-emerald-700
+              sm:text-xs
+            "
+          >
             {name}
           </h2>
         </Link>
 
-        <div className="mt-auto pt-3">
+        {/* قیمت */}
+        <div className="mt-auto pt-1.5">
           {pricing.hasDiscount && (
-            <p className="mb-0.5 text-[10px] text-muted-foreground line-through sm:text-xs">
+            <p
+              className="
+                mb-0.5 text-[10px]
+                leading-4 text-muted-foreground
+                line-through
+              "
+            >
               {formatPrice(pricing.salePrice)}
             </p>
           )}
-          <p className="text-sm font-extrabold leading-6 text-emerald-700 sm:text-base">
+
+          <p
+            className="
+              text-left text-xs font-extrabold
+              leading-5 text-emerald-700
+              sm:text-sm
+            "
+          >
             {formatPrice(pricing.finalPrice)}
           </p>
         </div>
 
-        <div className="min-h-4">
+        {/* موجودی */}
+        <div className="mt-0.5 min-h-[15px]">
           {isAvailable && availableStock <= 10 && (
-            <span className="text-[10px] text-muted-foreground sm:text-xs">
+            <span className="text-[9px] text-muted-foreground">
               موجودی: {availableStock.toLocaleString("fa-IR")}
             </span>
           )}
         </div>
       </CardContent>
 
-      <CardFooter className="p-3 pt-0 sm:p-3.5 sm:pt-0">
+      {/* دکمه خرید و تعداد */}
+      <CardFooter className="shrink-0 px-2.5 pb-2.5 pt-0">
         {!isAvailable ? (
           <Button
             type="button"
             variant="secondary"
             disabled
-            className="h-9 w-full rounded-xl text-xs mt-2"
+            className="h-8 w-full rounded-lg text-[11px]"
           >
             ناموجود
           </Button>
         ) : quantity > 0 ? (
-          <div className="flex h-9 w-full items-center justify-between rounded-xl border-0 bg-emerald-50 px-1 ring-1 ring-emerald-100 mt-2">
+          <div
+            className="
+              flex h-8 w-full items-center
+              justify-between rounded-lg
+              bg-emerald-50 px-0.5
+              ring-1 ring-emerald-100
+            "
+          >
             <Button
               type="button"
               variant="ghost"
               size="icon"
               aria-label={`افزایش تعداد ${name}`}
-              className=" size-7 rounded-lg text-emerald-700 hover:bg-emerald-100"
+              className="
+                size-7 shrink-0 rounded-md
+                text-emerald-700
+                hover:bg-emerald-100
+              "
               disabled={
                 isBusy || isCartUpdating || isCartLoading || !canIncrease
               }
@@ -208,37 +316,53 @@ export function ProductCard({ product }: ProductCardProps) {
               {isBusy ? (
                 <LoaderCircle className="size-3.5 animate-spin" />
               ) : (
-                <Plus className="size-4" />
+                <Plus className="size-3.5" />
               )}
             </Button>
-            <span className="min-w-8 text-center text-xs font-bold tabular-nums">
+
+            <span className="min-w-0 text-center text-[11px] font-bold tabular-nums">
               {quantity.toLocaleString("fa-IR")}
             </span>
+
             <Button
               type="button"
               variant="ghost"
               size="icon"
               aria-label={`کاهش تعداد ${name}`}
-              className="size-7 rounded-lg text-primary hover:bg-primary/10"
+              className="
+                size-7 shrink-0 rounded-md
+                text-emerald-700
+                hover:bg-emerald-100,
+                mt-2
+              "
               disabled={isBusy || isCartUpdating || isCartLoading}
               onClick={() => void handleDecrease()}
             >
-              <Minus className="size-4" />
+              <Minus className="size-3.5" />
             </Button>
           </div>
         ) : (
           <Button
             type="button"
-            className="mt-2 h-9 w-full rounded-xl bg-emerald-700 text-xs font-bold text-white shadow-sm transition hover:bg-emerald-800"
+            className="
+              h-8 w-full rounded-lg
+              bg-emerald-700 px-1.5
+              text-[10px] font-bold text-white
+              shadow-sm transition
+              hover:bg-emerald-800
+              sm:text-[11px],
+              mt-2
+            "
             disabled={isBusy || isCartUpdating || isCartLoading || !canAdd}
             onClick={() => void handleAdd()}
           >
             {isBusy ? (
-              <LoaderCircle className="ml-1 size-4 animate-spin" />
+              <LoaderCircle className="ml-1 size-3.5 shrink-0 animate-spin" />
             ) : (
-              <ShoppingCart className="ml-1 size-4" />
+              <ShoppingCart className="ml-1 size-3.5 shrink-0" />
             )}
-            افزودن به سبد
+
+            <span className="truncate">افزودن به سبد</span>
           </Button>
         )}
       </CardFooter>

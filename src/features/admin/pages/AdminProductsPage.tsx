@@ -353,7 +353,7 @@ export function AdminProductsPage() {
             </CardContent>
           </Card>
         ) : (
-          <section className="space-y-4" aria-label="فهرست کالاها">
+          <section className="space-y-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" aria-label="فهرست کالاها">
             {result.products.map((product) => (
               <Card key={product.id} className="overflow-hidden">
                 <CardHeader className="gap-4 p-4 sm:p-5 lg:flex-row lg:items-start lg:justify-between">
@@ -476,7 +476,7 @@ export function AdminProductsPage() {
                       </p>
                     </div>
                   ) : (
-                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6">
+                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-2">
                       {product.images.map((image) => (
                         <Card
                           key={image.id}
