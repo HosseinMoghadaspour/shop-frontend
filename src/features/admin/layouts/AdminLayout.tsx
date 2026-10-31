@@ -18,6 +18,7 @@ const navigation = [
   { to: "/admin/products", label: "مدیریت کالاها", icon: PackageSearch },
   { to: "/admin/categories", label: "دسته‌بندی‌ها", icon: FolderTree },
   { to: "/admin/sliders", label: "مدیریت اسلایدرها", icon: Images },
+  { to: "/admin/footer", label: "مدیریت فوتر", icon: Images },
 ];
 
 export function AdminLayout() {
@@ -43,16 +44,31 @@ export function AdminLayout() {
         />
       )}
 
-      <aside className={`fixed inset-y-0 right-0 z-50 flex w-[270px] flex-col border-l border-emerald-950/10 bg-white transition-transform duration-200 lg:translate-x-0 ${mobileOpen ? "translate-x-0" : "translate-x-full lg:translate-x-0"}`}>
+      <aside
+        className={`fixed inset-y-0 right-0 z-50 flex w-[270px] flex-col border-l border-emerald-950/10 bg-white transition-transform duration-200 lg:translate-x-0 ${mobileOpen ? "translate-x-0" : "translate-x-full lg:translate-x-0"}`}
+      >
         <div className="flex h-[88px] items-center gap-3 border-b border-slate-100 px-6">
           <div className="flex size-12 items-center justify-center rounded-2xl bg-emerald-800 text-white shadow-lg shadow-emerald-900/15">
-          <img src="/adinaLogo.png" alt="آدینا" className="size-full object-contain" />
+            <img
+              src="/adinaLogo.png"
+              alt="آدینا"
+              className="size-full object-contain"
+            />
           </div>
           <div>
-            <p className="text-base font-extrabold tracking-tight">فروشگاه آدینامارکت</p>
+            <p className="text-base font-extrabold tracking-tight">
+              فروشگاه آدینامارکت
+            </p>
             <p className="mt-1 text-xs text-slate-500">پنل مدیریت فروشگاه</p>
           </div>
-          <Button type="button" variant="ghost" size="icon" className="mr-auto text-slate-500 hover:bg-slate-100 lg:hidden" onClick={() => setMobileOpen(false)} aria-label="بستن منو">
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            className="mr-auto text-slate-500 hover:bg-slate-100 lg:hidden"
+            onClick={() => setMobileOpen(false)}
+            aria-label="بستن منو"
+          >
             <X className="size-5" />
           </Button>
         </div>
@@ -65,7 +81,9 @@ export function AdminLayout() {
                 to={to}
                 end={end}
                 onClick={() => setMobileOpen(false)}
-                className={({ isActive }) => `group flex items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-semibold transition ${isActive ? "bg-emerald-800 text-white shadow-md shadow-emerald-900/10" : "text-slate-600 hover:bg-emerald-50 hover:text-emerald-900"}`}
+                className={({ isActive }) =>
+                  `group flex items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-semibold transition ${isActive ? "bg-emerald-800 text-white shadow-md shadow-emerald-900/10" : "text-slate-600 hover:bg-emerald-50 hover:text-emerald-900"}`
+                }
               >
                 <Icon className="size-[18px] shrink-0" />
                 <span>{label}</span>
@@ -76,7 +94,11 @@ export function AdminLayout() {
         </div>
 
         <div className="mt-auto p-4">
-          <Button variant="ghost" className="mt-3 w-full justify-start text-slate-600 hover:bg-rose-50 hover:text-rose-700" onClick={() => void handleLogout()}>
+          <Button
+            variant="ghost"
+            className="mt-3 w-full justify-start text-slate-600 hover:bg-rose-50 hover:text-rose-700"
+            onClick={() => void handleLogout()}
+          >
             <LogOut className="ml-2 size-4" /> خروج از حساب
           </Button>
         </div>
@@ -84,7 +106,13 @@ export function AdminLayout() {
 
       <div className="min-h-screen lg:mr-[270px]">
         <div className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-slate-200/80 bg-white/95 px-4 backdrop-blur lg:hidden">
-          <Button type="button" variant="outline" size="icon" aria-label="باز کردن منو" onClick={() => setMobileOpen(true)}>
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            aria-label="باز کردن منو"
+            onClick={() => setMobileOpen(true)}
+          >
             <Menu className="size-5" />
           </Button>
           <span className="text-sm font-extrabold">پنل مدیریت فروشگاه</span>

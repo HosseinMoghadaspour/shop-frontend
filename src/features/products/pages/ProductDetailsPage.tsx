@@ -1,6 +1,14 @@
+import { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import { ArrowRight, ShoppingCart, PackageCheck, Truck, ShieldCheck } from "lucide-react";
-
+import {
+  ArrowRight,
+  ShoppingCart,
+  PackageCheck,
+  Truck,
+  ShieldCheck,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -22,6 +30,17 @@ export function ProductDetailsPage() {
 
   const productId = Number(id);
   const { data: product, isLoading, isError } = useProduct(productId);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+
+  const images = product?.images ?? [];
+
+  useEffect(() => {
+    if (!product) return;
+
+    const defaultIndex = product.images.findIndex((image) => image.isDefault);
+
+    setActiveImageIndex(defaultIndex >= 0 ? defaultIndex : 0);
+  }, [product?.id, product?.images]);
 
   const addItem = useCartStore((state) => state.addItem);
   const isCartUpdating = useCartStore((state) => state.isUpdating);
@@ -35,9 +54,7 @@ export function ProductDetailsPage() {
       <section className="mx-auto max-w-7xl px-3 py-6 sm:px-5 sm:py-10">
         <Card className="rounded-2xl">
           <CardContent className="flex flex-col items-center gap-3 py-8 text-center sm:gap-4 sm:py-10">
-            <h1 className="text-lg font-bold sm:text-xl">
-              محصول پیدا نشد
-            </h1>
+            <h1 className="text-lg font-bold sm:text-xl">محصول پیدا نشد</h1>
 
             <p className="text-xs text-muted-foreground sm:text-sm">
               اطلاعات محصول قابل دریافت نیست.
@@ -52,9 +69,21 @@ export function ProductDetailsPage() {
     );
   }
 
-  const defaultImage =
-    product.images.find((image) => image.isDefault) ?? product.images[0];
+  const activeImage = images[activeImageIndex] ?? images[0];
 
+  const hasMultipleImages = images.length > 1;
+
+  function showPreviousImage() {
+    setActiveImageIndex((current) =>
+      current === 0 ? images.length - 1 : current - 1,
+    );
+  }
+
+  function showNextImage() {
+    setActiveImageIndex((current) =>
+      current === images.length - 1 ? 0 : current + 1,
+    );
+  }
   const quantity = product.stockInfo[0]?.quantity ?? 0;
   const isAvailable = quantity > 0;
 
@@ -85,35 +114,124 @@ export function ProductDetailsPage() {
       <Card className="overflow-hidden rounded-2xl border border-emerald-950/5 shadow-sm sm:rounded-3xl">
         <div className="grid gap-4 p-3 sm:gap-7 sm:p-6 md:grid-cols-2 md:gap-8 md:p-8 lg:gap-10">
           {/* Product image */}
+          {/* Product Gallery */}
           <div className="min-w-0">
-            <div className="relative mx-auto aspect-square w-full max-w-[360px] overflow-hidden rounded-xl bg-[#f3f6f3] p-3 sm:max-w-lg sm:rounded-2xl sm:p-5 md:p-6 lg:rounded-3xl lg:p-8">
-              {defaultImage ? (
-                <img
-                  src={getApiAssetUrl(defaultImage.url)}
-                  alt={defaultImage.alt || product.name}
-                  className="h-full w-full object-contain mix-blend-multiply"
-                />
-              ) : (
-                <div className="flex h-full items-center justify-center">
-                  <span className="text-xs text-muted-foreground sm:text-sm">
-                    تصویر محصول موجود نیست
-                  </span>
+            <div className="mx-auto w-full max-w-[480px]">
+              {/* Main Image */}
+              <div className="group relative overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm sm:rounded-3xl">
+                <div className="relative aspect-square overflow-hidden bg-[#f5f7f5]">
+                  {activeImage ? (
+                    <div
+                      className="flex h-full w-full transition-transform duration-500 ease-in-out"
+                      style={{
+                        direction: "ltr",
+                        transform: `translateX(-${activeImageIndex * 100}%)`,
+                      }}
+                    >
+                      {images.map((image) => (
+                        <div
+                          key={image.url}
+                          className="flex h-full min-w-full shrink-0 items-center justify-center p-5 sm:p-8 md:p-10"
+                        >
+                          <img
+                            src={getApiAssetUrl(image.url)}
+                            alt={image.alt || product.name}
+                            className="h-full w-full select-none object-contain mix-blend-multiply transition-transform duration-500 group-hover:scale-105"
+                            draggable={false}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="flex h-full items-center justify-center">
+                      <span className="text-sm text-muted-foreground">
+                        تصویر محصول موجود نیست
+                      </span>
+                    </div>
+                  )}
+
+                  {/* Amazing Sale Badge */}
+                  {product.amazingSale && (
+                    <Badge className="absolute right-3 top-3 z-10 gap-1 rounded-full px-3 py-1.5 text-xs shadow-sm sm:right-4 sm:top-4">
+                      فروش شگفت‌انگیز
+                    </Badge>
+                  )}
+
+                  {/* Inactive Badge */}
+                  {!product.isActive && (
+                    <Badge
+                      variant="destructive"
+                      className="absolute left-3 top-3 z-10 rounded-full px-3 py-1.5 text-xs shadow-sm sm:left-4 sm:top-4"
+                    >
+                      غیرفعال
+                    </Badge>
+                  )}
+
+                  {/* Navigation Buttons */}
+                  {hasMultipleImages && (
+                    <>
+                      <button
+                        type="button"
+                        onClick={showPreviousImage}
+                        aria-label="تصویر قبلی"
+                        className="absolute right-3 top-1/2 z-10 flex size-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/70 bg-white/90 text-slate-700 shadow-md backdrop-blur transition hover:scale-110 hover:bg-white sm:size-11"
+                      >
+                        <ChevronRight className="size-5 sm:size-6" />
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={showNextImage}
+                        aria-label="تصویر بعدی"
+                        className="absolute left-3 top-1/2 z-10 flex size-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/70 bg-white/90 text-slate-700 shadow-md backdrop-blur transition hover:scale-110 hover:bg-white sm:size-11"
+                      >
+                        <ChevronLeft className="size-5 sm:size-6" />
+                      </button>
+
+                      {/* Image Counter */}
+                      <div className="absolute bottom-3 left-3 z-10 rounded-full bg-slate-900/65 px-3 py-1 text-[11px] font-medium text-white backdrop-blur sm:bottom-4 sm:left-4 sm:text-xs">
+                        {`${activeImageIndex + 1} از ${images.length}`}
+                      </div>
+                    </>
+                  )}
                 </div>
-              )}
+              </div>
 
-              {product.amazingSale && (
-                <Badge className="absolute right-2 top-2 gap-1 rounded-full px-2 py-1 text-[10px] sm:right-4 sm:top-4 sm:px-3 sm:text-xs">
-                  فروش شگفت‌انگیز
-                </Badge>
-              )}
+              {/* Thumbnail Gallery */}
+              {hasMultipleImages && (
+                <div className="mt-3 flex gap-2 overflow-x-auto pb-2 sm:mt-4 sm:gap-3">
+                  {images.map((image, index) => {
+                    const isSelected = activeImageIndex === index;
 
-              {!product.isActive && (
-                <Badge
-                  variant="destructive"
-                  className="absolute left-2 top-2 rounded-full px-2 py-1 text-[10px] sm:left-4 sm:top-4 sm:text-xs"
-                >
-                  غیرفعال
-                </Badge>
+                    return (
+                      <button
+                        key={image.url}
+                        type="button"
+                        onClick={() => setActiveImageIndex(index)}
+                        aria-label={`نمایش تصویر ${index + 1}`}
+                        aria-pressed={isSelected}
+                        className={`relative size-[68px] shrink-0 overflow-hidden rounded-xl border-2 bg-white p-1 transition-all duration-200 sm:size-20 sm:rounded-2xl ${
+                          isSelected
+                            ? "border-primary shadow-md shadow-primary/15"
+                            : "border-slate-100 opacity-70 hover:border-slate-300 hover:opacity-100"
+                        }`}
+                      >
+                        <img
+                          src={getApiAssetUrl(image.url)}
+                          alt={
+                            image.alt || `${product.name} - تصویر ${index + 1}`
+                          }
+                          className="h-full w-full rounded-lg object-contain"
+                          loading="lazy"
+                        />
+
+                        {isSelected && (
+                          <span className="absolute inset-x-1 bottom-1 h-1 rounded-full bg-primary" />
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
               )}
             </div>
           </div>
@@ -247,9 +365,7 @@ export function ProductDetailsPage() {
               >
                 <ShoppingCart className="ml-2 size-4 sm:size-5" />
 
-                {isCartUpdating
-                  ? "در حال افزودن..."
-                  : "افزودن به سبد خرید"}
+                {isCartUpdating ? "در حال افزودن..." : "افزودن به سبد خرید"}
               </Button>
             </div>
 
@@ -326,4 +442,3 @@ function ProductDetailsSkeleton() {
     </section>
   );
 }
-
