@@ -44,7 +44,9 @@ export function CheckoutPage() {
   );
   const [provinceId, setProvinceId] = useState<number | null>(null);
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
-  const [selectedPaymentMethodId, setSelectedPaymentMethodId] = useState<number | null>(null);
+  const [selectedPaymentMethodId, setSelectedPaymentMethodId] = useState<
+    number | null
+  >(null);
   const [paymentMethodsLoading, setPaymentMethodsLoading] = useState(true);
 
   const [form, setForm] = useState<OrderDeliveryAddress>({
@@ -67,15 +69,24 @@ export function CheckoutPage() {
         const methods = await getPaymentMethods();
         if (cancelled) return;
         setPaymentMethods(methods);
-        setSelectedPaymentMethodId((current) => current ?? methods[0]?.rowId ?? null);
+        setSelectedPaymentMethodId(
+          (current) => current ?? methods[0]?.rowId ?? null,
+        );
       } catch (err) {
-        if (!cancelled) setError(err instanceof Error ? err.message : "دریافت روش‌های پرداخت انجام نشد.");
+        if (!cancelled)
+          setError(
+            err instanceof Error
+              ? err.message
+              : "دریافت روش‌های پرداخت انجام نشد.",
+          );
       } finally {
         if (!cancelled) setPaymentMethodsLoading(false);
       }
     }
     void loadPaymentMethods();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const selectedAddress = useMemo(() => {
@@ -208,25 +219,36 @@ export function CheckoutPage() {
 
     try {
       setSubmitting(true);
+      const storageKey = "checkout:idempotency-key";
 
-      const order = await createOrder({
-        paymentMethodId: selectedPaymentMethodId,
-        deliveryAddress:
-          selectedAddressId !== null
-            ? {
-                addressId: selectedAddressId,
-              }
-            : {
-                cityId: form.cityId,
-                deliverToName: form.deliverToName.trim(),
-                deliverToMobileNumber: form.deliverToMobileNumber.trim(),
-                deliverToPhoneNumber:
-                  form.deliverToPhoneNumber?.trim() || undefined,
-                Adrs: form.Adrs.trim(),
-                PostalCode: form.PostalCode?.trim() || undefined,
-                RowDesc: form.RowDesc?.trim() || undefined,
-              },
-      });
+      let idempotencyKey = sessionStorage.getItem(storageKey);
+
+      if (!idempotencyKey) {
+        idempotencyKey = crypto.randomUUID();
+
+        sessionStorage.setItem(storageKey, idempotencyKey);
+      }
+      const order = await createOrder(
+        {
+          paymentMethodId: selectedPaymentMethodId,
+          deliveryAddress:
+            selectedAddressId !== null
+              ? {
+                  addressId: selectedAddressId,
+                }
+              : {
+                  cityId: form.cityId,
+                  deliverToName: form.deliverToName.trim(),
+                  deliverToMobileNumber: form.deliverToMobileNumber.trim(),
+                  deliverToPhoneNumber:
+                    form.deliverToPhoneNumber?.trim() || undefined,
+                  Adrs: form.Adrs.trim(),
+                  PostalCode: form.PostalCode?.trim() || undefined,
+                  RowDesc: form.RowDesc?.trim() || undefined,
+                },
+        },
+        idempotencyKey,
+      );
 
       /*
        * بسته به response واقعی submitOrder ممکن است
@@ -237,6 +259,7 @@ export function CheckoutPage() {
 
       const orderId = order.orderHId;
 
+      sessionStorage.removeItem("checkout:idempotency-key");
       if (orderId) {
         navigate(`/orders/${orderId}`);
         return;
@@ -299,7 +322,9 @@ export function CheckoutPage() {
         </Button>
 
         <div>
-          <span className="text-xs font-bold text-primary">مرحله نهایی خرید</span>
+          <span className="text-xs font-bold text-primary">
+            مرحله نهایی خرید
+          </span>
           <h1 className="text-2xl font-extrabold">تکمیل سفارش</h1>
 
           <p className="text-sm text-muted-foreground">
@@ -522,18 +547,45 @@ export function CheckoutPage() {
 
           {/* Payment method */}
           <Card>
-            <CardHeader><CardTitle>روش پرداخت</CardTitle></CardHeader>
+            <CardHeader>
+              <CardTitle>روش پرداخت</CardTitle>
+            </CardHeader>
             <CardContent className="space-y-3">
               {paymentMethodsLoading ? (
-                <div className="flex items-center gap-2 text-sm text-muted-foreground"><Loader2 className="h-4 w-4 animate-spin" />در حال دریافت روش‌های پرداخت...</div>
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  در حال دریافت روش‌های پرداخت...
+                </div>
               ) : paymentMethods.length === 0 ? (
-                <p className="text-sm text-destructive">در حال حاضر روش پرداخت فعالی برای فروشگاه تعریف نشده است.</p>
-              ) : paymentMethods.map((method) => (
-                <label key={method.rowId} className={`flex cursor-pointer items-start gap-3 rounded-lg border p-3 transition-colors ${selectedPaymentMethodId === method.rowId ? "border-primary bg-primary/5" : "border-border"}`}>
-                  <input type="radio" name="paymentMethod" className="mt-1" value={method.rowId} checked={selectedPaymentMethodId === method.rowId} onChange={() => setSelectedPaymentMethodId(method.rowId)} disabled={submitting} />
-                  <span className="min-w-0"><span className="block font-medium">{method.name}</span>{method.description && <span className="mt-1 block text-sm text-muted-foreground">{method.description}</span>}</span>
-                </label>
-              ))}
+                <p className="text-sm text-destructive">
+                  در حال حاضر روش پرداخت فعالی برای فروشگاه تعریف نشده است.
+                </p>
+              ) : (
+                paymentMethods.map((method) => (
+                  <label
+                    key={method.rowId}
+                    className={`flex cursor-pointer items-start gap-3 rounded-lg border p-3 transition-colors ${selectedPaymentMethodId === method.rowId ? "border-primary bg-primary/5" : "border-border"}`}
+                  >
+                    <input
+                      type="radio"
+                      name="paymentMethod"
+                      className="mt-1"
+                      value={method.rowId}
+                      checked={selectedPaymentMethodId === method.rowId}
+                      onChange={() => setSelectedPaymentMethodId(method.rowId)}
+                      disabled={submitting}
+                    />
+                    <span className="min-w-0">
+                      <span className="block font-medium">{method.name}</span>
+                      {method.description && (
+                        <span className="mt-1 block text-sm text-muted-foreground">
+                          {method.description}
+                        </span>
+                      )}
+                    </span>
+                  </label>
+                ))
+              )}
             </CardContent>
           </Card>
 
@@ -631,7 +683,12 @@ export function CheckoutPage() {
               <Button
                 className="w-full"
                 size="lg"
-                disabled={submitting || paymentMethodsLoading || paymentMethods.length === 0 || selectedPaymentMethodId === null}
+                disabled={
+                  submitting ||
+                  paymentMethodsLoading ||
+                  paymentMethods.length === 0 ||
+                  selectedPaymentMethodId === null
+                }
                 onClick={handleSubmitOrder}
               >
                 {submitting ? (

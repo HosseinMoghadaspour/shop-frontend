@@ -107,16 +107,21 @@ export interface OrderDetailResponse {
 
 export async function createOrder(
   data: CreateOrderRequest,
+  idempotencyKey: string,
 ): Promise<CreateOrderResponse> {
   const response =
     await apiClient.post<ApiResponse<CreateOrderResponse>>(
       "/orders",
       data,
+      {
+        headers: {
+          "Idempotency-Key": idempotencyKey,
+        },
+      },
     );
 
   return response.data.data;
 }
-
 export async function getOrders(): Promise<OrdersResponse> {
   const response =
     await apiClient.get<ApiResponse<OrdersResponse>>(

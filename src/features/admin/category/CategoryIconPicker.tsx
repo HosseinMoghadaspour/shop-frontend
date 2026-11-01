@@ -121,7 +121,7 @@ export function CategoryIconPicker({
                   className="absolute left-1 top-1"
                 />
               )}
-            </button>
+            </Button>
           );
         })}
       </div>
