@@ -18,6 +18,7 @@ export function AdminBranchesPage() {
   const [active, setActive] = useState(true);
   const [isDefault, setIsDefault] = useState(false);
   const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
 
   const branches = Array.from(new Map((options.data ?? []).map((x) => [x.branchId, x])).values());
   const warehouses = (options.data ?? []).filter((x) => x.branchId === branchId);
@@ -45,6 +46,8 @@ export function AdminBranchesPage() {
   }, [branchId, options.data]);
 
   async function save() {
+    setError("");
+    setMessage("");
     if (!branchId || !warehouseId || !cityId) {
       setMessage("شعبه، انبار و شهر را انتخاب کنید.");
       return;
@@ -55,14 +58,18 @@ export function AdminBranchesPage() {
       setMessage("هر دو مختصات را وارد کنید.");
       return;
     }
-    await saveAdminBranch(branchId, {
-      cityId, warehouseId,
-      salePriceTypeId: priceTypeId ? Number(priceTypeId) : null,
-      latitude: lat, longitude: lng,
-      isActive: active, isDefault,
-    });
-    setMessage("تنظیمات ذخیره شد.");
-    await options.refetch();
+    try {
+      await saveAdminBranch(branchId, {
+        cityId, warehouseId,
+        salePriceTypeId: priceTypeId ? Number(priceTypeId) : null,
+        latitude: lat, longitude: lng,
+        isActive: active, isDefault,
+      });
+      setMessage("تنظیمات ذخیره شد.");
+      await options.refetch();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "ذخیره تنظیمات ناموفق بود.");
+    }
   }
 
   return (
@@ -106,6 +113,7 @@ export function AdminBranchesPage() {
             <label className="flex items-center gap-2"><input type="checkbox" checked={active} onChange={(e) => setActive(e.target.checked)} /> فعال در فروشگاه</label>
             <label className="flex items-center gap-2"><input type="checkbox" checked={isDefault} onChange={(e) => setIsDefault(e.target.checked)} /> شعبه پیش‌فرض شهر</label>
           </div>
+          {error && <p className="text-sm text-rose-700">{error}</p>}
           {message && <p className="text-sm text-emerald-700">{message}</p>}
           <Button onClick={() => void save()}>ذخیره تنظیمات</Button>
         </div>
