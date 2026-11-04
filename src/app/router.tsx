@@ -99,6 +99,7 @@ export const router = createBrowserRouter([
             element: <AdminPaymentMethodsPage />,
           },
           { path: "/admin/bank-accounts", element: <AdminBankAccountsPage /> },
+          { path: "/admin/branches", element: <AdminBranchesPage /> },
         ],
       },
     ],
