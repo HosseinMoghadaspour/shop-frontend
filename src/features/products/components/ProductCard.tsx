@@ -285,7 +285,7 @@ export function ProductCard({ product }: ProductCardProps) {
             type="button"
             variant="secondary"
             disabled
-            className="h-8 w-full rounded-lg text-[11px]"
+            className="h-8 w-full rounded-lg text-[11px] mt-2"
           >
             ناموجود
           </Button>

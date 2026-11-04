@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import {
-  Globe,
   Image,
   Loader2,
   RefreshCw,
@@ -9,15 +8,12 @@ import {
   Share2,
   ShieldCheck,
   Store,
-  MapPin,
   Phone,
   Link2,
   ImagePlus,
   Trash2,
   Upload,
 } from "lucide-react";
-
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -465,18 +461,12 @@ export function AdminFooterPage() {
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [notice, setNotice] = useState<string | null>(null);
 
   const loadFooter = useCallback(async () => {
     setLoading(true);
-    setError(null);
-
     try {
       const footer = await getAdminFooter();
       setForm(toFormData(footer));
-    } catch (error) {
-      setError(getErrorMessage(error));
     } finally {
       setLoading(false);
     }
@@ -497,14 +487,9 @@ export function AdminFooterPage() {
     event.preventDefault();
 
     setSaving(true);
-    setError(null);
-    setNotice(null);
 
     try {
       await updateAdminFooter(form);
-      setNotice("اطلاعات فوتر با موفقیت ذخیره شد.");
-    } catch (error) {
-      setError(getErrorMessage(error));
     } finally {
       setSaving(false);
     }
@@ -551,21 +536,9 @@ export function AdminFooterPage() {
         </Button>
       </header>
 
-      {error && (
-        <Alert variant="destructive">
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      )}
-
-      {notice && (
-        <Alert className="border-emerald-200 bg-emerald-50 text-emerald-900">
-          <AlertDescription>{notice}</AlertDescription>
-        </Alert>
-      )}
-
       <form
         onSubmit={(event) => void handleSubmit(event)}
-        className="space-y-5"
+        className="space-y-5 grid gap-4 lg:grid-cols-2"
       >
         {fieldGroups.map((group) => {
           const Icon = group.icon;
@@ -651,8 +624,8 @@ export function AdminFooterPage() {
             </Card>
           );
         })}
-
-        <div className="sticky bottom-3 z-20 flex justify-end rounded-2xl border bg-white/95 p-3 shadow-lg backdrop-blur">
+        <div></div>
+        <div className="bottom-3 z-20 flex justify-end rounded-2xl p-3">
           <Button
             type="submit"
             size="lg"

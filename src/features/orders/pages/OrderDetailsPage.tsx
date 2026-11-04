@@ -1,12 +1,26 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import {
   getOrderById,
   type OrderDetail,
   type OrderHeader,
 } from "@/services/orders.api";
+import {
+  getPublicBankAccounts,
+  startOrderPayment,
+  type PublicBankAccount,
+  type StartPaymentResponse,
+} from "@/services/payment.api";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 
 function formatPrice(value: number | null) {
   if (value == null) return "۰";
@@ -23,6 +37,41 @@ export function OrderDetailsPage() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const [paymentInfo, setPaymentInfo] = useState<StartPaymentResponse | null>(
+    null,
+  );
+
+  const [bankAccounts, setBankAccounts] = useState<PublicBankAccount[]>([]);
+
+  const [isPaymentLoading, setIsPaymentLoading] = useState(false);
+
+  async function loadPaymentInfo(orderId: number) {
+    try {
+      setIsPaymentLoading(true);
+      const payment = await startOrderPayment(orderId);
+      setPaymentInfo(payment);
+
+      if (payment.paymentMethodType === "CARD_TO_CARD") {
+        const account = await getPublicBankAccounts();
+        setBankAccounts(account);
+      }
+    } catch (error) {
+      console.error("خطا در دریافت اطلاعات پرداخت : ", error);
+    } finally {
+      setIsPaymentLoading(false);
+    }
+  }
+
+  async function copyPaymentValue(value: string) {
+    try {
+      await navigator.clipboard.writeText(value);
+      toast.success("کپی شد!");
+    } catch (error) {
+      console.error("کپی اطلاعات با خطا مواجه شد:", error);
+      toast.error("کپی اطلاعات با خطا مواجه شد");
+    }
+  }
 
   useEffect(() => {
     if (!id) {
@@ -57,6 +106,7 @@ export function OrderDetailsPage() {
 
         setOrder(result.orderH);
         setItems(result.orderD);
+        await loadPaymentInfo(orderId);
       } catch (error) {
         if (!mounted) return;
 
@@ -174,7 +224,9 @@ export function OrderDetailsPage() {
                     </div>
                   )}
                 </TableCell>
-                <TableCell>{item.OutputValue.toLocaleString("fa-IR")}</TableCell>
+                <TableCell>
+                  {item.OutputValue.toLocaleString("fa-IR")}
+                </TableCell>
                 <TableCell>{formatPrice(item.UnitPrice)} تومان</TableCell>
                 <TableCell className="text-end font-bold">
                   {formatPrice(item.TotalPrice)} تومان
@@ -220,7 +272,137 @@ export function OrderDetailsPage() {
             <span>{formatPrice(order.PayablePrice)} تومان</span>
           </div>
         </div>
+
+        {isPaymentLoading && (
+          <div className="rounded-xl border border-gray-200 bg-white p-4 text-sm text-gray-500">
+            در حال دریافت اطلاعات پرداخت...
+          </div>
+        )}
       </section>
+      {paymentInfo && (
+        <section className="mt-6 space-y-4 rounded-2xl border border-gray-200 bg-white p-4 sm:p-6">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <h2 className="text-lg font-bold text-gray-900">
+                اطلاعات پرداخت
+              </h2>
+              <p className="mt-1 text-sm text-gray-500">
+                روش پرداخت: {paymentInfo.paymentMethodName}
+              </p>
+            </div>
+
+            <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700">
+              {paymentInfo.paymentStatusName}
+            </span>
+          </div>
+
+          <div className="rounded-xl bg-gray-50 p-4">
+            <p className="text-sm text-gray-500">مبلغ قابل پرداخت</p>
+            <p className="mt-2 text-xl font-bold text-gray-900">
+              {formatPrice(paymentInfo.payableAmount)} تومان
+            </p>
+          </div>
+
+          {paymentInfo.paymentMethodType === "CARD_TO_CARD" && (
+            <div className="space-y-4">
+              <div>
+                <h3 className="font-semibold text-gray-900">
+                  واریز به یکی از حساب‌های زیر
+                </h3>
+                <p className="mt-1 text-sm text-gray-500">
+                  پس از واریز وجه، اطلاعات رسید پرداخت را ثبت کنید.
+                </p>
+              </div>
+
+              {bankAccounts.length === 0 ? (
+                <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+                  در حال حاضر حساب بانکی فعالی برای پرداخت معرفی نشده است. لطفاً
+                  با پشتیبانی فروشگاه تماس بگیرید.
+                </div>
+              ) : (
+                <div className="grid gap-3">
+                  {bankAccounts.map((account) => (
+                    <div
+                      key={account.id}
+                      className="rounded-xl border border-gray-200 p-4"
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <h4 className="font-bold text-gray-900">
+                          {account.bankName}
+                        </h4>
+                        <span className="text-xs text-gray-500">
+                          به نام {account.accountOwnerName}
+                        </span>
+                      </div>
+
+                      {account.cardNumber && (
+                        <div className="mt-4 flex items-center justify-between gap-2">
+                          <div className="min-w-0">
+                            <p className="text-xs text-gray-500">شماره کارت</p>
+                            <p
+                              dir="ltr"
+                              className="mt-1 text-base font-bold tracking-wider text-gray-900"
+                            >
+                              {account.cardNumber}
+                            </p>
+                          </div>
+
+                          <Button
+                            type="button"
+                            onClick={() =>
+                              copyPaymentValue(account.cardNumber!)
+                            }
+                            className="shrink-0 rounded-lg border border-gray-200 px-3 py-2 text-xs font-medium hover:bg-gray-50"
+                          >
+                            کپی شماره کارت
+                          </Button>
+                        </div>
+                      )}
+
+                      {account.accountNumber && (
+                        <div className="mt-3 flex items-center justify-between gap-2">
+                          <div className="min-w-0">
+                            <p className="text-xs text-gray-500">شماره حساب</p>
+                            <p
+                              dir="ltr"
+                              className="mt-1 font-medium text-gray-800"
+                            >
+                              {account.accountNumber}
+                            </p>
+                          </div>
+
+                          <Button
+                            type="button"
+                            onClick={() =>
+                              copyPaymentValue(account.accountNumber!)
+                            }
+                            className="shrink-0 rounded-lg border border-gray-200 px-3 py-2 text-xs font-medium hover:bg-gray-50"
+                          >
+                            کپی شماره حساب
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {paymentInfo.paymentMethodType === "PAY_IN_PLACE" && (
+            <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800">
+              پرداخت سفارش شما هنگام تحویل کالا انجام خواهد شد.
+            </div>
+          )}
+
+          {paymentInfo.paymentMethodType === "GATEWAY" && (
+            <div className="rounded-xl border border-blue-200 bg-blue-50 p-4 text-sm text-blue-800">
+              اتصال به درگاه بانکی در حال آماده‌سازی است. در حال حاضر امکان
+              پرداخت آنلاین از این روش فراهم نشده است.
+            </div>
+          )}
+        </section>
+      )}
     </main>
   );
 }

@@ -5,10 +5,13 @@ import {
   PackageSearch,
   FolderTree,
   Images,
+  Receipt,
   LogOut,
   Menu,
   X,
   ChevronLeft,
+  CreditCard,
+  Landmark,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/stores/auth.store";
@@ -19,6 +22,21 @@ const navigation = [
   { to: "/admin/categories", label: "دسته‌بندی‌ها", icon: FolderTree },
   { to: "/admin/sliders", label: "مدیریت اسلایدرها", icon: Images },
   { to: "/admin/footer", label: "مدیریت فوتر", icon: Images },
+  {
+    to: "/admin/payment-methods",
+    label: "روش‌های پرداخت",
+    icon: CreditCard,
+  },
+  {
+    to: "/admin/bank-accounts",
+    label: "کارت‌ها و حساب‌های بانکی",
+    icon: Landmark,
+  },
+  {
+    to: "/admin/payment-receipts",
+    label: "رسیدهای کارت‌به‌کارت",
+    icon: Receipt,
+  },
 ];
 
 export function AdminLayout() {
