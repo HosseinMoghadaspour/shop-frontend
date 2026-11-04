@@ -117,6 +117,12 @@ export function CheckoutPage() {
   });
 
   useEffect(() => {
+    const syncBranch = () => setSelectedBranchIdState(getSelectedBranchId());
+    window.addEventListener("store-branch-change", syncBranch);
+    return () => window.removeEventListener("store-branch-change", syncBranch);
+  }, []);
+
+  useEffect(() => {
     if (!branchCityId || !branchesQuery.data) return;
     const branches = branchesQuery.data.data;
     if (!branches.length) {
@@ -795,8 +801,13 @@ export function CheckoutPage() {
 
   const branchCityId = selectedAddress?.cityId ?? (selectedAddressId === null ? form.cityId : undefined);
   const branchesQuery = useQuery({
-    queryKey: ["store-branches", branchCityId],
-    queryFn: () => getBranchesByCity(branchCityId!),
+    queryKey: ["store-branches", branchCityId, selectedAddress?.latitude, selectedAddress?.longitude],
+    queryFn: () => getBranchesByCity(
+      branchCityId!,
+      selectedAddress?.latitude != null && selectedAddress.longitude != null
+        ? { latitude: selectedAddress.latitude, longitude: selectedAddress.longitude }
+        : undefined,
+    ),
     enabled: branchCityId !== undefined && branchCityId > 0,
   });
 
