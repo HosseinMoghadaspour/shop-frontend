@@ -55,6 +55,7 @@ export interface AdminBranchOption {
   branchName: string;
   warehouseId: number;
   warehouseName: string;
+  configuredWarehouseId: number | null;
   cityId: number | null;
   cityName: string | null;
   provinceId: number | null;
