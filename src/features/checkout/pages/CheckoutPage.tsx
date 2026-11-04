@@ -148,6 +148,8 @@ export function CheckoutPage() {
   ) => {
     setSelectedAddressIdState(address.id);
     setSelectedAddressId(address.id);
+    setSelectedBranchIdState(undefined);
+    setSelectedBranchId(null);
     setError(null);
 
     setProvinceId(address.province?.id ?? null);
