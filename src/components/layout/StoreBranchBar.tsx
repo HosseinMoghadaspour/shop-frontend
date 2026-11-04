@@ -87,11 +87,11 @@ export function StoreBranchBar() {
     if (!branchesQuery.isSuccess || !branchesQuery.data) return;
     const branches = branchesQuery.data.data;
     if (!branches.some((branch) => branch.id === branchId)) {
-      const preferred = branchesQuery.data.defaultBranchId ?? branches[0]?.id ?? null;
+      const preferred = branchesQuery.data.defaultBranchId ?? (selectedAddress?.latitude != null && selectedAddress.longitude != null ? branches[0]?.id ?? null : null);
       setSelectedBranchId(preferred);
       refreshBranchData();
     }
-  }, [branchesQuery.isSuccess, branchesQuery.data, branchId]);
+  }, [branchesQuery.isSuccess, branchesQuery.data, branchId, selectedAddress?.latitude, selectedAddress?.longitude]);
 
   if (!isInitialized || !isAuthenticated) return null;
   if (location.pathname === "/delivery-address" && addressesQuery.data?.length === 0) return null;
