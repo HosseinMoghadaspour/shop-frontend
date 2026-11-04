@@ -152,6 +152,8 @@ export function CheckoutPage() {
   const handleNewAddress = () => {
     setSelectedAddressIdState(null);
     setSelectedAddressId(null);
+    setSelectedBranchIdState(undefined);
+    setSelectedBranchId(null);
     setProvinceId(null);
     setError(null);
 
@@ -176,6 +178,7 @@ export function CheckoutPage() {
     }));
 
     if (selectedAddressId !== null) {
+      setSelectedAddressIdState(null);
       setSelectedAddressId(null);
       setProvinceId(null);
     }
