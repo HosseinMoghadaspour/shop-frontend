@@ -124,8 +124,13 @@ export function CheckoutPage() {
 
   useEffect(() => {
     const syncBranch = () => setSelectedBranchIdState(getSelectedBranchId());
+    const syncAddress = () => setSelectedAddressIdState(getSelectedAddressId() ?? null);
     window.addEventListener("store-branch-change", syncBranch);
-    return () => window.removeEventListener("store-branch-change", syncBranch);
+    window.addEventListener("store-address-change", syncAddress);
+    return () => {
+      window.removeEventListener("store-branch-change", syncBranch);
+      window.removeEventListener("store-address-change", syncAddress);
+    };
   }, []);
 
   useEffect(() => {
