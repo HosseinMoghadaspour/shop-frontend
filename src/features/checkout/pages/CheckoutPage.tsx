@@ -117,6 +117,12 @@ export function CheckoutPage() {
   });
 
   useEffect(() => {
+    const syncAddress = () => setSelectedAddressIdState(getSelectedAddressId() ?? null);
+    window.addEventListener("store-address-change", syncAddress);
+    return () => window.removeEventListener("store-address-change", syncAddress);
+  }, []);
+
+  useEffect(() => {
     const syncBranch = () => setSelectedBranchIdState(getSelectedBranchId());
     window.addEventListener("store-branch-change", syncBranch);
     return () => window.removeEventListener("store-branch-change", syncBranch);
