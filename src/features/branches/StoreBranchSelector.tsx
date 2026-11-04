@@ -58,6 +58,7 @@ export function StoreBranchSelector() {
       const preferred = branchesQuery.data?.defaultBranchId ?? branches[0].id;
       setBranchId(preferred);
       setSelectedBranchId(preferred);
+      refreshBranchDependentData();
     }
   }, [branchesQuery.data, branchId]);
 
