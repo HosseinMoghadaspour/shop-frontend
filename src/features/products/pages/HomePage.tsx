@@ -16,6 +16,7 @@ import {
 import { Slider } from "@/features/slider/slider";
 import { Category } from "@/features/categories/categories";
 import { useCartStore } from "@/stores/cart.store";
+import { useSelectedBranchId } from "@/hooks/useSelectedBranchId";
 
 function ProductSection({
   eyebrow,
@@ -134,25 +135,26 @@ function ProductSection({
 
 export function HomePage() {
   const fetchCart = useCartStore((state) => state.fetchCart);
+  const branchId = useSelectedBranchId();
 
   useEffect(() => {
     void fetchCart();
-  }, [fetchCart]);
+  }, [fetchCart, branchId]);
 
   const recommendedQuery = useQuery({
-    queryKey: ["products", "homepage-recommended"],
+    queryKey: ["products", "homepage-recommended", branchId],
     queryFn: () => getProducts({ page: 1, limit: 10 }),
   });
   const amazingQuery = useQuery({
-    queryKey: ["products", "amazing", 12],
+    queryKey: ["products", "amazing", 12, branchId],
     queryFn: () => getAmazingProducts(12),
   });
   const newQuery = useQuery({
-    queryKey: ["products", "new", 12],
+    queryKey: ["products", "new", 12, branchId],
     queryFn: () => getNewProducts(12),
   });
   const bestSellingQuery = useQuery({
-    queryKey: ["products", "best-selling", 12],
+    queryKey: ["products", "best-selling", 12, branchId],
     queryFn: () => getBestSellingProducts(12),
   });
 
