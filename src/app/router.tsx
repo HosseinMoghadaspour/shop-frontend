@@ -26,6 +26,7 @@ import { AdminFooterPage } from "@/features/admin/pages/AdminFooterPage";
 import { AdminPaymentReceiptsPage } from "@/features/admin/pages/AdminPaymentReceiptsPage";
 import { AdminPaymentMethodsPage } from "@/features/admin/pages/AdminPaymentMethodsPage";
 import { AdminBankAccountsPage } from "@/features/admin/pages/AdminBankAccountsPage";
+import { AdminBranchesPage } from "@/features/admin/pages/AdminBranchesPage";
 import { DeliveryAddressPage } from "@/features/addresses/pages/DeliveryAddressPage";
 
 function NotFoundPage() {
