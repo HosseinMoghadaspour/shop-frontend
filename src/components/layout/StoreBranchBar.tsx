@@ -8,7 +8,6 @@ import { getMyAddresses } from "@/services/addresses.api";
 import { getBranchesByCity } from "@/services/branches.api";
 import {
   getSelectedAddressId,
-  getSelectedBranchId,
   setSelectedAddressId,
   setSelectedBranchId,
 } from "@/lib/store-branch";
