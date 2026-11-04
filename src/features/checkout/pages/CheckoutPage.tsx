@@ -234,6 +234,7 @@ export function CheckoutPage() {
       }
       const order = await createOrder(
         {
+          branchId: selectedBranchId,
           paymentMethodId: selectedPaymentMethodId,
           deliveryAddress:
             selectedAddressId !== null
