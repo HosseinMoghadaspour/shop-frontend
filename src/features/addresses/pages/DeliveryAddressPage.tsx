@@ -15,6 +15,8 @@ export function DeliveryAddressPage() {
   const queryClient = useQueryClient();
   const [provinceId, setProvinceId] = useState<number | null>(null);
   const [cityId, setCityId] = useState<number | null>(null);
+  const [latitude, setLatitude] = useState("");
+  const [longitude, setLongitude] = useState("");
   const [locationLoading, setLocationLoading] = useState(false);
   const [form, setForm] = useState({
     deliverToName: "",
@@ -50,8 +52,8 @@ export function DeliveryAddressPage() {
         deliverToPhoneNumber: form.deliverToPhoneNumber.trim() || undefined,
         Adrs: form.Adrs.trim(),
         PostalCode: form.PostalCode.trim(),
-        latitude: coordinates?.latitude ?? null,
-        longitude: coordinates?.longitude ?? null,
+        latitude: latitude.trim() ? Number(latitude) : null,
+        longitude: longitude.trim() ? Number(longitude) : null,
       });
       setSelectedAddressId(id);
       await queryClient.invalidateQueries({ queryKey: ["addresses"] });
@@ -99,6 +101,16 @@ export function DeliveryAddressPage() {
               <div className="space-y-2">
                 <Label>کد پستی</Label>
                 <Input dir="ltr" value={form.PostalCode} onChange={(e) => update("PostalCode", e.target.value)} />
+              </div>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label>عرض جغرافیایی (اختیاری)</Label>
+                <Input dir="ltr" value={latitude} onChange={(e) => setLatitude(e.target.value)} placeholder="Latitude" />
+              </div>
+              <div className="space-y-2">
+                <Label>طول جغرافیایی (اختیاری)</Label>
+                <Input dir="ltr" value={longitude} onChange={(e) => setLongitude(e.target.value)} placeholder="Longitude" />
               </div>
             </div>
             <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-dashed border-emerald-700/30 p-4">
