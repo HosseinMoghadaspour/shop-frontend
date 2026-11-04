@@ -32,3 +32,22 @@ export async function getMyAddresses(): Promise<DeliveryAddress[]> {
     const response = await apiClient.get<AddressesResponse>("/locations/address/me");
     return response.data.data;
 }
+
+
+export interface CreateDeliveryAddressInput {
+    cityId: number;
+    deliverToName: string;
+    deliverToMobileNumber: string;
+    deliverToPhoneNumber?: string;
+    Adrs: string;
+    PostalCode?: string;
+    RowDesc?: string;
+}
+
+export async function createMyAddress(input: CreateDeliveryAddressInput): Promise<number> {
+    const response = await apiClient.post<{ success: boolean; data: { id: number } }>(
+        "/locations/address/me",
+        input,
+    );
+    return response.data.data.id;
+}
