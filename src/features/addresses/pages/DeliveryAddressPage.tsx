@@ -43,6 +43,14 @@ export function DeliveryAddressPage() {
       setError("کد پستی را وارد کنید.");
       return;
     }
+    const lat = latitude.trim() ? Number(latitude) : null;
+    const lng = longitude.trim() ? Number(longitude) : null;
+    if ((lat === null) !== (lng === null) ||
+        (lat !== null && (!Number.isFinite(lat) || lat < -90 || lat > 90)) ||
+        (lng !== null && (!Number.isFinite(lng) || lng < -180 || lng > 180))) {
+      setError("مختصات جغرافیایی باید کامل و معتبر وارد شوند.");
+      return;
+    }
     setBusy(true);
     try {
       const id = await createMyAddress({
@@ -52,8 +60,8 @@ export function DeliveryAddressPage() {
         deliverToPhoneNumber: form.deliverToPhoneNumber.trim() || undefined,
         Adrs: form.Adrs.trim(),
         PostalCode: form.PostalCode.trim(),
-        latitude: latitude.trim() ? Number(latitude) : null,
-        longitude: longitude.trim() ? Number(longitude) : null,
+        latitude: lat,
+        longitude: lng,
       });
       setSelectedAddressId(id);
       await queryClient.invalidateQueries({ queryKey: ["addresses"] });
