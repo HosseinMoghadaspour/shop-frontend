@@ -4,6 +4,7 @@ import { MapPin, Store } from "lucide-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuthStore } from "@/stores/auth.store";
+import { useCartStore } from "@/stores/cart.store";
 import { getMyAddresses } from "@/services/addresses.api";
 import { getBranchesByCity } from "@/services/branches.api";
 import { getSelectedAddressId, getSelectedBranchId, setSelectedAddressId, setSelectedBranchId } from "@/lib/store-branch";
@@ -11,6 +12,7 @@ import { getSelectedAddressId, getSelectedBranchId, setSelectedAddressId, setSel
 export function StoreBranchSelector() {
   const queryClient = useQueryClient();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const refreshCart = useCartStore((state) => state.fetchCart);
   const [addressId, setAddressId] = useState<number | undefined>(getSelectedAddressId());
   const [branchId, setBranchId] = useState<number | undefined>(getSelectedBranchId());
 
@@ -44,7 +46,8 @@ export function StoreBranchSelector() {
   }, [addresses, addressId]);
 
   useEffect(() => {
-    const branches = branchesQuery.data?.data ?? [];
+    if (!branchesQuery.data) return;
+    const branches = branchesQuery.data.data;
     if (!branches.length) {
       setBranchId(undefined);
       setSelectedBranchId(null);
@@ -63,6 +66,7 @@ export function StoreBranchSelector() {
     void queryClient.invalidateQueries({ queryKey: ["product"] });
     void queryClient.invalidateQueries({ queryKey: ["cart"] });
     window.dispatchEvent(new Event("store-branch-change"));
+    void refreshCart();
   }
 
   if (!isAuthenticated) return null;
