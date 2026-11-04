@@ -57,6 +57,7 @@ export interface AdminBranchOption {
   warehouseName: string;
   cityId: number | null;
   cityName: string | null;
+  provinceId: number | null;
   salePriceTypeId: number | null;
   latitude: number | null;
   longitude: number | null;
