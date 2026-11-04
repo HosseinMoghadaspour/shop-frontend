@@ -111,7 +111,7 @@ export function CheckoutPage() {
     (selectedAddressId === null && form.cityId > 0 ? form.cityId : undefined);
 
   const branchesQuery = useQuery({
-    queryKey: ["store-branches", branchCityId],
+    queryKey: ["store-branches", branchCityId, selectedAddress?.latitude, selectedAddress?.longitude],
     queryFn: () => getBranchesByCity(branchCityId!, selectedAddress?.latitude != null && selectedAddress.longitude != null ? { latitude: selectedAddress.latitude, longitude: selectedAddress.longitude } : undefined),
     enabled: branchCityId !== undefined,
   });
@@ -201,6 +201,8 @@ export function CheckoutPage() {
     if (selectedAddressId !== null) {
       setSelectedAddressIdState(null);
       setSelectedAddressId(null);
+      setSelectedBranchIdState(undefined);
+      setSelectedBranchId(null);
       setProvinceId(null);
     }
   };
