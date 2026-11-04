@@ -36,6 +36,7 @@ export function AdminBranchesPage() {
     if (!saved) return;
     setWarehouseId(saved.warehouseId);
     setCityId(saved.cityId ?? 0);
+    setProvinceId(saved.provinceId ?? 0);
     setPriceTypeId(saved.salePriceTypeId == null ? "" : String(saved.salePriceTypeId));
     setLatitude(saved.latitude == null ? "" : String(saved.latitude));
     setLongitude(saved.longitude == null ? "" : String(saved.longitude));
