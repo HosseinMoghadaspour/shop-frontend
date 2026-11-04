@@ -22,6 +22,16 @@ export function StoreBranchBar() {
   const branchId = useSelectedBranchId();
   const [addressId, setAddressId] = useState<number | undefined>(getSelectedAddressId());
 
+  useEffect(() => {
+    const syncAddress = () => setAddressId(getSelectedAddressId());
+    window.addEventListener("store-address-change", syncAddress);
+    window.addEventListener("storage", syncAddress);
+    return () => {
+      window.removeEventListener("store-address-change", syncAddress);
+      window.removeEventListener("storage", syncAddress);
+    };
+  }, []);
+
   const addressesQuery = useQuery({
     queryKey: ["addresses"],
     queryFn: getMyAddresses,
