@@ -24,7 +24,7 @@ import { createOrder } from "@/services/orders.api";
 import type { OrderDeliveryAddress } from "@/services/orders.api";
 import { getPaymentMethods } from "@/services/payment.api";
 import { getBranchesByCity } from "@/services/branches.api";
-import { getSelectedBranchId, setSelectedBranchId } from "@/lib/store-branch";
+import { getSelectedBranchId, setSelectedBranchId, getSelectedAddressId, setSelectedAddressId } from "@/lib/store-branch";
 import { getBranchesByCity } from "@/services/branches.api";
 import { getSelectedBranchId, setSelectedBranchId } from "@/lib/store-branch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -45,7 +45,7 @@ export function CheckoutPage() {
   const { data: cart, isLoading: cartLoading } = useCart();
   const { data: addresses, isLoading: addressesLoading } = useAddresses();
 
-  const [selectedAddressId, setSelectedAddressId] = useState<number | null>(null);
+  const [selectedAddressId, setSelectedAddressIdState] = useState<number | null>(getSelectedAddressId() ?? null);
   const [selectedBranchId, setSelectedBranchIdState] = useState<number | undefined>(getSelectedBranchId());
   const [provinceId, setProvinceId] = useState<number | null>(null);
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
@@ -132,6 +132,7 @@ export function CheckoutPage() {
   const handleSelectAddress = (
     address: NonNullable<typeof addresses>[number],
   ) => {
+    setSelectedAddressIdState(address.id);
     setSelectedAddressId(address.id);
     setError(null);
 
@@ -149,6 +150,7 @@ export function CheckoutPage() {
   };
 
   const handleNewAddress = () => {
+    setSelectedAddressIdState(null);
     setSelectedAddressId(null);
     setProvinceId(null);
     setError(null);
