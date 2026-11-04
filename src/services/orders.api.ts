@@ -11,6 +11,7 @@ export interface OrderDeliveryAddress {
 }
 
 export interface CreateOrderRequest {
+  branchId: number;
   paymentMethodId: number;
   deliveryAddress:
     | {
