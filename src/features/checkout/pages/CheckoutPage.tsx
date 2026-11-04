@@ -762,6 +762,7 @@ export function CheckoutPage() {
   });
 
   useEffect(() => {
+    if (!branchCityId) return;
     const branches = branchesQuery.data?.data ?? [];
     if (!branches.length) {
       setSelectedBranchIdState(undefined);
@@ -773,5 +774,5 @@ export function CheckoutPage() {
       setSelectedBranchIdState(preferred);
       setSelectedBranchId(preferred);
     }
-  }, [branchesQuery.data, selectedBranchId]);
+  }, [branchesQuery.data, selectedBranchId, branchCityId]);
 
