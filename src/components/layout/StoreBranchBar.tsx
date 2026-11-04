@@ -87,7 +87,7 @@ export function StoreBranchBar() {
     if (!branchesQuery.isSuccess || !branchesQuery.data) return;
     const branches = branchesQuery.data.data;
     if (!branches.some((branch) => branch.id === branchId)) {
-      const preferred = branchesQuery.data.defaultBranchId ?? (selectedAddress?.latitude != null && selectedAddress.longitude != null ? branches[0]?.id ?? null : null);
+      const preferred = branchesQuery.data.defaultBranchId ?? (selectedAddress?.latitude != null && selectedAddress.longitude != null && branches[0]?.distanceKm != null ? branches[0].id : null);
       setSelectedBranchId(preferred);
       refreshBranchData();
     }
