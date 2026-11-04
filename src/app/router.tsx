@@ -26,6 +26,7 @@ import { AdminFooterPage } from "@/features/admin/pages/AdminFooterPage";
 import { AdminPaymentReceiptsPage } from "@/features/admin/pages/AdminPaymentReceiptsPage";
 import { AdminPaymentMethodsPage } from "@/features/admin/pages/AdminPaymentMethodsPage";
 import { AdminBankAccountsPage } from "@/features/admin/pages/AdminBankAccountsPage";
+import { DeliveryAddressPage } from "@/features/addresses/pages/DeliveryAddressPage";
 
 function NotFoundPage() {
   return (
@@ -65,6 +66,7 @@ export const router = createBrowserRouter([
         element: <ProtectedRoute />,
         children: [
           { path: "/cart", element: <CartPage /> },
+          { path: "/delivery-address", element: <DeliveryAddressPage /> },
           { path: "/checkout", element: <CheckoutPage /> },
           { path: "/checkout/success", element: <OrderSuccessPage /> },
           { path: "/orders", element: <OrdersPage /> },
