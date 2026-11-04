@@ -12,6 +12,7 @@ import {
   ChevronLeft,
   CreditCard,
   Landmark,
+  Store,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/stores/auth.store";
@@ -19,6 +20,7 @@ import { useAuthStore } from "@/stores/auth.store";
 const navigation = [
   { to: "/admin", label: "داشبورد", icon: LayoutDashboard, end: true },
   { to: "/admin/products", label: "مدیریت کالاها", icon: PackageSearch },
+  { to: "/admin/branches", label: "مدیریت شعب", icon: Store },
   { to: "/admin/categories", label: "دسته‌بندی‌ها", icon: FolderTree },
   { to: "/admin/sliders", label: "مدیریت اسلایدرها", icon: Images },
   { to: "/admin/footer", label: "مدیریت فوتر", icon: Images },
