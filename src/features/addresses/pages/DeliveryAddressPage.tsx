@@ -15,6 +15,8 @@ export function DeliveryAddressPage() {
   const queryClient = useQueryClient();
   const [provinceId, setProvinceId] = useState<number | null>(null);
   const [cityId, setCityId] = useState<number | null>(null);
+  const [coordinates, setCoordinates] = useState<{ latitude: number; longitude: number } | null>(null);
+  const [locationLoading, setLocationLoading] = useState(false);
   const [form, setForm] = useState({
     deliverToName: "",
     deliverToMobileNumber: "",
@@ -113,6 +115,38 @@ export function DeliveryAddressPage() {
               </div>
             </div>
             <p className="text-xs text-muted-foreground">با واردکردن مختصات محل آدرس، نزدیک‌ترین شعبه دقیق‌تر تشخیص داده می‌شود. در غیر این صورت شعبه پیش‌فرض شهر انتخاب می‌شود.</p>
+            <div className="rounded-xl border border-dashed border-emerald-700/30 p-4">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <p className="text-sm font-semibold">موقعیت روی نقشه</p>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    برای تشخیص نزدیک‌ترین شعبه، موقعیت این آدرس را ثبت کنید (اختیاری).
+                  </p>
+                  {coordinates && <p className="mt-1 text-xs text-emerald-700">موقعیت ثبت شد: {coordinates.latitude.toFixed(5)}, {coordinates.longitude.toFixed(5)}</p>}
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={locationLoading || !navigator.geolocation}
+                  onClick={() => {
+                    setLocationLoading(true);
+                    navigator.geolocation.getCurrentPosition(
+                      (position) => {
+                        setCoordinates({ latitude: position.coords.latitude, longitude: position.coords.longitude });
+                        setLocationLoading(false);
+                      },
+                      () => {
+                        setError("دریافت موقعیت انجام نشد. مجوز مکان‌یابی مرورگر را بررسی کنید.");
+                        setLocationLoading(false);
+                      },
+                      { enableHighAccuracy: true, timeout: 12000, maximumAge: 60000 },
+                    );
+                  }}
+                >
+                  {locationLoading ? "در حال دریافت موقعیت..." : coordinates ? "به‌روزرسانی موقعیت" : "ثبت موقعیت فعلی"}
+                </Button>
+              </div>
+            </div>
             <div className="space-y-2">
               <Label>نشانی کامل</Label>
               <textarea
