@@ -16,9 +16,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { getBranchesByCity } from "@/services/branches.api";
-import { getSelectedBranchId, setSelectedBranchId } from "@/lib/store-branch";
-
 import AddressSelector from "../components/AddressSelector";
 import { useAddresses } from "@/features/addresses/hooks/useAddresses";
 import LocationSelector from "../components/LocationSelector";
@@ -199,7 +196,12 @@ export function CheckoutPage() {
   const handleSubmitOrder = async () => {
     setError(null);
 
-    if (!selectedBranchId) {\n      setError("برای شهر این آدرس شعبه فعالی انتخاب نشده است.");\n      return;\n    }\n\n    if (cartLoading) {
+    if (!selectedBranchId) {
+      setError("برای شهر این آدرس شعبه فعالی انتخاب نشده است.");
+      return;
+    }
+
+    if (cartLoading) {
       return;
     }
     if (paymentMethodsLoading) {
