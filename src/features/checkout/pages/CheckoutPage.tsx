@@ -15,6 +15,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { getBranchesByCity } from "@/services/branches.api";
+import { getSelectedBranchId, setSelectedBranchId } from "@/lib/store-branch";
 
 import AddressSelector from "../components/AddressSelector";
 import { useAddresses } from "@/features/addresses/hooks/useAddresses";
@@ -43,9 +46,8 @@ export function CheckoutPage() {
   const { data: cart, isLoading: cartLoading } = useCart();
   const { data: addresses, isLoading: addressesLoading } = useAddresses();
 
-  const [selectedAddressId, setSelectedAddressId] = useState<number | null>(
-    null,
-  );
+  const [selectedAddressId, setSelectedAddressId] = useState<number | null>(null);
+  const [selectedBranchId, setSelectedBranchIdState] = useState<number | undefined>(getSelectedBranchId());
   const [provinceId, setProvinceId] = useState<number | null>(null);
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
   const [selectedPaymentMethodId, setSelectedPaymentMethodId] = useState<
