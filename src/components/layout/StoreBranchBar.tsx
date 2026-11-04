@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { MapPin } from "lucide-react";
 
@@ -13,6 +13,7 @@ import {
   setSelectedBranchId,
 } from "@/lib/store-branch";
 import { useSelectedBranchId } from "@/hooks/useSelectedBranchId";
+import { useCartStore } from "@/stores/cart.store";
 
 export function StoreBranchBar() {
   const isInitialized = useAuthStore((state) => state.isInitialized);
@@ -20,6 +21,15 @@ export function StoreBranchBar() {
   const location = useLocation();
   const navigate = useNavigate();
   const branchId = useSelectedBranchId();
+  const queryClient = useQueryClient();
+  const refreshCart = useCartStore((state) => state.fetchCart);
+
+  function refreshBranchData() {
+    void queryClient.invalidateQueries({ queryKey: ["products"] });
+    void queryClient.invalidateQueries({ queryKey: ["product"] });
+    void queryClient.invalidateQueries({ queryKey: ["cart"] });
+    void refreshCart();
+  }
   const [addressId, setAddressId] = useState<number | undefined>(getSelectedAddressId());
 
   useEffect(() => {
@@ -79,6 +89,7 @@ export function StoreBranchBar() {
     if (!branches.some((branch) => branch.id === branchId)) {
       const preferred = branchesQuery.data.defaultBranchId ?? branches[0]?.id ?? null;
       setSelectedBranchId(preferred);
+      refreshBranchData();
     }
   }, [branchesQuery.isSuccess, branchesQuery.data, branchId]);
 
@@ -112,6 +123,7 @@ export function StoreBranchBar() {
             setAddressId(nextId);
             setSelectedAddressId(nextId);
             setSelectedBranchId(null);
+            refreshBranchData();
           }}
         >
           {(addressesQuery.data ?? []).map((address) => (
@@ -126,7 +138,7 @@ export function StoreBranchBar() {
           className="max-w-[220px] rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs"
           value={branchId ?? ""}
           disabled={branchesQuery.isLoading || !branchesQuery.data?.data.length}
-          onChange={(event) => setSelectedBranchId(Number(event.target.value))}
+          onChange={(event) => { setSelectedBranchId(Number(event.target.value)); refreshBranchData(); }}
         >
           <option value="" disabled>
             {branchesQuery.isLoading ? "در حال دریافت شعب..." : "انتخاب شعبه"}
