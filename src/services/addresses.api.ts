@@ -15,6 +15,8 @@ export interface DeliveryAddress {
     };
     address: string | null;
     postalCode: string | null;
+    latitude: number | null;
+    longitude: number | null;
     isActive: boolean;
     cityId: number | null;
     city: AddressLocation | null;
@@ -42,6 +44,8 @@ export interface CreateDeliveryAddressInput {
     Adrs: string;
     PostalCode?: string;
     RowDesc?: string;
+    latitude?: number | null;
+    longitude?: number | null;
 }
 
 export async function createMyAddress(input: CreateDeliveryAddressInput): Promise<number> {
