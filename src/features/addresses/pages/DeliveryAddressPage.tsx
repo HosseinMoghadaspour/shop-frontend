@@ -15,7 +15,6 @@ export function DeliveryAddressPage() {
   const queryClient = useQueryClient();
   const [provinceId, setProvinceId] = useState<number | null>(null);
   const [cityId, setCityId] = useState<number | null>(null);
-  const [coordinates, setCoordinates] = useState<{ latitude: number; longitude: number } | null>(null);
   const [locationLoading, setLocationLoading] = useState(false);
   const [form, setForm] = useState({
     deliverToName: "",
@@ -102,37 +101,38 @@ export function DeliveryAddressPage() {
                 <Input dir="ltr" value={form.PostalCode} onChange={(e) => update("PostalCode", e.target.value)} />
               </div>
             </div>
-            <div className="rounded-xl border border-dashed border-emerald-700/30 p-4">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div>
-                  <p className="text-sm font-semibold">موقعیت روی نقشه</p>
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    برای تشخیص نزدیک‌ترین شعبه، موقعیت این آدرس را ثبت کنید (اختیاری).
-                  </p>
-                  {coordinates && <p className="mt-1 text-xs text-emerald-700">موقعیت ثبت شد: {coordinates.latitude.toFixed(5)}, {coordinates.longitude.toFixed(5)}</p>}
-                </div>
-                <Button
-                  type="button"
-                  variant="outline"
-                  disabled={locationLoading || !navigator.geolocation}
-                  onClick={() => {
-                    setLocationLoading(true);
-                    navigator.geolocation.getCurrentPosition(
-                      (position) => {
-                        setCoordinates({ latitude: position.coords.latitude, longitude: position.coords.longitude });
-                        setLocationLoading(false);
-                      },
-                      () => {
-                        setError("دریافت موقعیت انجام نشد. مجوز مکان‌یابی مرورگر را بررسی کنید.");
-                        setLocationLoading(false);
-                      },
-                      { enableHighAccuracy: true, timeout: 12000, maximumAge: 60000 },
-                    );
-                  }}
-                >
-                  {locationLoading ? "در حال دریافت موقعیت..." : coordinates ? "به‌روزرسانی موقعیت" : "ثبت موقعیت فعلی"}
-                </Button>
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-dashed border-emerald-700/30 p-4">
+              <div>
+                <p className="text-sm font-semibold">موقعیت مکانی آدرس</p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  موقعیت را از GPS دریافت کنید یا مختصات را در فیلدهای بالا وارد کنید.
+                </p>
+                {latitude.trim() && longitude.trim() && (
+                  <p className="mt-1 text-xs text-emerald-700">مختصات ثبت شده است.</p>
+                )}
               </div>
+              <Button
+                type="button"
+                variant="outline"
+                disabled={locationLoading || !("geolocation" in navigator)}
+                onClick={() => {
+                  setLocationLoading(true);
+                  navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                      setLatitude(String(position.coords.latitude));
+                      setLongitude(String(position.coords.longitude));
+                      setLocationLoading(false);
+                    },
+                    () => {
+                      setError("دریافت موقعیت انجام نشد. مجوز مکان‌یابی مرورگر را بررسی کنید.");
+                      setLocationLoading(false);
+                    },
+                    { enableHighAccuracy: true, timeout: 12000, maximumAge: 60000 },
+                  );
+                }}
+              >
+                {locationLoading ? "در حال دریافت موقعیت..." : "دریافت موقعیت فعلی"}
+              </Button>
             </div>
             <div className="space-y-2">
               <Label>نشانی کامل</Label>
