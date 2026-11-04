@@ -48,3 +48,23 @@ export async function saveAdminBranch(
 ): Promise<void> {
   await apiClient.put(`/branches/admin/${branchId}`, data);
 }
+
+
+export interface AdminBranchOption {
+  branchId: number;
+  branchName: string;
+  warehouseId: number;
+  warehouseName: string;
+  cityId: number | null;
+  cityName: string | null;
+  salePriceTypeId: number | null;
+  latitude: number | null;
+  longitude: number | null;
+  isActive: boolean | null;
+  isDefault: boolean | null;
+}
+
+export async function getAdminBranchOptions(): Promise<AdminBranchOption[]> {
+  const response = await apiClient.get<{ success: boolean; data: AdminBranchOption[] }>("/branches/admin/options");
+  return response.data.data;
+}
