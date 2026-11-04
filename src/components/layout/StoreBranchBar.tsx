@@ -58,13 +58,14 @@ export function StoreBranchBar() {
     }
 
     const current = addresses.find((address) => address.id === addressId);
+    if (!current && addressesQuery.isFetching) return;
     if (!current) {
       const preferred = addresses[0];
       setAddressId(preferred.id);
       setSelectedAddressId(preferred.id);
       setSelectedBranchId(null);
     }
-  }, [isInitialized, isAuthenticated, addressesQuery.isSuccess, addressesQuery.data, addressId, location.pathname, navigate]);
+  }, [isInitialized, isAuthenticated, addressesQuery.isSuccess, addressesQuery.isFetching, addressesQuery.data, addressId, location.pathname, navigate]);
 
   const selectedAddress = useMemo(
     () => addressesQuery.data?.find((address) => address.id === addressId) ?? null,
