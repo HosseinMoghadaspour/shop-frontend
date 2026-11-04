@@ -77,7 +77,7 @@ export function StoreBranchSelector() {
 
   if (!addresses.length) {
     return (
-      <Link to="/checkout" className="inline-flex items-center gap-2 rounded-xl bg-white px-3 py-2 text-xs font-semibold text-emerald-800 shadow-sm">
+      <Link to="/delivery-address" className="inline-flex items-center gap-2 rounded-xl bg-white px-3 py-2 text-xs font-semibold text-emerald-800 shadow-sm">
         <MapPin className="size-4" />
         ابتدا آدرس تحویل را ثبت کنید
       </Link>
