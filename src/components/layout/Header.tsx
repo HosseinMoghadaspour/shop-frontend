@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuthStore } from "@/stores/auth.store";
 import { useCartStore } from "@/stores/cart.store";
+import { StoreBranchSelector } from "@/features/branches/StoreBranchSelector";
 
 const navItems = [
   { to: "/", label: "صفحه اصلی", end: true },
@@ -225,6 +226,15 @@ export function Header() {
             جستجو
           </Button>
         </form>
+
+        {isAuthenticated && (
+          <div className="flex flex-wrap items-center justify-between gap-2 border-t border-emerald-900/10 py-2">
+            <span className="hidden text-xs font-medium text-emerald-950/70 sm:inline">
+              ارسال بر اساس آدرس و شعبه انتخابی شما
+            </span>
+            <StoreBranchSelector />
+          </div>
+        )}
 
         {/* ردیف پایین دسکتاپ */}
 
