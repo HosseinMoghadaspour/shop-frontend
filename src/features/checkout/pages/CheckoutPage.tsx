@@ -142,9 +142,9 @@ export function CheckoutPage() {
       return;
     }
     if (!branches.some((branch) => branch.id === selectedBranchId)) {
-      const preferred = branchesQuery.data.defaultBranchId ?? branches[0].id;
+      const preferred = branchesQuery.data.defaultBranchId ?? (selectedAddress?.latitude != null && selectedAddress.longitude != null ? branches[0]?.id : undefined);
       setSelectedBranchIdState(preferred);
-      setSelectedBranchId(preferred);
+      setSelectedBranchId(preferred ?? null);
     }
   }, [branchCityId, branchesQuery.data, selectedBranchId]);
 
