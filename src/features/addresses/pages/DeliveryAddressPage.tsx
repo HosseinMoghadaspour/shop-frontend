@@ -22,6 +22,8 @@ export function DeliveryAddressPage() {
     Adrs: "",
     PostalCode: "",
   });
+  const [latitude, setLatitude] = useState("");
+  const [longitude, setLongitude] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
@@ -49,6 +51,8 @@ export function DeliveryAddressPage() {
         deliverToPhoneNumber: form.deliverToPhoneNumber.trim() || undefined,
         Adrs: form.Adrs.trim(),
         PostalCode: form.PostalCode.trim(),
+        latitude: latitude.trim() ? Number(latitude) : null,
+        longitude: longitude.trim() ? Number(longitude) : null,
       });
       setSelectedAddressId(id);
       await queryClient.invalidateQueries({ queryKey: ["addresses"] });
@@ -98,6 +102,17 @@ export function DeliveryAddressPage() {
                 <Input dir="ltr" value={form.PostalCode} onChange={(e) => update("PostalCode", e.target.value)} />
               </div>
             </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label>عرض جغرافیایی (اختیاری)</Label>
+                <Input dir="ltr" value={latitude} onChange={(e) => setLatitude(e.target.value)} placeholder="Latitude" />
+              </div>
+              <div className="space-y-2">
+                <Label>طول جغرافیایی (اختیاری)</Label>
+                <Input dir="ltr" value={longitude} onChange={(e) => setLongitude(e.target.value)} placeholder="Longitude" />
+              </div>
+            </div>
+            <p className="text-xs text-muted-foreground">با واردکردن مختصات محل آدرس، نزدیک‌ترین شعبه دقیق‌تر تشخیص داده می‌شود. در غیر این صورت شعبه پیش‌فرض شهر انتخاب می‌شود.</p>
             <div className="space-y-2">
               <Label>نشانی کامل</Label>
               <textarea
