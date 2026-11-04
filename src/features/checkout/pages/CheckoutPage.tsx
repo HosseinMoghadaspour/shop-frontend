@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import {
   ArrowRight,
@@ -22,6 +23,9 @@ import { useCart } from "@/features/cart/hooks/useCart";
 import { createOrder } from "@/services/orders.api";
 import type { OrderDeliveryAddress } from "@/services/orders.api";
 import { getPaymentMethods } from "@/services/payment.api";
+import { getBranchesByCity } from "@/services/branches.api";
+import { getSelectedBranchId, setSelectedBranchId } from "@/lib/store-branch";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { PaymentMethod } from "@/services/payment.api";
 
 interface CartItem {
@@ -168,7 +172,7 @@ export function CheckoutPage() {
   const handleSubmitOrder = async () => {
     setError(null);
 
-    if (cartLoading) {
+    if (!selectedBranchId) {\n      setError("برای شهر این آدرس شعبه فعالی انتخاب نشده است.");\n      return;\n    }\n\n    if (cartLoading) {
       return;
     }
     if (paymentMethodsLoading) {
@@ -352,6 +356,40 @@ export function CheckoutPage() {
             onSelect={handleSelectAddress}
             onNewAddress={handleNewAddress}
           />
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Package className="h-5 w-5" />
+                انتخاب شعبه ارسال
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Select
+                value={selectedBranchId ? String(selectedBranchId) : ""}
+                onValueChange={(value) => {
+                  const id = Number(value);
+                  setSelectedBranchIdState(id);
+                  setSelectedBranchId(id);
+                }}
+                disabled={branchesQuery.isLoading || !branchesQuery.data?.data.length}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder={branchesQuery.isLoading ? "در حال دریافت شعب..." : "شعبه را انتخاب کنید"} />
+                </SelectTrigger>
+                <SelectContent>
+                  {branchesQuery.data?.data.map((branch) => (
+                    <SelectItem key={branch.id} value={String(branch.id)}>
+                      {branch.name}{branch.isDefault ? " (پیشنهادی)" : ""}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {branchesQuery.data?.data.length === 0 && (
+                <p className="mt-2 text-sm text-destructive">برای شهر انتخاب‌شده شعبه فروشگاهی فعالی تعریف نشده است.</p>
+              )}
+            </CardContent>
+          </Card>
 
           {/* New address form */}
           {selectedAddressId === null && (
@@ -715,3 +753,25 @@ export function CheckoutPage() {
     </div>
   );
 }
+
+  const branchCityId = selectedAddress?.cityId ?? (selectedAddressId === null ? form.cityId : undefined);
+  const branchesQuery = useQuery({
+    queryKey: ["store-branches", branchCityId],
+    queryFn: () => getBranchesByCity(branchCityId!),
+    enabled: branchCityId !== undefined && branchCityId > 0,
+  });
+
+  useEffect(() => {
+    const branches = branchesQuery.data?.data ?? [];
+    if (!branches.length) {
+      setSelectedBranchIdState(undefined);
+      setSelectedBranchId(null);
+      return;
+    }
+    if (!branches.some((branch) => branch.id === selectedBranchId)) {
+      const preferred = branchesQuery.data?.defaultBranchId ?? branches[0].id;
+      setSelectedBranchIdState(preferred);
+      setSelectedBranchId(preferred);
+    }
+  }, [branchesQuery.data, selectedBranchId]);
+
