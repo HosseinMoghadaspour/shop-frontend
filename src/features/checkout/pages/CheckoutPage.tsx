@@ -110,7 +110,7 @@ export function CheckoutPage() {
 
   const branchesQuery = useQuery({
     queryKey: ["store-branches", branchCityId],
-    queryFn: () => getBranchesByCity(branchCityId!),
+    queryFn: () => getBranchesByCity(branchCityId!, selectedAddress?.latitude != null && selectedAddress.longitude != null ? { latitude: selectedAddress.latitude, longitude: selectedAddress.longitude } : undefined),
     enabled: branchCityId !== undefined,
   });
 
