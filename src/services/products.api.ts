@@ -1,4 +1,5 @@
 import { apiClient } from "./api/client";
+import { getSelectedBranchId } from "@/lib/store-branch";
 
 export interface ProductPricing {
   salePrice: number;
@@ -108,6 +109,7 @@ export interface GetProductsParams {
   limit?: number;
   search?: string;
   categoryId?: number;
+  branchId?: number;
 }
 
 export interface ProductsResult {
@@ -129,7 +131,7 @@ interface ProductListApiResponse {
 export async function getProducts(
   params?: GetProductsParams,
 ): Promise<ProductsResult> {
-  const response = await apiClient.get<ProductsApiResponse>("/products", { params });
+  const response = await apiClient.get<ProductsApiResponse>("/products", { params: { ...params, branchId: params?.branchId ?? getSelectedBranchId() } });
   return {
     products: response.data.data,
     pagination: response.data.pagination,
@@ -138,7 +140,7 @@ export async function getProducts(
 
 async function getProductList(endpoint: string, limit = 12): Promise<Product[]> {
   const response = await apiClient.get<ProductListApiResponse>(endpoint, {
-    params: { limit },
+    params: { limit, branchId: getSelectedBranchId() },
   });
   return response.data.data;
 }
@@ -161,6 +163,6 @@ interface ProductApiResponse {
 }
 
 export async function getProduct(productId: number): Promise<Product> {
-  const response = await apiClient.get<ProductApiResponse>(`/products/${productId}`);
+  const response = await apiClient.get<ProductApiResponse>(`/products/${productId}`, { params: { branchId: getSelectedBranchId() } });
   return response.data.data;
 }
