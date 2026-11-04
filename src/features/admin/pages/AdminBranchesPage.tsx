@@ -34,7 +34,7 @@ export function AdminBranchesPage() {
   useEffect(() => {
     const saved = warehouses.find((x) => x.cityId !== null) ?? warehouses[0];
     if (!saved) return;
-    setWarehouseId(saved.warehouseId);
+    setWarehouseId(saved.configuredWarehouseId ?? saved.warehouseId);
     setCityId(saved.cityId ?? 0);
     setProvinceId(saved.provinceId ?? 0);
     setPriceTypeId(saved.salePriceTypeId == null ? "" : String(saved.salePriceTypeId));
