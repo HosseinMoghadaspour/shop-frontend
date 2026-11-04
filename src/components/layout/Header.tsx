@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuthStore } from "@/stores/auth.store";
 import { useCartStore } from "@/stores/cart.store";
+import { useSelectedBranchId } from "@/hooks/useSelectedBranchId";
 import { StoreBranchSelector } from "@/features/branches/StoreBranchSelector";
 
 const navItems = [
@@ -39,6 +40,7 @@ export function Header() {
   const cart = useCartStore((state) => state.cart);
   const fetchCart = useCartStore((state) => state.fetchCart);
   const resetCart = useCartStore((state) => state.reset);
+  const selectedBranchId = useSelectedBranchId();
 
   useEffect(() => {
     if (!isInitialized) return;
@@ -49,7 +51,7 @@ export function Header() {
     }
 
     void fetchCart();
-  }, [isInitialized, isAuthenticated, fetchCart, resetCart]);
+  }, [isInitialized, isAuthenticated, fetchCart, resetCart, selectedBranchId]);
 
   async function handleLogout() {
     try {
