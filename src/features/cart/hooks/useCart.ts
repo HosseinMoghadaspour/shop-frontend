@@ -1,10 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { getCart } from "@/services/cart.api";
-import { getSelectedBranchId } from "@/lib/store-branch";
+import { useSelectedBranchId } from "@/hooks/useSelectedBranchId";
 
 export function useCart() {
+  const branchId = useSelectedBranchId();
   return useQuery({
-    queryKey: ["cart", getSelectedBranchId()],
+    queryKey: ["cart", branchId],
     queryFn: getCart,
   });
 }
