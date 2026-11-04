@@ -15,8 +15,6 @@ export function DeliveryAddressPage() {
   const queryClient = useQueryClient();
   const [provinceId, setProvinceId] = useState<number | null>(null);
   const [cityId, setCityId] = useState<number | null>(null);
-  const [coordinates, setCoordinates] = useState<{ latitude: number; longitude: number } | null>(null);
-  const [locationLoading, setLocationLoading] = useState(false);
   const [form, setForm] = useState({
     deliverToName: "",
     deliverToMobileNumber: "",
