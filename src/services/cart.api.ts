@@ -1,4 +1,5 @@
 import { apiClient } from "./api/client";
+import { getSelectedBranchId } from "@/lib/store-branch";
 
 export interface CartItem {
   goodId: number;
@@ -41,6 +42,7 @@ export async function getCart(): Promise<Cart> {
   const response =
     await apiClient.get<CartApiResponse>(
       "/cart",
+      { params: { branchId: getSelectedBranchId() } },
     );
 
   return response.data.cart;
@@ -57,6 +59,7 @@ export async function addToCart(
         goodId,
         quantity,
       },
+      { params: { branchId: getSelectedBranchId() } },
     );
 
   return response.data.cart;
@@ -72,6 +75,7 @@ export async function updateCartItem(
       {
         quantity,
       },
+      { params: { branchId: getSelectedBranchId() } },
     );
 
   return response.data.cart;
@@ -83,6 +87,7 @@ export async function removeFromCart(
   const response =
     await apiClient.delete<CartApiResponse>(
       `/cart/items/${goodId}`,
+      { params: { branchId: getSelectedBranchId() } },
     );
 
   return response.data.cart;
