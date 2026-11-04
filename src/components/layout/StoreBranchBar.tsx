@@ -152,6 +152,9 @@ export function StoreBranchBar() {
         <Link to="/delivery-address" className="mr-auto text-xs font-medium text-emerald-700 hover:underline">
           مدیریت آدرس‌ها
         </Link>
+        {branchesQuery.isError && (
+          <span className="w-full text-xs text-rose-700">دریافت شعب انجام نشد؛ تنظیمات شعب و اتصال سرور را بررسی کنید.</span>
+        )}
         {branchesQuery.isSuccess && branchesQuery.data.data.length === 0 && (
           <span className="w-full text-xs text-rose-700">برای شهر این آدرس هنوز شعبه فعالی تعریف نشده است.</span>
         )}
