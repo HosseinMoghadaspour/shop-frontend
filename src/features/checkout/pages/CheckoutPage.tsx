@@ -105,6 +105,31 @@ export function CheckoutPage() {
     );
   }, [addresses, selectedAddressId]);
 
+  const branchCityId =
+    selectedAddress?.cityId ??
+    (selectedAddressId === null && form.cityId > 0 ? form.cityId : undefined);
+
+  const branchesQuery = useQuery({
+    queryKey: ["store-branches", branchCityId],
+    queryFn: () => getBranchesByCity(branchCityId!),
+    enabled: branchCityId !== undefined,
+  });
+
+  useEffect(() => {
+    if (!branchCityId || !branchesQuery.data) return;
+    const branches = branchesQuery.data.data;
+    if (!branches.length) {
+      setSelectedBranchIdState(undefined);
+      setSelectedBranchId(null);
+      return;
+    }
+    if (!branches.some((branch) => branch.id === selectedBranchId)) {
+      const preferred = branchesQuery.data.defaultBranchId ?? branches[0].id;
+      setSelectedBranchIdState(preferred);
+      setSelectedBranchId(preferred);
+    }
+  }, [branchCityId, branchesQuery.data, selectedBranchId]);
+
   const handleSelectAddress = (
     address: NonNullable<typeof addresses>[number],
   ) => {
