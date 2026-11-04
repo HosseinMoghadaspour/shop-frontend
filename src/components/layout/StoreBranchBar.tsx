@@ -53,8 +53,13 @@ export function StoreBranchBar() {
 
   const cityId = selectedAddress?.cityId ?? undefined;
   const branchesQuery = useQuery({
-    queryKey: ["store-branches", cityId],
-    queryFn: () => getBranchesByCity(cityId!),
+    queryKey: ["store-branches", cityId, selectedAddress?.latitude, selectedAddress?.longitude],
+    queryFn: () => getBranchesByCity(
+      cityId!,
+      selectedAddress?.latitude != null && selectedAddress.longitude != null
+        ? { latitude: selectedAddress.latitude, longitude: selectedAddress.longitude }
+        : undefined,
+    ),
     enabled: isAuthenticated && cityId !== undefined,
   });
 
