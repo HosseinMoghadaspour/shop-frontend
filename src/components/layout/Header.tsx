@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuthStore } from "@/stores/auth.store";
 import { useCartStore } from "@/stores/cart.store";
+import { useSelectedBranchId } from "@/hooks/useSelectedBranchId";
 
 const navItems = [
   { to: "/", label: "صفحه اصلی", end: true },
