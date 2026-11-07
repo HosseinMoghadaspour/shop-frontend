@@ -40,6 +40,7 @@ export async function saveAdminBranch(
     cityId: number;
     warehouseId?: number;
     salePriceTypeId: number | null;
+    address: string;
     latitude: number | null;
     longitude: number | null;
     isActive: boolean;
@@ -53,8 +54,9 @@ export async function saveAdminBranch(
 export interface AdminBranchOption {
   branchId: number;
   branchName: string;
-  warehouseId: number;
-  warehouseName: string;
+  description: string | null;
+  warehouseId: number | null;
+  warehouseName: string | null;
   configuredWarehouseId: number | null;
   cityId: number | null;
   cityName: string | null;
