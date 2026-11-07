@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { useAuthStore } from "@/stores/auth.store";
 import { useCartStore } from "@/stores/cart.store";
 import { useSelectedBranchId } from "@/hooks/useSelectedBranchId";
+import { StoreBranchSelector } from "@/layouts/StoreBranchSelector";
 
 const navItems = [
   { to: "/", label: "صفحه اصلی", end: true },
@@ -108,7 +109,8 @@ export function Header() {
             role="search"
             className="hidden h-11 min-w-0 max-w-[680px] flex-1 items-center rounded-full border border-slate-200 bg-white px-3 transition focus-within:border-emerald-600 focus-within:ring-4 focus-within:ring-emerald-600/10 md:flex"
           >
-            <Button variant="ghost"
+            <Button
+              variant="ghost"
               type="button"
               onClick={() => navigate("/categories")}
               className="flex shrink-0 items-center gap-1.5 border-l border-slate-200 pl-3 text-xs text-slate-500 transition hover:text-emerald-700"
@@ -126,7 +128,8 @@ export function Header() {
               className="h-full w-auto min-w-0 flex-1 rounded-none border-0 bg-transparent px-4 text-sm text-slate-700 shadow-none outline-none focus-visible:border-transparent focus-visible:ring-0 placeholder:text-slate-400"
             />
 
-            <Button variant="ghost"
+            <Button
+              variant="ghost"
               type="submit"
               aria-label="جستجو"
               className="flex size-8 shrink-0 items-center justify-center rounded-full text-emerald-700 transition hover:bg-emerald-50"
@@ -150,7 +153,8 @@ export function Header() {
                   <span className="max-w-28 truncate">{userName}</span>
                 </Link>
 
-                <Button variant="ghost"
+                <Button
+                  variant="ghost"
                   type="button"
                   onClick={() => void handleLogout()}
                   title="خروج از حساب"
@@ -187,7 +191,8 @@ export function Header() {
             </Link>
 
             {/* منوی موبایل */}
-            <Button variant="ghost"
+            <Button
+              variant="ghost"
               type="button"
               aria-label={mobileMenuOpen ? "بستن منو" : "باز کردن منو"}
               aria-expanded={mobileMenuOpen}
@@ -220,7 +225,8 @@ export function Header() {
             className="h-full w-auto min-w-0 flex-1 rounded-none border-0 bg-transparent px-3 text-sm shadow-none outline-none focus-visible:border-transparent focus-visible:ring-0 placeholder:text-slate-400"
           />
 
-          <Button variant="ghost"
+          <Button
+            variant="ghost"
             type="submit"
             className="text-xs font-medium text-emerald-700"
           >
@@ -298,7 +304,8 @@ export function Header() {
                   حساب کاربری ({userName})
                 </Link>
 
-                <Button variant="ghost"
+                <Button
+                  variant="ghost"
                   type="button"
                   onClick={() => {
                     setMobileMenuOpen(false);

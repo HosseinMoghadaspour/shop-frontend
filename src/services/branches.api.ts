@@ -38,7 +38,7 @@ export async function saveAdminBranch(
   branchId: number,
   data: {
     cityId: number;
-    warehouseId: number;
+    warehouseId?: number;
     salePriceTypeId: number | null;
     latitude: number | null;
     longitude: number | null;

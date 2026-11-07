@@ -19,7 +19,7 @@ export function AdminBranchesPage() {
     queryFn: getProvinces,
   });
   const [branchId, setBranchId] = useState(0);
-  const [warehouseId, setWarehouseId] = useState(0);
+//   const [warehouseId, setWarehouseId] = useState(0);
   const [provinceId, setProvinceId] = useState(0);
   const [cityId, setCityId] = useState(0);
   const [priceTypeId, setPriceTypeId] = useState("");
@@ -49,7 +49,6 @@ export function AdminBranchesPage() {
   useEffect(() => {
     const saved = warehouses.find((x) => x.cityId !== null) ?? warehouses[0];
     if (!saved) return;
-    setWarehouseId(saved.configuredWarehouseId ?? saved.warehouseId);
     setCityId(saved.cityId ?? 0);
     setProvinceId(saved.provinceId ?? 0);
     setPriceTypeId(
@@ -64,7 +63,7 @@ export function AdminBranchesPage() {
   async function save() {
     setError("");
     setMessage("");
-    if (!branchId || !warehouseId || !cityId) {
+    if (!branchId  || !cityId) {
       setMessage("شعبه، انبار و شهر را انتخاب کنید.");
       return;
     }
@@ -91,7 +90,6 @@ export function AdminBranchesPage() {
     try {
       await saveAdminBranch(branchId, {
         cityId,
-        warehouseId,
         salePriceTypeId: priceTypeId ? Number(priceTypeId) : null,
         latitude: lat,
         longitude: lng,
@@ -132,7 +130,7 @@ export function AdminBranchesPage() {
               ))}
             </select>
           </label>
-          <label className="block space-y-2 text-sm">
+          {/* <label className="block space-y-2 text-sm">
             انبار
             <select
               className="w-full rounded-lg border p-2"
@@ -146,7 +144,7 @@ export function AdminBranchesPage() {
                 </option>
               ))}
             </select>
-          </label>
+          </label> */}
           <div className="grid gap-3 sm:grid-cols-2">
             <label className="space-y-2 text-sm">
               استان
@@ -183,11 +181,11 @@ export function AdminBranchesPage() {
             </label>
           </div>
           <div className="space-y-4">
-            <Input
+            {/* <Input
               value={priceTypeId}
               onChange={(e) => setPriceTypeId(e.target.value)}
               placeholder="شناسه نوع قیمت"
-            />
+            /> */}
 
             <BranchLocationPicker
               latitude={latitude.trim() ? Number(latitude) : null}
