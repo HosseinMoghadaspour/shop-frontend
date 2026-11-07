@@ -23,6 +23,7 @@ export function AdminBranchesPage() {
   const [provinceId, setProvinceId] = useState(0);
   const [cityId, setCityId] = useState(0);
   const [priceTypeId, setPriceTypeId] = useState("");
+  const [address, setAddress] = useState("");
   const [latitude, setLatitude] = useState("");
   const [longitude, setLongitude] = useState("");
   const [active, setActive] = useState(true);
@@ -54,6 +55,7 @@ export function AdminBranchesPage() {
     setPriceTypeId(
       saved.salePriceTypeId == null ? "" : String(saved.salePriceTypeId),
     );
+    setAddress(saved.description ?? "");
     setLatitude(saved.latitude == null ? "" : String(saved.latitude));
     setLongitude(saved.longitude == null ? "" : String(saved.longitude));
     setActive(saved.isActive ?? true);
@@ -91,6 +93,7 @@ export function AdminBranchesPage() {
       await saveAdminBranch(branchId, {
         cityId,
         salePriceTypeId: priceTypeId ? Number(priceTypeId) : null,
+        address,
         latitude: lat,
         longitude: lng,
         isActive: active,
@@ -180,6 +183,20 @@ export function AdminBranchesPage() {
               </select>
             </label>
           </div>
+          <label className="block space-y-2 text-sm">
+            آدرس شعبه
+            <textarea
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              maxLength={500}
+              rows={3}
+              placeholder="آدرس کامل شعبه را وارد کنید"
+              className="w-full resize-y rounded-lg border border-input bg-background px-3 py-2 text-sm outline-none transition focus-visible:ring-2 focus-visible:ring-ring"
+            />
+            <span className="text-xs text-muted-foreground">
+              حداکثر ۵۰۰ کاراکتر؛ آدرس در ستون RowDesc جدول Branch ذخیره می‌شود.
+            </span>
+          </label>
           <div className="space-y-4">
             {/* <Input
               value={priceTypeId}
