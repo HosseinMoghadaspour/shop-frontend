@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   getAdminBranchOptions,
   saveAdminBranch,
@@ -18,9 +17,8 @@ export function AdminBranchesPage() {
     queryKey: ["provinces"],
     queryFn: getProvinces,
   });
+
   const [branchId, setBranchId] = useState(0);
-  const [warehouseId, setWarehouseId] = useState(0);
-//   const [warehouseId, setWarehouseId] = useState(0);
   const [provinceId, setProvinceId] = useState(0);
   const [cityId, setCityId] = useState(0);
   const [priceTypeId, setPriceTypeId] = useState("");
@@ -33,11 +31,10 @@ export function AdminBranchesPage() {
   const [error, setError] = useState("");
 
   const branches = Array.from(
-    new Map((options.data ?? []).map((x) => [x.branchId, x])).values(),
+    new Map((options.data ?? []).map((item) => [item.branchId, item])).values(),
   );
-  const warehouses = (options.data ?? []).filter(
-    (x) => x.branchId === branchId,
-  );
+  const selectedBranch = branches.find((item) => item.branchId === branchId);
+
   const cities = useQuery({
     queryKey: ["admin-cities", provinceId],
     queryFn: () => getCitiesByProvince(provinceId),
@@ -45,37 +42,54 @@ export function AdminBranchesPage() {
   });
 
   useEffect(() => {
-    if (!branchId && branches.length) setBranchId(branches[0].branchId);
+    if (!branchId && branches.length > 0) {
+      setBranchId(branches[0].branchId);
+    }
   }, [branches, branchId]);
 
   useEffect(() => {
-    const saved = warehouses.find((x) => x.cityId !== null) ?? warehouses[0];
-    if (!saved) {
-      setWarehouseId(0);
+    if (!selectedBranch) {
+      setCityId(0);
+      setProvinceId(0);
+      setPriceTypeId("");
+      setAddress("");
+      setLatitude("");
+      setLongitude("");
+      setActive(true);
+      setIsDefault(false);
       return;
     }
-    setWarehouseId(saved.configuredWarehouseId ?? saved.warehouseId ?? 0);
-    setCityId(saved.cityId ?? 0);
-    setProvinceId(saved.provinceId ?? 0);
+
+    setCityId(selectedBranch.cityId ?? 0);
+    setProvinceId(selectedBranch.provinceId ?? 0);
     setPriceTypeId(
-      saved.salePriceTypeId == null ? "" : String(saved.salePriceTypeId),
+      selectedBranch.salePriceTypeId == null
+        ? ""
+        : String(selectedBranch.salePriceTypeId),
     );
-    setAddress(saved.description ?? "");
-    setLatitude(saved.latitude == null ? "" : String(saved.latitude));
-    setLongitude(saved.longitude == null ? "" : String(saved.longitude));
-    setActive(saved.isActive ?? true);
-    setIsDefault(saved.isDefault ?? false);
-  }, [branchId, options.data]);
+    setAddress(selectedBranch.description ?? "");
+    setLatitude(
+      selectedBranch.latitude == null ? "" : String(selectedBranch.latitude),
+    );
+    setLongitude(
+      selectedBranch.longitude == null ? "" : String(selectedBranch.longitude),
+    );
+    setActive(selectedBranch.isActive ?? true);
+    setIsDefault(selectedBranch.isDefault ?? false);
+  }, [selectedBranch]);
 
   async function save() {
     setError("");
     setMessage("");
-    if (!branchId || !cityId || !warehouseId) {
-      setMessage("برای این شعبه باید یک انبار فعال تعریف شده باشد و شهر را انتخاب کنید.");
+
+    if (!branchId || !cityId) {
+      setMessage("شعبه و شهر را انتخاب کنید.");
       return;
     }
+
     const lat = latitude.trim() ? Number(latitude) : null;
     const lng = longitude.trim() ? Number(longitude) : null;
+
     if ((lat === null) !== (lng === null)) {
       setMessage("موقعیت شعبه را به‌طور کامل انتخاب کنید.");
       return;
@@ -94,10 +108,10 @@ export function AdminBranchesPage() {
       setMessage("مختصات جغرافیایی معتبر نیست.");
       return;
     }
+
     try {
       await saveAdminBranch(branchId, {
         cityId,
-        warehouseId,
         salePriceTypeId: priceTypeId ? Number(priceTypeId) : null,
         address,
         latitude: lat,
@@ -105,7 +119,7 @@ export function AdminBranchesPage() {
         isActive: active,
         isDefault,
       });
-      setMessage("تنظیمات ذخیره شد.");
+      setMessage("تنظیمات شعبه ذخیره شد.");
       await options.refetch();
     } catch (err) {
       setError(
@@ -118,10 +132,15 @@ export function AdminBranchesPage() {
     <section dir="rtl" className="space-y-5 p-5">
       <h1 className="text-2xl font-black">مدیریت شعب فروشگاه</h1>
       <p className="text-sm text-muted-foreground">
-        برای هر شعبه، شهر، انبار، نوع قیمت و مختصات جغرافیایی را مشخص کنید.
+        اطلاعات شعبه، شهر، آدرس و موقعیت جغرافیایی را مدیریت کنید.
       </p>
+
       {options.isLoading ? (
         <p>در حال دریافت اطلاعات...</p>
+      ) : options.isError ? (
+        <p className="text-sm text-rose-700">
+          دریافت اطلاعات شعب ناموفق بود.
+        </p>
       ) : (
         <div className="space-y-4 rounded-2xl border bg-white p-5">
           <label className="block space-y-2 text-sm">
@@ -129,71 +148,60 @@ export function AdminBranchesPage() {
             <select
               className="w-full rounded-lg border p-2"
               value={branchId || ""}
-              onChange={(e) => setBranchId(Number(e.target.value))}
+              onChange={(event) => setBranchId(Number(event.target.value))}
             >
               <option value="">انتخاب شعبه</option>
-              {branches.map((x) => (
-                <option key={x.branchId} value={x.branchId}>
-                  {x.branchName}
+              {branches.map((item) => (
+                <option key={item.branchId} value={item.branchId}>
+                  {item.branchName}
                 </option>
               ))}
             </select>
           </label>
-          {/* <label className="block space-y-2 text-sm">
-            انبار
-            <select
-              className="w-full rounded-lg border p-2"
-              value={warehouseId || ""}
-              onChange={(e) => setWarehouseId(Number(e.target.value))}
-            >
-              <option value="">انتخاب انبار</option>
-              {warehouses.map((x) => (
-                <option key={x.warehouseId} value={x.warehouseId}>
-                  {x.warehouseName}
-                </option>
-              ))}
-            </select>
-          </label> */}
+
           <div className="grid gap-3 sm:grid-cols-2">
             <label className="space-y-2 text-sm">
               استان
               <select
                 className="w-full rounded-lg border p-2"
                 value={provinceId || ""}
-                onChange={(e) => {
-                  setProvinceId(Number(e.target.value));
+                onChange={(event) => {
+                  setProvinceId(Number(event.target.value));
                   setCityId(0);
                 }}
               >
                 <option value="">انتخاب استان</option>
-                {provinces.data?.map((x) => (
-                  <option key={x.id} value={x.id}>
-                    {x.name}
+                {provinces.data?.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.name}
                   </option>
                 ))}
               </select>
             </label>
+
             <label className="space-y-2 text-sm">
               شهر
               <select
                 className="w-full rounded-lg border p-2"
                 value={cityId || ""}
-                onChange={(e) => setCityId(Number(e.target.value))}
+                onChange={(event) => setCityId(Number(event.target.value))}
+                disabled={!provinceId}
               >
                 <option value="">انتخاب شهر</option>
-                {cities.data?.map((x) => (
-                  <option key={x.id} value={x.id}>
-                    {x.name}
+                {cities.data?.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.name}
                   </option>
                 ))}
               </select>
             </label>
           </div>
+
           <label className="block space-y-2 text-sm">
             آدرس شعبه
             <textarea
               value={address}
-              onChange={(e) => setAddress(e.target.value)}
+              onChange={(event) => setAddress(event.target.value)}
               maxLength={500}
               rows={3}
               placeholder="آدرس کامل شعبه را وارد کنید"
@@ -203,43 +211,41 @@ export function AdminBranchesPage() {
               حداکثر ۵۰۰ کاراکتر؛ آدرس در ستون RowDesc جدول Branch ذخیره می‌شود.
             </span>
           </label>
-          <div className="space-y-4">
-            {/* <Input
-              value={priceTypeId}
-              onChange={(e) => setPriceTypeId(e.target.value)}
-              placeholder="شناسه نوع قیمت"
-            /> */}
 
-            <BranchLocationPicker
-              latitude={latitude.trim() ? Number(latitude) : null}
-              longitude={longitude.trim() ? Number(longitude) : null}
-              onChange={(location) => {
-                setLatitude(String(location.latitude));
-                setLongitude(String(location.longitude));
-              }}
-            />
-          </div>
+          <BranchLocationPicker
+            latitude={latitude.trim() ? Number(latitude) : null}
+            longitude={longitude.trim() ? Number(longitude) : null}
+            onChange={(location) => {
+              setLatitude(String(location.latitude));
+              setLongitude(String(location.longitude));
+            }}
+          />
+
           <div className="flex flex-wrap gap-5 text-sm">
             <label className="flex items-center gap-2">
               <input
                 type="checkbox"
                 checked={active}
-                onChange={(e) => setActive(e.target.checked)}
-              />{" "}
+                onChange={(event) => setActive(event.target.checked)}
+              />
               فعال در فروشگاه
             </label>
             <label className="flex items-center gap-2">
               <input
                 type="checkbox"
                 checked={isDefault}
-                onChange={(e) => setIsDefault(e.target.checked)}
-              />{" "}
+                onChange={(event) => setIsDefault(event.target.checked)}
+              />
               شعبه پیش‌فرض شهر
             </label>
           </div>
+
           {error && <p className="text-sm text-rose-700">{error}</p>}
           {message && <p className="text-sm text-emerald-700">{message}</p>}
-          <Button onClick={() => void save()}>ذخیره تنظیمات</Button>
+
+          <Button onClick={() => void save()} disabled={!branchId}>
+            ذخیره تنظیمات
+          </Button>
         </div>
       )}
     </section>
