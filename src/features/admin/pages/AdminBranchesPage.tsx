@@ -19,6 +19,7 @@ export function AdminBranchesPage() {
     queryFn: getProvinces,
   });
   const [branchId, setBranchId] = useState(0);
+  const [warehouseId, setWarehouseId] = useState(0);
 //   const [warehouseId, setWarehouseId] = useState(0);
   const [provinceId, setProvinceId] = useState(0);
   const [cityId, setCityId] = useState(0);
@@ -49,7 +50,11 @@ export function AdminBranchesPage() {
 
   useEffect(() => {
     const saved = warehouses.find((x) => x.cityId !== null) ?? warehouses[0];
-    if (!saved) return;
+    if (!saved) {
+      setWarehouseId(0);
+      return;
+    }
+    setWarehouseId(saved.configuredWarehouseId ?? saved.warehouseId ?? 0);
     setCityId(saved.cityId ?? 0);
     setProvinceId(saved.provinceId ?? 0);
     setPriceTypeId(
@@ -65,8 +70,8 @@ export function AdminBranchesPage() {
   async function save() {
     setError("");
     setMessage("");
-    if (!branchId  || !cityId) {
-      setMessage("شعبه، انبار و شهر را انتخاب کنید.");
+    if (!branchId || !cityId || !warehouseId) {
+      setMessage("برای این شعبه باید یک انبار فعال تعریف شده باشد و شهر را انتخاب کنید.");
       return;
     }
     const lat = latitude.trim() ? Number(latitude) : null;
@@ -92,6 +97,7 @@ export function AdminBranchesPage() {
     try {
       await saveAdminBranch(branchId, {
         cityId,
+        warehouseId,
         salePriceTypeId: priceTypeId ? Number(priceTypeId) : null,
         address,
         latitude: lat,
