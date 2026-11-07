@@ -12,6 +12,21 @@ export interface StoreBranch {
   distanceKm: number | null;
 }
 
+export interface AdminBranchRecord {
+  id: number;
+  name: string;
+  description: string | null;
+  address: string | null;
+  isMainBranch: boolean;
+  cityId: number | null;
+  cityName: string | null;
+  salePriceTypeId: number | null;
+  latitude: number | null;
+  longitude: number | null;
+  isDefault: boolean;
+  isConfigured: boolean;
+}
+
 interface BranchesResponse {
   success: boolean;
   data: StoreBranch[];
@@ -28,10 +43,10 @@ export async function getBranchesByCity(
   return response.data;
 }
 
-export async function getAdminBranches(): Promise<StoreBranch[]> {
+export async function getAdminBranches(): Promise<AdminBranchRecord[]> {
   const response = await apiClient.get<{
     success: boolean;
-    data: StoreBranch[];
+    data: AdminBranchRecord[];
   }>("/branches/admin");
   return response.data.data;
 }
