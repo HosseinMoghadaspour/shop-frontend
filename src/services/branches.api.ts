@@ -5,7 +5,6 @@ export interface StoreBranch {
   name: string;
   cityId: number;
   cityName: string;
-  warehouseId: number;
   salePriceTypeId: number | null;
   latitude: number | null;
   longitude: number | null;
@@ -30,7 +29,10 @@ export async function getBranchesByCity(
 }
 
 export async function getAdminBranches(): Promise<StoreBranch[]> {
-  const response = await apiClient.get<{ success: boolean; data: StoreBranch[] }>("/branches/admin");
+  const response = await apiClient.get<{
+    success: boolean;
+    data: StoreBranch[];
+  }>("/branches/admin");
   return response.data.data;
 }
 
@@ -38,7 +40,6 @@ export async function saveAdminBranch(
   branchId: number,
   data: {
     cityId: number;
-    warehouseId?: number;
     salePriceTypeId: number | null;
     address: string;
     latitude: number | null;
@@ -50,14 +51,10 @@ export async function saveAdminBranch(
   await apiClient.put(`/branches/admin/${branchId}`, data);
 }
 
-
 export interface AdminBranchOption {
   branchId: number;
   branchName: string;
   description: string | null;
-  warehouseId: number | null;
-  warehouseName: string | null;
-  configuredWarehouseId: number | null;
   cityId: number | null;
   cityName: string | null;
   provinceId: number | null;
@@ -69,6 +66,9 @@ export interface AdminBranchOption {
 }
 
 export async function getAdminBranchOptions(): Promise<AdminBranchOption[]> {
-  const response = await apiClient.get<{ success: boolean; data: AdminBranchOption[] }>("/branches/admin/options");
+  const response = await apiClient.get<{
+    success: boolean;
+    data: AdminBranchOption[];
+  }>("/branches/admin/options");
   return response.data.data;
 }
