@@ -1,5 +1,4 @@
 import { Header } from "@/components/layout/Header";
-import { StoreBranchBar } from "@/components/layout/StoreBranchBar";
 import { Footer } from "@/components/layout/Footer";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
@@ -27,9 +26,8 @@ export function StoreLayout() {
   }, [isAuthenticated, addressesQuery.isSuccess, addressesQuery.data, location.pathname, navigate]);
 
   return (
-    <div className="flex min-h-screen flex-col text-foreground bg-[#EDF7F3]">
+    <div className="flex min-h-screen flex-col bg-[#EDF7F3] pb-[calc(5.25rem+env(safe-area-inset-bottom))] text-foreground md:pb-0">
       <Header />
-      {/* <StoreBranchBar /> */}
       <main className="mx-auto w-full max-w-[1000px] flex-1 p-5">
         {isAuthenticated && location.pathname !== "/delivery-address" && !addressesQuery.isSuccess ? (
           <div className="rounded-2xl border bg-white p-8 text-center text-sm text-slate-500">در حال بررسی آدرس و شعبه انتخابی...</div>
