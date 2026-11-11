@@ -65,9 +65,9 @@ export function Header() {
   const userName = user?.RowName?.trim() || "حساب کاربری";
 
   const mobileNavItems = [
-    { to: "/", label: "خانه", icon: Home, end: true },
-    { to: "/categories", label: "دسته‌ها", icon: LayoutGrid },
-    { to: "/discounts", label: "شگفت‌انگیز", icon: Flame, featured: true },
+      { to: "/discounts", label: "شگفت‌انگیز", icon: Flame, end: true },
+      { to: "/categories", label: "دسته‌ها", icon: LayoutGrid },
+      { to: "/", label: "خانه", icon: Home, featured: true },
     { to: "/cart", label: "سبد خرید", icon: ShoppingBag, badge: cartQuantity },
     {
       to: isAuthenticated ? "/profile" : "/auth/login",
@@ -269,7 +269,7 @@ export function Header() {
       <nav
         dir="rtl"
         aria-label="ناوبری اصلی موبایل"
-        className="fixed inset-x-0 bottom-0 z-50 border-t border-emerald-900/10 bg-white/95 pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_30px_rgba(15,60,45,0.09)] backdrop-blur-xl md:hidden"
+        className="fixed inset-x-0 bottom-0 z-50 border-t border-emerald-900/10 bg-[#AEDBC9]/55 pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_30px_rgba(15,60,45,0.09)] backdrop-blur-xl md:hidden"
       >
         <div className="mx-auto grid h-[68px] max-w-lg grid-cols-5 items-center px-2">
           {mobileNavItems.map(({ to, label, icon: Icon, end, featured, badge }) => (
@@ -292,11 +292,9 @@ export function Header() {
                   <span
                     className={[
                       "relative flex items-center justify-center transition-all duration-200",
-                      featured
-                        ? "mb-1 -mt-7 size-12 rounded-2xl border-4 border-white bg-gradient-to-br from-orange-500 to-rose-600 text-white shadow-lg shadow-rose-900/25"
-                        : isActive
-                          ? "size-8 rounded-xl bg-emerald-50 text-emerald-700"
-                          : "size-8 text-slate-500 group-hover:text-emerald-700",
+                      isActive
+                        && "mb-1 -mt-7 size-12 rounded-2xl border-4 border-white bg-emerald-700 text-white shadow-lg text-emerald-700"
+
                     ].join(" ")}
                   >
                     <Icon className={featured ? "size-5" : "size-[19px]"} />
@@ -306,7 +304,7 @@ export function Header() {
                       </span>
                     )}
                   </span>
-                  <span className={featured ? "font-bold text-rose-700" : ""}>
+                  <span>
                     {label}
                   </span>
                 </>
