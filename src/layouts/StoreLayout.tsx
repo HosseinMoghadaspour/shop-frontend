@@ -29,7 +29,7 @@ export function StoreLayout() {
   return (
     <div className="flex min-h-screen flex-col text-foreground bg-[#EDF7F3]">
       <Header />
-      <StoreBranchBar />
+      {/* <StoreBranchBar /> */}
       <main className="mx-auto w-full max-w-[1000px] flex-1 p-5">
         {isAuthenticated && location.pathname !== "/delivery-address" && !addressesQuery.isSuccess ? (
           <div className="rounded-2xl border bg-white p-8 text-center text-sm text-slate-500">در حال بررسی آدرس و شعبه انتخابی...</div>
