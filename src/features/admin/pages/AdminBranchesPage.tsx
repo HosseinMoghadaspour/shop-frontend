@@ -192,7 +192,7 @@ export function AdminBranchesPage() {
               ))}
             </select>
             <span className="text-xs text-muted-foreground">
-              انبار انتخاب‌شده مبنای اطلاعات موجودی این شعبه خواهد بود.
+              انبار فعال مرتبط با این شعبه ذخیره می‌شود و در مدیریت کالا نمایش داده خواهد شد.
             </span>
           </label>
 
