@@ -100,10 +100,14 @@ export interface AdminWarehouseOption {
   name: string;
 }
 
-export async function getAdminWarehouses(): Promise<AdminWarehouseOption[]> {
+export async function getAdminWarehouses(
+  branchId: number,
+): Promise<AdminWarehouseOption[]> {
   const response = await apiClient.get<{
     success: boolean;
     data: AdminWarehouseOption[];
-  }>("/branches/admin/warehouses");
+  }>("/branches/admin/warehouses", {
+    params: { branchId },
+  });
   return response.data.data;
 }
