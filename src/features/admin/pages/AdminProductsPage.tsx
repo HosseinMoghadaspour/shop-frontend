@@ -341,7 +341,7 @@ export function AdminProductsPage() {
 
         {branchId > 0 && result.branch && (
           <div className="flex flex-wrap items-center gap-2 text-sm">
-            <Badge variant="secondary">شعبه: {branchesQuery.data?.find((item) => item.id === branchId)?.name}</Badge>
+            <Badge variant="secondary">شعبه: {result.branch.name}</Badge>
             <Badge variant="outline">انبار فعال: {result.branch.warehouseName}</Badge>
           </div>
         )}
