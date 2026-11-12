@@ -98,8 +98,8 @@ export function AdminBranchesPage() {
       setMessage("شعبه و شهر را انتخاب کنید.");
       return;
     }
-    if (active && !warehouseId) {
-      setMessage("برای فعال بودن شعبه، انبار فعال آن را انتخاب کنید.");
+    if (!warehouseId) {
+      setMessage("برای هر شعبه باید یک انبار فعال انتخاب کنید.");
       return;
     }
 
@@ -262,7 +262,7 @@ export function AdminBranchesPage() {
 
           <Button
             onClick={() => void save()}
-            disabled={!branchId || warehouses.isLoading || (active && !warehouseId)}
+            disabled={!branchId || warehouses.isLoading || !warehouseId}
           >
             ذخیره تنظیمات
           </Button>
