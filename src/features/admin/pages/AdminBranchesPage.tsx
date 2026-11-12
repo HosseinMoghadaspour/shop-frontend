@@ -10,6 +10,8 @@ import { getProvinces, getCitiesByProvince } from "@/services/locations.api";
 import { BranchLocationPicker } from "../components/BranchLocationPicker";
 
 export function AdminBranchesPage() {
+  const [branchId, setBranchId] = useState(0);
+
   const options = useQuery({
     queryKey: ["admin-branch-options"],
     queryFn: getAdminBranchOptions,
@@ -24,7 +26,6 @@ export function AdminBranchesPage() {
     queryFn: getProvinces,
   });
 
-  const [branchId, setBranchId] = useState(0);
   const [provinceId, setProvinceId] = useState(0);
   const [cityId, setCityId] = useState(0);
   const [priceTypeId, setPriceTypeId] = useState("");
