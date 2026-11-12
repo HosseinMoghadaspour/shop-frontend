@@ -295,7 +295,7 @@ export function ProductCard({ product }: ProductCardProps) {
               flex h-8 w-full items-center
               justify-between rounded-lg
               bg-emerald-50 px-0.5
-              ring-1 ring-emerald-100
+              ring-1 ring-emerald-100 mt-4
             "
           >
             <Button
@@ -333,7 +333,7 @@ export function ProductCard({ product }: ProductCardProps) {
                 size-7 shrink-0 rounded-md
                 text-emerald-700
                 hover:bg-emerald-100,
-                mt-2
+
               "
               disabled={isBusy || isCartUpdating || isCartLoading}
               onClick={() => void handleDecrease()}

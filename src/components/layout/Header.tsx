@@ -93,9 +93,9 @@ export function Header() {
               <img
                 src="/adinaLogo.png"
                 alt="لوگوی آدینامارکت"
-                className="h-10 w-10 object-contain sm:h-12 sm:w-12"
+                className="h-10 w-10 object-contain sm:h-12 sm:w-12 "
               />
-              <span className="text-base font-extrabold tracking-tight text-slate-800 sm:text-xl">
+              <span className="text-base font-extrabold tracking-tight text-slate-800 sm:text-xl hidden sm:flex">
                 آدینامارکت
               </span>
             </Link>
@@ -180,22 +180,6 @@ export function Header() {
                 )}
               </Link>
             </div>
-
-            {/* عملیات فشرده موبایل */}
-            <div className="flex items-center gap-1 md:hidden">
-              <Link
-                to="/cart"
-                aria-label={`سبد خرید، ${cartQuantity} محصول`}
-                className="relative flex size-10 items-center justify-center rounded-xl text-slate-700 transition hover:bg-white/60"
-              >
-                <ShoppingCart className="size-5" />
-                {cartQuantity > 0 && (
-                  <span className="absolute -right-0.5 -top-0.5 flex min-h-4 min-w-4 items-center justify-center rounded-full bg-emerald-700 px-1 text-[9px] font-bold text-white ring-2 ring-[#AEDBC9]">
-                    {cartQuantity > 99 ? "99+" : cartQuantity.toLocaleString("fa-IR")}
-                  </span>
-                )}
-              </Link>
-            </div>
           </div>
 
           {/* جست‌وجوی موبایل */}
@@ -216,20 +200,13 @@ export function Header() {
             <Button
               variant="ghost"
               type="submit"
-              className="h-8 rounded-full px-3 text-xs font-bold text-emerald-700 hover:bg-emerald-50"
+              className="h-8 rounded-full px-3 text-xs font-bold text-emerald-700 hover:bg-emerald-50 border-"
             >
               جستجو
             </Button>
           </form>
 
-          {isAuthenticated && (
-            <div className="flex flex-wrap items-center justify-between gap-2 border-t border-emerald-900/10 py-2">
-              <span className="hidden text-xs font-medium text-emerald-950/70 sm:inline">
-                ارسال بر اساس آدرس و شعبه انتخابی شما
-              </span>
-              <StoreBranchSelector />
-            </div>
-          )}
+        
 
           {/* منوی افقی دسکتاپ */}
           <nav
