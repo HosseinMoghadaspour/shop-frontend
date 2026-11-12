@@ -25,6 +25,9 @@ export interface AdminBranchRecord {
   longitude: number | null;
   isDefault: boolean;
   isConfigured: boolean;
+  isActive: boolean;
+  warehouseId: number | null;
+  warehouseName: string | null;
 }
 
 interface BranchesResponse {
@@ -61,6 +64,7 @@ export async function saveAdminBranch(
     longitude: number | null;
     isActive: boolean;
     isDefault: boolean;
+    warehouseId: number;
   },
 ): Promise<void> {
   await apiClient.put(`/branches/admin/${branchId}`, data);
@@ -78,6 +82,8 @@ export interface AdminBranchOption {
   longitude: number | null;
   isActive: boolean | null;
   isDefault: boolean | null;
+  warehouseId: number | null;
+  warehouseName: string | null;
 }
 
 export async function getAdminBranchOptions(): Promise<AdminBranchOption[]> {
@@ -85,5 +91,23 @@ export async function getAdminBranchOptions(): Promise<AdminBranchOption[]> {
     success: boolean;
     data: AdminBranchOption[];
   }>("/branches/admin/options");
+  return response.data.data;
+}
+
+
+export interface AdminWarehouseOption {
+  id: number;
+  name: string;
+}
+
+export async function getAdminWarehouses(
+  branchId: number,
+): Promise<AdminWarehouseOption[]> {
+  const response = await apiClient.get<{
+    success: boolean;
+    data: AdminWarehouseOption[];
+  }>("/branches/admin/warehouses", {
+    params: { branchId },
+  });
   return response.data.data;
 }

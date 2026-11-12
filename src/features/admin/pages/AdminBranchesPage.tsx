@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import {
   getAdminBranchOptions,
+  getAdminWarehouses,
   saveAdminBranch,
 } from "@/services/branches.api";
 import { getProvinces, getCitiesByProvince } from "@/services/locations.api";
@@ -13,6 +14,11 @@ export function AdminBranchesPage() {
     queryKey: ["admin-branch-options"],
     queryFn: getAdminBranchOptions,
   });
+  const warehouses = useQuery({
+    queryKey: ["admin-warehouses", branchId],
+    queryFn: () => getAdminWarehouses(branchId),
+    enabled: branchId > 0,
+  });
   const provinces = useQuery({
     queryKey: ["provinces"],
     queryFn: getProvinces,
@@ -22,6 +28,7 @@ export function AdminBranchesPage() {
   const [provinceId, setProvinceId] = useState(0);
   const [cityId, setCityId] = useState(0);
   const [priceTypeId, setPriceTypeId] = useState("");
+  const [warehouseId, setWarehouseId] = useState("");
   const [address, setAddress] = useState("");
   const [latitude, setLatitude] = useState("");
   const [longitude, setLongitude] = useState("");
@@ -52,6 +59,7 @@ export function AdminBranchesPage() {
       setCityId(0);
       setProvinceId(0);
       setPriceTypeId("");
+      setWarehouseId("");
       setAddress("");
       setLatitude("");
       setLongitude("");
@@ -67,6 +75,11 @@ export function AdminBranchesPage() {
         ? ""
         : String(selectedBranch.salePriceTypeId),
     );
+    setWarehouseId(
+      selectedBranch.warehouseId == null
+        ? ""
+        : String(selectedBranch.warehouseId),
+    );
     setAddress(selectedBranch.description ?? "");
     setLatitude(
       selectedBranch.latitude == null ? "" : String(selectedBranch.latitude),
@@ -78,12 +91,27 @@ export function AdminBranchesPage() {
     setIsDefault(selectedBranch.isDefault ?? false);
   }, [selectedBranch]);
 
+  useEffect(() => {
+    if (
+      branchId > 0 &&
+      warehouses.isSuccess &&
+      warehouseId &&
+      !warehouses.data.some((warehouse) => String(warehouse.id) === warehouseId)
+    ) {
+      setWarehouseId("");
+    }
+  }, [branchId, warehouseId, warehouses.data, warehouses.isSuccess]);
+
   async function save() {
     setError("");
     setMessage("");
 
     if (!branchId || !cityId) {
       setMessage("شعبه و شهر را انتخاب کنید.");
+      return;
+    }
+    if (!warehouseId) {
+      setMessage("برای هر شعبه باید یک انبار فعال انتخاب کنید.");
       return;
     }
 
@@ -113,6 +141,7 @@ export function AdminBranchesPage() {
       await saveAdminBranch(branchId, {
         cityId,
         salePriceTypeId: priceTypeId ? Number(priceTypeId) : null,
+        warehouseId: Number(warehouseId),
         address,
         latitude: lat,
         longitude: lng,
@@ -132,7 +161,7 @@ export function AdminBranchesPage() {
     <section dir="rtl" className="space-y-5 p-5">
       <h1 className="text-2xl font-black">مدیریت شعب فروشگاه</h1>
       <p className="text-sm text-muted-foreground">
-        اطلاعات شعبه، شهر، آدرس و موقعیت جغرافیایی را مدیریت کنید.
+        اطلاعات شعبه، شهر، انبار اختصاصی، آدرس و موقعیت جغرافیایی را مدیریت کنید.
       </p>
 
       {options.isLoading ? (
@@ -157,6 +186,39 @@ export function AdminBranchesPage() {
                 </option>
               ))}
             </select>
+          </label>
+
+          <label className="block space-y-2 text-sm">
+            انبار فعال شعبه
+            <select
+              className="w-full rounded-lg border p-2"
+              value={warehouseId}
+              onChange={(event) => setWarehouseId(event.target.value)}
+              disabled={!branchId || warehouses.isLoading || warehouses.isError}
+            >
+              <option value="">
+                {!branchId
+                  ? "ابتدا شعبه را انتخاب کنید"
+                  : warehouses.isLoading
+                    ? "در حال دریافت انبارهای شعبه..."
+                    : warehouses.data?.length
+                      ? "انتخاب انبار"
+                      : "برای این شعبه انبار فعالی ثبت نشده است"}
+              </option>
+              {warehouses.data?.map((warehouse) => (
+                <option key={warehouse.id} value={warehouse.id}>
+                  {warehouse.name}
+                </option>
+              ))}
+            </select>
+            <span className="text-xs text-muted-foreground">
+              فقط انبارهای فعال که مقدار Branch_ID آن‌ها با شعبه انتخاب‌شده برابر است نمایش داده می‌شوند.
+            </span>
+            {warehouses.isError && (
+              <span className="block text-xs text-rose-700">
+                دریافت انبارهای این شعبه ناموفق بود.
+              </span>
+            )}
           </label>
 
           <div className="grid gap-3 sm:grid-cols-2">
@@ -243,7 +305,10 @@ export function AdminBranchesPage() {
           {error && <p className="text-sm text-rose-700">{error}</p>}
           {message && <p className="text-sm text-emerald-700">{message}</p>}
 
-          <Button onClick={() => void save()} disabled={!branchId}>
+          <Button
+            onClick={() => void save()}
+            disabled={!branchId || warehouses.isLoading || !warehouseId}
+          >
             ذخیره تنظیمات
           </Button>
         </div>

@@ -22,6 +22,12 @@ export interface AdminProduct {
 }
 
 export interface AdminProductsResult {
+  branch: {
+    id: number;
+    name: string;
+    warehouseId: number;
+    warehouseName: string;
+  } | null;
   products: AdminProduct[];
   pagination: {
     page: number;
@@ -39,6 +45,7 @@ interface ApiResponse<T> {
 
 interface ListResponse {
   success: boolean;
+  branch: NonNullable<AdminProductsResult["branch"]>;
   data: AdminProduct[];
   pagination: AdminProductsResult["pagination"];
 }
@@ -66,6 +73,7 @@ export async function getAdminProducts(params: {
   visibility: "all" | "visible" | "hidden";
   page: number;
   limit: number;
+  branchId: number;
 }): Promise<AdminProductsResult> {
   const response = await apiClient.get<ListResponse>(
     "/admin/products",
@@ -73,6 +81,7 @@ export async function getAdminProducts(params: {
   );
 
   return {
+    branch: response.data.branch,
     products: response.data.data,
     pagination: response.data.pagination,
   };
@@ -81,11 +90,12 @@ export async function getAdminProducts(params: {
 export async function setProductVisibility(
   productId: number,
   isVisible: boolean,
+  branchId: number,
 ) {
   try {
     const response = await apiClient.patch<
       ApiResponse<{ id: number; isVisible: boolean }>
-    >(`/admin/products/${productId}/visibility`, { isVisible });
+    >(`/admin/products/${productId}/visibility?branchId=${branchId}`, { isVisible });
 
     return response.data.data;
   } catch (error) {
