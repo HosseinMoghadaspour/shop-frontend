@@ -129,7 +129,7 @@ export function AdminBranchesPage() {
       await saveAdminBranch(branchId, {
         cityId,
         salePriceTypeId: priceTypeId ? Number(priceTypeId) : null,
-        warehouseId: warehouseId ? Number(warehouseId) : null,
+        warehouseId: Number(warehouseId),
         address,
         latitude: lat,
         longitude: lng,
