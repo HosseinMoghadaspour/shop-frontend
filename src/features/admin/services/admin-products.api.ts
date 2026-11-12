@@ -24,6 +24,7 @@ export interface AdminProduct {
 export interface AdminProductsResult {
   branch: {
     id: number;
+    name: string;
     warehouseId: number;
     warehouseName: string;
   } | null;
