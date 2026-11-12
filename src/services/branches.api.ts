@@ -64,7 +64,7 @@ export async function saveAdminBranch(
     longitude: number | null;
     isActive: boolean;
     isDefault: boolean;
-    warehouseId: number | null;
+    warehouseId: number;
   },
 ): Promise<void> {
   await apiClient.put(`/branches/admin/${branchId}`, data);
