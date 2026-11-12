@@ -15,8 +15,9 @@ export function AdminBranchesPage() {
     queryFn: getAdminBranchOptions,
   });
   const warehouses = useQuery({
-    queryKey: ["admin-warehouses"],
-    queryFn: getAdminWarehouses,
+    queryKey: ["admin-warehouses", branchId],
+    queryFn: () => getAdminWarehouses(branchId),
+    enabled: branchId > 0,
   });
   const provinces = useQuery({
     queryKey: ["provinces"],
@@ -89,6 +90,17 @@ export function AdminBranchesPage() {
     setActive(selectedBranch.isActive ?? true);
     setIsDefault(selectedBranch.isDefault ?? false);
   }, [selectedBranch]);
+
+  useEffect(() => {
+    if (
+      branchId > 0 &&
+      warehouses.isSuccess &&
+      warehouseId &&
+      !warehouses.data.some((warehouse) => String(warehouse.id) === warehouseId)
+    ) {
+      setWarehouseId("");
+    }
+  }, [branchId, warehouseId, warehouses.data, warehouses.isSuccess]);
 
   async function save() {
     setError("");
@@ -182,9 +194,17 @@ export function AdminBranchesPage() {
               className="w-full rounded-lg border p-2"
               value={warehouseId}
               onChange={(event) => setWarehouseId(event.target.value)}
-              disabled={warehouses.isLoading}
+              disabled={!branchId || warehouses.isLoading || warehouses.isError}
             >
-              <option value="">انتخاب انبار</option>
+              <option value="">
+                {!branchId
+                  ? "ابتدا شعبه را انتخاب کنید"
+                  : warehouses.isLoading
+                    ? "در حال دریافت انبارهای شعبه..."
+                    : warehouses.data?.length
+                      ? "انتخاب انبار"
+                      : "برای این شعبه انبار فعالی ثبت نشده است"}
+              </option>
               {warehouses.data?.map((warehouse) => (
                 <option key={warehouse.id} value={warehouse.id}>
                   {warehouse.name}
@@ -192,8 +212,13 @@ export function AdminBranchesPage() {
               ))}
             </select>
             <span className="text-xs text-muted-foreground">
-              انبار فعال مرتبط با این شعبه ذخیره می‌شود و در مدیریت کالا نمایش داده خواهد شد.
+              فقط انبارهای فعال که مقدار Branch_ID آن‌ها با شعبه انتخاب‌شده برابر است نمایش داده می‌شوند.
             </span>
+            {warehouses.isError && (
+              <span className="block text-xs text-rose-700">
+                دریافت انبارهای این شعبه ناموفق بود.
+              </span>
+            )}
           </label>
 
           <div className="grid gap-3 sm:grid-cols-2">
