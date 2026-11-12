@@ -176,6 +176,26 @@ export function AdminBranchesPage() {
             </select>
           </label>
 
+          <label className="block space-y-2 text-sm">
+            انبار فعال شعبه
+            <select
+              className="w-full rounded-lg border p-2"
+              value={warehouseId}
+              onChange={(event) => setWarehouseId(event.target.value)}
+              disabled={warehouses.isLoading}
+            >
+              <option value="">انتخاب انبار</option>
+              {warehouses.data?.map((warehouse) => (
+                <option key={warehouse.id} value={warehouse.id}>
+                  {warehouse.name}
+                </option>
+              ))}
+            </select>
+            <span className="text-xs text-muted-foreground">
+              انبار انتخاب‌شده مبنای اطلاعات موجودی این شعبه خواهد بود.
+            </span>
+          </label>
+
           <div className="grid gap-3 sm:grid-cols-2">
             <label className="space-y-2 text-sm">
               استان
