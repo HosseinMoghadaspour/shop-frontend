@@ -25,6 +25,7 @@ export function Header() {
 
   const user = useAuthStore((state) => state.user);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const authKind = useAuthStore((state) => state.authKind);
   const isInitialized = useAuthStore((state) => state.isInitialized);
   const logout = useAuthStore((state) => state.logout);
 
@@ -70,9 +71,9 @@ export function Header() {
       { to: "/", label: "خانه", icon: Home, featured: true },
     { to: "/cart", label: "سبد خرید", icon: ShoppingBag, badge: cartQuantity },
     {
-      to: isAuthenticated ? "/profile" : "/auth/login",
-      label: isAuthenticated ? "حساب من" : "ورود",
-      icon: UserRound,
+      to: !isAuthenticated ? "/auth/login" : authKind === "admin" ? "/admin" : "/profile",
+      label: !isAuthenticated ? "ورود" : authKind === "admin" ? "پنل مدیریت" : "حساب من",
+      icon: authKind === "admin" ? ShoppingBag : UserRound,
     },
   ];
 
@@ -139,6 +140,14 @@ export function Header() {
                 <div className="h-9 w-20 animate-pulse rounded-lg bg-white/50" />
               ) : isAuthenticated ? (
                 <>
+                  {authKind === "admin" && (
+                    <Link
+                      to="/admin"
+                      className="rounded-xl px-3 py-2 text-sm font-semibold text-emerald-800 transition hover:bg-white/60"
+                    >
+                      پنل مدیریت
+                    </Link>
+                  )}
                   <Link
                     to="/profile"
                     title={userName}
