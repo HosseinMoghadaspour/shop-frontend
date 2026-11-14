@@ -252,8 +252,7 @@ export function CartPage() {
           {cart.items.map((item, index) => {
             const productQuery = productQueries[index];
             const availableStock = productQuery?.data
-              ? productQuery.data.stockInfo[0]?.quantity ??
-                productQuery.data.stock
+              ? productQuery.data.stockInfo[0]?.quantity ?? 0
               : null;
 
             return (
