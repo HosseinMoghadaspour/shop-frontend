@@ -294,7 +294,7 @@ export function AdminProductsPage() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">همه کالاها</SelectItem>
-                  <SelectItem value="visible">نمایش در سایت فعال</SelectItem>
+                  <SelectItem value="visible">فعال بودن در فروشگاه فعال</SelectItem>
                   <SelectItem value="hidden">مخفی در سایت</SelectItem>
                 </SelectContent>
               </Select>
@@ -414,7 +414,7 @@ export function AdminProductsPage() {
                           htmlFor={`visibility-${product.id}`}
                           className="cursor-pointer text-sm font-medium"
                         >
-                          نمایش در سایت
+                          فعال بودن در فروشگاه
                         </Label>
                         <Badge
                           variant={product.isVisible ? "default" : "secondary"}
@@ -424,7 +424,7 @@ export function AdminProductsPage() {
                               : ""
                           }
                         >
-                          {product.isVisible ? "نمایش داده می‌شود" : "مخفی است"}
+                          {product.isVisible ? "فعال است" : "غیرفعال است"}
                         </Badge>
                         {!product.isActive && (
                           <p className="text-xs text-amber-700 dark:text-amber-400">
