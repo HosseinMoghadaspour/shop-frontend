@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import {
   LogOut,
   Search,
@@ -20,15 +19,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useAuthStore } from "@/stores/auth.store";
-import { getAdminBranches } from "@/services/branches.api";
 
 import {
   deleteProductImage,
@@ -41,7 +32,6 @@ import {
 } from "@/features/admin/services/admin-products.api";
 
 const initialResult: AdminProductsResult = {
-  branch: null,
   products: [],
   pagination: { page: 1, limit: 20, total: 0, totalPages: 0 },
 };
@@ -87,14 +77,6 @@ export function AdminProductsPage() {
   const logout = useAuthStore((state: any) => state.logout);
 
   const [result, setResult] = useState(initialResult);
-  const [branchId, setBranchId] = useState(0);
-  const branchesQuery = useQuery({
-    queryKey: ["admin-product-branches"],
-    queryFn: getAdminBranches,
-  });
-  const selectedBranch = branchesQuery.data?.find(
-    (branch) => branch.id === branchId,
-  );
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
   const [visibility, setVisibility] = useState<"all" | "visible" | "hidden">(
@@ -107,12 +89,6 @@ export function AdminProductsPage() {
   const [notice, setNotice] = useState<string | null>(null);
 
   const loadProducts = useCallback(async () => {
-    if (!branchId) {
-      setResult(initialResult);
-      setLoading(false);
-      return;
-    }
-
     setLoading(true);
     setError(null);
 
@@ -122,7 +98,6 @@ export function AdminProductsPage() {
         visibility,
         page,
         limit: 20,
-        branchId,
       });
       setResult(data);
     } catch (err) {
@@ -132,16 +107,7 @@ export function AdminProductsPage() {
     } finally {
       setLoading(false);
     }
-  }, [search, visibility, page, branchId]);
-
-  useEffect(() => {
-    if (!branchId && branchesQuery.data?.length) {
-      const firstAvailable = branchesQuery.data.find(
-        (item) => item.isActive && item.warehouseId !== null,
-      );
-      if (firstAvailable) setBranchId(firstAvailable.id);
-    }
-  }, [branchesQuery.data, branchId]);
+  }, [search, visibility, page]);
 
   useEffect(() => {
     void loadProducts();
@@ -160,7 +126,7 @@ export function AdminProductsPage() {
     setNotice(null);
 
     try {
-      await setProductVisibility(product.id, !product.isVisible, branchId);
+      await setProductVisibility(product.id, !product.isVisible);
       setNotice(
         !product.isVisible
           ? "نمایش کالا در سایت فعال شد."
@@ -269,15 +235,14 @@ export function AdminProductsPage() {
               مدیریت کالاها و تصاویر
             </h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              ابتدا شعبه را انتخاب کنید؛ فهرست کالاها بر اساس همان شعبه فیلتر
-              می‌شود و انبار فعال آن نیز نمایش داده خواهد شد.
+              کاتالوگ کالاها یکپارچه است؛ تغییر وضعیت و تصاویر هر کالا در تمام شعب اعمال می‌شود.
             </p>
           </div>
           <div className="flex gap-2">
             <Button
               variant="outline"
               onClick={() => void loadProducts()}
-              disabled={loading || !branchId}
+              disabled={loading}
             >
               <RefreshCw
                 className={`ml-2 size-4 ${loading ? "animate-spin" : ""}`}
@@ -293,70 +258,6 @@ export function AdminProductsPage() {
       </header>
 
       <div className="mx-auto max-w-[1600px] space-y-5 px-4 py-6 sm:px-6 lg:px-8">
-        <Card>
-          <CardContent className="grid gap-3 p-4 sm:grid-cols-[minmax(0,1fr)_minmax(220px,360px)] sm:items-center">
-            <div>
-              <p className="font-semibold">شعبه موردنظر را انتخاب کنید</p>
-              <p className="mt-1 text-xs text-muted-foreground">
-                فهرست کالاها فقط از اطلاعات شعبه انتخاب‌شده دریافت می‌شود.
-              </p>
-            </div>
-            <Select
-              value={branchId ? String(branchId) : ""}
-              onValueChange={(value) => {
-                setBranchId(Number(value));
-                setPage(1);
-                setResult(initialResult);
-              }}
-              disabled={branchesQuery.isLoading}
-            >
-              <SelectTrigger className="h-11">
-                <SelectValue placeholder="انتخاب شعبه">
-                  {selectedBranch?.name}
-                </SelectValue>
-              </SelectTrigger>
-              <SelectContent className={"min-w-80"}>
-                {branchesQuery.data?.map((item) => (
-                  <SelectItem
-                    key={item.id}
-                    value={String(item.id)}
-                    disabled={!item.isActive || item.warehouseId === null}
-                  >
-                    {item.name}
-                    {item.warehouseName
-                      ? ` — ${item.warehouseName}`
-                      : " — بدون انبار فعال"}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </CardContent>
-        </Card>
-
-        {branchesQuery.isError && (
-          <Alert variant="destructive">
-            <AlertDescription>دریافت فهرست شعب ناموفق بود.</AlertDescription>
-          </Alert>
-        )}
-
-        {!branchId && !branchesQuery.isLoading && (
-          <Alert>
-            <AlertDescription>
-              برای مدیریت کالاها، ابتدا یک شعبه فعال با انبار فعال انتخاب یا در
-              بخش مدیریت شعب تنظیم کنید.
-            </AlertDescription>
-          </Alert>
-        )}
-
-        {branchId > 0 && selectedBranch && (
-          <div className="flex flex-wrap items-center gap-2 text-sm">
-            <Badge variant="secondary">شعبه: {selectedBranch.name}</Badge>
-
-            <Badge variant="outline">
-              انبار فعال: {selectedBranch.warehouseName || "بدون انبار"}
-            </Badge>
-          </div>
-        )}
         <Card>
           <CardContent className="p-4 sm:p-5">
             <form
@@ -391,7 +292,7 @@ export function AdminProductsPage() {
                 </SelectContent>
               </Select>
 
-              <Button type="submit" className="h-11" disabled={!branchId}>
+              <Button type="submit" className="h-11">
                 <Search className="ml-2 size-4" />
                 جست‌وجو
               </Button>
@@ -426,13 +327,13 @@ export function AdminProductsPage() {
           </Alert>
         )}
 
-        {branchId > 0 && loading ? (
+        {loading ? (
           <section className="space-y-4" aria-label="در حال بارگذاری کالاها">
             {Array.from({ length: 3 }).map((_, index) => (
               <ProductCardSkeleton key={index} />
             ))}
           </section>
-        ) : branchId > 0 && result.products.length === 0 ? (
+        ) : result.products.length === 0 ? (
           <Card>
             <CardContent className="flex flex-col items-center justify-center px-4 py-14 text-center">
               <div className="mb-4 rounded-full bg-muted p-4">
@@ -445,7 +346,7 @@ export function AdminProductsPage() {
             </CardContent>
           </Card>
         ) : (
-          branchId > 0 && (
+          (
             <section
               className="space-y-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
               aria-label="فهرست کالاها"
