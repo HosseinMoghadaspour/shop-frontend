@@ -11,12 +11,14 @@ import { EmptyCart } from "../components/EmptyCart";
 
 import { useCartStore } from "@/stores/cart.store";
 import { getProduct } from "@/services/products.api";
+import { useSelectedBranchId } from "@/hooks/useSelectedBranchId";
 import {
   getMinimumQuantity,
   getQuantityStep,
 } from "@/features/cart/utils/quantity";
 
 export function CartPage() {
+  const branchId = useSelectedBranchId();
   const cart = useCartStore((state) => state.cart);
 
   const isLoading = useCartStore((state) => state.isLoading);
@@ -35,7 +37,7 @@ export function CartPage() {
 
   const productQueries = useQueries({
     queries: (cart?.items ?? []).map((item) => ({
-      queryKey: ["product", item.goodId],
+      queryKey: ["product", item.goodId, branchId],
       queryFn: () => getProduct(item.goodId),
       staleTime: 30_000,
       enabled: Boolean(cart),
