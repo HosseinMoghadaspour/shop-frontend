@@ -217,6 +217,13 @@ export function Header() {
 
         
 
+          {/* انتخاب آدرس و شعبه برای مشتری و ادمین */}
+          <div className="border-t border-emerald-900/10 py-2">
+            <div className="mx-auto flex w-full max-w-[1280px] justify-center px-2 sm:px-4">
+              <StoreBranchSelector />
+            </div>
+          </div>
+
           {/* منوی افقی دسکتاپ */}
           <nav
             aria-label="منوی اصلی"
