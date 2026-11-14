@@ -10,6 +10,19 @@ import { getProvinces, getCitiesByProvince } from "@/services/locations.api";
 import { BranchLocationPicker } from "../components/BranchLocationPicker";
 
 export function AdminBranchesPage() {
+  const [branchId, setBranchId] = useState(0);
+  const [provinceId, setProvinceId] = useState(0);
+  const [cityId, setCityId] = useState(0);
+  const [priceTypeId, setPriceTypeId] = useState("");
+  const [warehouseId, setWarehouseId] = useState("");
+  const [address, setAddress] = useState("");
+  const [latitude, setLatitude] = useState("");
+  const [longitude, setLongitude] = useState("");
+  const [active, setActive] = useState(true);
+  const [isDefault, setIsDefault] = useState(false);
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+
   const options = useQuery({
     queryKey: ["admin-branch-options"],
     queryFn: getAdminBranchOptions,
@@ -23,19 +36,6 @@ export function AdminBranchesPage() {
     queryKey: ["provinces"],
     queryFn: getProvinces,
   });
-
-  const [branchId, setBranchId] = useState(0);
-  const [provinceId, setProvinceId] = useState(0);
-  const [cityId, setCityId] = useState(0);
-  const [priceTypeId, setPriceTypeId] = useState("");
-  const [warehouseId, setWarehouseId] = useState("");
-  const [address, setAddress] = useState("");
-  const [latitude, setLatitude] = useState("");
-  const [longitude, setLongitude] = useState("");
-  const [active, setActive] = useState(true);
-  const [isDefault, setIsDefault] = useState(false);
-  const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
 
   const branches = Array.from(
     new Map((options.data ?? []).map((item) => [item.branchId, item])).values(),
@@ -161,15 +161,14 @@ export function AdminBranchesPage() {
     <section dir="rtl" className="space-y-5 p-5">
       <h1 className="text-2xl font-black">مدیریت شعب فروشگاه</h1>
       <p className="text-sm text-muted-foreground">
-        اطلاعات شعبه، شهر، انبار اختصاصی، آدرس و موقعیت جغرافیایی را مدیریت کنید.
+        اطلاعات شعبه، شهر، انبار اختصاصی، آدرس و موقعیت جغرافیایی را مدیریت
+        کنید.
       </p>
 
       {options.isLoading ? (
         <p>در حال دریافت اطلاعات...</p>
       ) : options.isError ? (
-        <p className="text-sm text-rose-700">
-          دریافت اطلاعات شعب ناموفق بود.
-        </p>
+        <p className="text-sm text-rose-700">دریافت اطلاعات شعب ناموفق بود.</p>
       ) : (
         <div className="space-y-4 rounded-2xl border bg-white p-5">
           <label className="block space-y-2 text-sm">
@@ -212,7 +211,8 @@ export function AdminBranchesPage() {
               ))}
             </select>
             <span className="text-xs text-muted-foreground">
-              فقط انبارهای فعال که مقدار Branch_ID آن‌ها با شعبه انتخاب‌شده برابر است نمایش داده می‌شوند.
+              فقط انبارهای فعال که مقدار Branch_ID آن‌ها با شعبه انتخاب‌شده
+              برابر است نمایش داده می‌شوند.
             </span>
             {warehouses.isError && (
               <span className="block text-xs text-rose-700">

@@ -140,7 +140,7 @@ export function BranchLocationPicker({
         </MapContainer>
       </div>
 
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+      {/* <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div className="rounded-lg border border-gray-200 bg-gray-50 p-3">
           <span className="text-xs text-gray-500">
             عرض جغرافیایی (Latitude)
@@ -166,7 +166,7 @@ export function BranchLocationPicker({
             {longitude !== null ? longitude.toFixed(6) : "انتخاب نشده"}
           </p>
         </div>
-      </div>
+      </div> */}
 
       {!hasLocation && (
         <p className="text-xs text-amber-600">

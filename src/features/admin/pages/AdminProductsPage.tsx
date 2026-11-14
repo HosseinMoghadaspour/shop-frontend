@@ -92,6 +92,9 @@ export function AdminProductsPage() {
     queryKey: ["admin-product-branches"],
     queryFn: getAdminBranches,
   });
+  const selectedBranch = branchesQuery.data?.find(
+    (branch) => branch.id === branchId,
+  );
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
   const [visibility, setVisibility] = useState<"all" | "visible" | "hidden">(
@@ -266,7 +269,8 @@ export function AdminProductsPage() {
               مدیریت کالاها و تصاویر
             </h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              ابتدا شعبه را انتخاب کنید؛ فهرست کالاها بر اساس همان شعبه فیلتر می‌شود و انبار فعال آن نیز نمایش داده خواهد شد.
+              ابتدا شعبه را انتخاب کنید؛ فهرست کالاها بر اساس همان شعبه فیلتر
+              می‌شود و انبار فعال آن نیز نمایش داده خواهد شد.
             </p>
           </div>
           <div className="flex gap-2">
@@ -307,9 +311,11 @@ export function AdminProductsPage() {
               disabled={branchesQuery.isLoading}
             >
               <SelectTrigger className="h-11">
-                <SelectValue placeholder="انتخاب شعبه" />
+                <SelectValue placeholder="انتخاب شعبه">
+                  {selectedBranch?.name}
+                </SelectValue>
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className={"min-w-80"}>
                 {branchesQuery.data?.map((item) => (
                   <SelectItem
                     key={item.id}
@@ -317,7 +323,9 @@ export function AdminProductsPage() {
                     disabled={!item.isActive || item.warehouseId === null}
                   >
                     {item.name}
-                    {item.warehouseName ? ` — ${item.warehouseName}` : " — بدون انبار فعال"}
+                    {item.warehouseName
+                      ? ` — ${item.warehouseName}`
+                      : " — بدون انبار فعال"}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -334,18 +342,21 @@ export function AdminProductsPage() {
         {!branchId && !branchesQuery.isLoading && (
           <Alert>
             <AlertDescription>
-              برای مدیریت کالاها، ابتدا یک شعبه فعال با انبار فعال انتخاب یا در بخش مدیریت شعب تنظیم کنید.
+              برای مدیریت کالاها، ابتدا یک شعبه فعال با انبار فعال انتخاب یا در
+              بخش مدیریت شعب تنظیم کنید.
             </AlertDescription>
           </Alert>
         )}
 
-        {branchId > 0 && result.branch && (
+        {branchId > 0 && selectedBranch && (
           <div className="flex flex-wrap items-center gap-2 text-sm">
-            <Badge variant="secondary">شعبه: {result.branch.name}</Badge>
-            <Badge variant="outline">انبار فعال: {result.branch.warehouseName}</Badge>
+            <Badge variant="secondary">شعبه: {selectedBranch.name}</Badge>
+
+            <Badge variant="outline">
+              انبار فعال: {selectedBranch.warehouseName || "بدون انبار"}
+            </Badge>
           </div>
         )}
-
         <Card>
           <CardContent className="p-4 sm:p-5">
             <form
@@ -433,191 +444,200 @@ export function AdminProductsPage() {
               </p>
             </CardContent>
           </Card>
-        ) : branchId > 0 ? (
-          <section className="space-y-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" aria-label="فهرست کالاها">
-            {result.products.map((product) => (
-              <Card key={product.id} className="overflow-hidden">
-                <CardHeader className="gap-4 p-4 sm:p-5 lg:flex-row lg:items-start lg:justify-between">
-                  <div className="min-w-0 space-y-3 flex flex-wrap items-center gap-10">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <CardTitle className="text-base leading-7">
-                        {product.name || product.alias || "بدون نام"}
-                      </CardTitle>
-                      <Badge variant="secondary">
-                        کد: {product.code || "—"}
-                      </Badge>
-                      <Badge
-                        variant={product.isActive ? "default" : "outline"}
-                        className={
-                          product.isActive
-                            ? "bg-emerald-700 hover:bg-emerald-700"
-                            : "border-amber-300 text-amber-700"
-                        }
-                      >
-                        {product.isActive
-                          ? "فعال در حسابداری"
-                          : "غیرفعال در حسابداری"}
-                      </Badge>
-                    </div>
+        ) : (
+          branchId > 0 && (
+            <section
+              className="space-y-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+              aria-label="فهرست کالاها"
+            >
+              {result.products.map((product) => (
+                <Card key={product.id} className="overflow-hidden">
+                  <CardHeader className="gap-4 p-4 sm:p-5 lg:flex-row lg:items-start lg:justify-between">
+                    <div className="min-w-0 space-y-3 flex flex-wrap items-center gap-10">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <CardTitle className="text-base leading-7">
+                          {product.name || product.alias || "بدون نام"}
+                        </CardTitle>
+                        <Badge variant="secondary">
+                          کد: {product.code || "—"}
+                        </Badge>
+                        <Badge
+                          variant={product.isActive ? "default" : "outline"}
+                          className={
+                            product.isActive
+                              ? "bg-emerald-700 hover:bg-emerald-700"
+                              : "border-amber-300 text-amber-700"
+                          }
+                        >
+                          {product.isActive
+                            ? "فعال در حسابداری"
+                            : "غیرفعال در حسابداری"}
+                        </Badge>
+                      </div>
 
-                    <p className="text-sm text-muted-foreground">
-                      قیمت فروش:{" "}
-                      <span className="font-semibold text-foreground">
-                        {money.format(product.salePrice)}
-                      </span>
-                      {product.discountPrice != null &&
-                        product.discountPrice > 0 && (
-                          <span className="mr-3">
-                            قیمت تخفیف:{" "}
-                            <span className="font-semibold text-foreground">
-                              {money.format(product.discountPrice)}
-                            </span>
-                          </span>
-                        )}
-                    </p>
-
-                    <div className="flex flex-wrap items-center gap-3 rounded-lg border bg-muted/30 p-3">
-                      <Switch
-                        id={`visibility-${product.id}`}
-                        checked={product.isVisible}
-                        onCheckedChange={() => void toggleVisibility(product)}
-                        disabled={
-                          busyAction === `visibility-${product.id}` ||
-                          !product.isActive
-                        }
-                        aria-label={`تغییر نمایش ${product.name ?? product.code ?? product.id}`}
-                      />
-                      <Label
-                        htmlFor={`visibility-${product.id}`}
-                        className="cursor-pointer text-sm font-medium"
-                      >
-                        نمایش در سایت
-                      </Label>
-                      <Badge
-                        variant={product.isVisible ? "default" : "secondary"}
-                        className={
-                          product.isVisible
-                            ? "bg-emerald-700 hover:bg-emerald-700"
-                            : ""
-                        }
-                      >
-                        {product.isVisible ? "نمایش داده می‌شود" : "مخفی است"}
-                      </Badge>
-                      {!product.isActive && (
-                        <p className="text-xs text-amber-700 dark:text-amber-400">
-                          برای نمایش، ابتدا وضعیت فعال کالا در حسابداری بررسی
-                          شود.
-                        </p>
-                      )}
-                    </div>
-
-                    <Button
-                      className="relative w-full lg:w-auto mb-3"
-                      disabled={busyAction === `upload-${product.id}`}
-                    >
-                      <Label className="flex cursor-pointer items-center justify-center gap-2">
-                        <Upload className="size-4" />
-                        {busyAction === `upload-${product.id}`
-                          ? "در حال آپلود..."
-                          : "افزودن تصاویر"}
-                        <Input
-                          type="file"
-                          accept="image/jpeg,image/png,image/webp,image/avif"
-                          multiple
-                          className="absolute inset-0 cursor-pointer opacity-0"
-                          disabled={busyAction === `upload-${product.id}`}
-                          onChange={(event) => {
-                            const input = event.currentTarget;
-                            void handleUpload(product, input.files, input);
-                          }}
-                        />
-                      </Label>
-                    </Button>
-                  </div>
-                </CardHeader>
-
-                <Separator />
-
-                <CardContent className="space-y-3 bg-muted/20 p-4 sm:p-5">
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <h3 className="flex items-center gap-2 text-sm font-semibold">
-                      <ImageIcon className="size-4 text-muted-foreground" />
-                      تصاویر کالا ({money.format(product.images.length)})
-                    </h3>
-                    <p className="text-xs text-muted-foreground">
-                      هر تصویر حداکثر ۸ مگابایت؛ تا ۱۰ تصویر
-                    </p>
-                  </div>
-
-                  {product.images.length === 0 ? (
-                    <div className="rounded-xl border border-dashed bg-background px-4 py-10 text-center">
-                      <ImageIcon className="mx-auto mb-2 size-7 text-muted-foreground/60" />
                       <p className="text-sm text-muted-foreground">
-                        هنوز تصویری برای این کالا ثبت نشده است.
+                        قیمت فروش:{" "}
+                        <span className="font-semibold text-foreground">
+                          {money.format(product.salePrice)}
+                        </span>
+                        {product.discountPrice != null &&
+                          product.discountPrice > 0 && (
+                            <span className="mr-3">
+                              قیمت تخفیف:{" "}
+                              <span className="font-semibold text-foreground">
+                                {money.format(product.discountPrice)}
+                              </span>
+                            </span>
+                          )}
+                      </p>
+
+                      <div className="flex flex-wrap items-center gap-3 rounded-lg border bg-muted/30 p-3">
+                        <Switch
+                          id={`visibility-${product.id}`}
+                          checked={product.isVisible}
+                          onCheckedChange={() => void toggleVisibility(product)}
+                          disabled={
+                            busyAction === `visibility-${product.id}` ||
+                            !product.isActive
+                          }
+                          aria-label={`تغییر نمایش ${product.name ?? product.code ?? product.id}`}
+                        />
+                        <Label
+                          htmlFor={`visibility-${product.id}`}
+                          className="cursor-pointer text-sm font-medium"
+                        >
+                          نمایش در سایت
+                        </Label>
+                        <Badge
+                          variant={product.isVisible ? "default" : "secondary"}
+                          className={
+                            product.isVisible
+                              ? "bg-emerald-700 hover:bg-emerald-700"
+                              : ""
+                          }
+                        >
+                          {product.isVisible ? "نمایش داده می‌شود" : "مخفی است"}
+                        </Badge>
+                        {!product.isActive && (
+                          <p className="text-xs text-amber-700 dark:text-amber-400">
+                            برای نمایش، ابتدا وضعیت فعال کالا در حسابداری بررسی
+                            شود.
+                          </p>
+                        )}
+                      </div>
+
+                      <Button
+                        className="relative w-full lg:w-auto mb-3"
+                        disabled={busyAction === `upload-${product.id}`}
+                      >
+                        <Label className="flex cursor-pointer items-center justify-center gap-2">
+                          <Upload className="size-4" />
+                          {busyAction === `upload-${product.id}`
+                            ? "در حال آپلود..."
+                            : "افزودن تصاویر"}
+                          <Input
+                            type="file"
+                            accept="image/jpeg,image/png,image/webp,image/avif"
+                            multiple
+                            className="absolute inset-0 cursor-pointer opacity-0"
+                            disabled={busyAction === `upload-${product.id}`}
+                            onChange={(event) => {
+                              const input = event.currentTarget;
+                              void handleUpload(product, input.files, input);
+                            }}
+                          />
+                        </Label>
+                      </Button>
+                    </div>
+                  </CardHeader>
+
+                  <Separator />
+
+                  <CardContent className="space-y-3 bg-muted/20 p-4 sm:p-5">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <h3 className="flex items-center gap-2 text-sm font-semibold">
+                        <ImageIcon className="size-4 text-muted-foreground" />
+                        تصاویر کالا ({money.format(product.images.length)})
+                      </h3>
+                      <p className="text-xs text-muted-foreground">
+                        هر تصویر حداکثر ۸ مگابایت؛ تا ۱۰ تصویر
                       </p>
                     </div>
-                  ) : (
-                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-2">
-                      {product.images.map((image) => (
-                        <Card
-                          key={image.id}
-                          className="overflow-hidden rounded-xl bg-background"
-                        >
-                          <div className="relative aspect-square bg-muted/50">
-                            {image.url ? (
-                              <img
-                                src={imageUrl(image.url)}
-                                alt={image.alt || product.name || "تصویر کالا"}
-                                loading="lazy"
-                                className="size-full object-contain p-2"
-                              />
-                            ) : (
-                              <div className="flex size-full items-center justify-center text-xs text-muted-foreground">
-                                تصویر در دسترس نیست
-                              </div>
-                            )}
-                            {image.isDefault && (
-                              <Badge className="absolute right-2 top-2 bg-emerald-700 hover:bg-emerald-700">
-                                پیش‌فرض
-                              </Badge>
-                            )}
-                          </div>
-                          <CardContent className="space-y-2 p-2">
-                            {!image.isDefault && (
+
+                    {product.images.length === 0 ? (
+                      <div className="rounded-xl border border-dashed bg-background px-4 py-10 text-center">
+                        <ImageIcon className="mx-auto mb-2 size-7 text-muted-foreground/60" />
+                        <p className="text-sm text-muted-foreground">
+                          هنوز تصویری برای این کالا ثبت نشده است.
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-2 gap-3 sm:grid-cols-2">
+                        {product.images.map((image) => (
+                          <Card
+                            key={image.id}
+                            className="overflow-hidden rounded-xl bg-background"
+                          >
+                            <div className="relative aspect-square bg-muted/50">
+                              {image.url ? (
+                                <img
+                                  src={imageUrl(image.url)}
+                                  alt={
+                                    image.alt || product.name || "تصویر کالا"
+                                  }
+                                  loading="lazy"
+                                  className="size-full object-contain p-2"
+                                />
+                              ) : (
+                                <div className="flex size-full items-center justify-center text-xs text-muted-foreground">
+                                  تصویر در دسترس نیست
+                                </div>
+                              )}
+                              {image.isDefault && (
+                                <Badge className="absolute right-2 top-2 bg-emerald-700 hover:bg-emerald-700">
+                                  پیش‌فرض
+                                </Badge>
+                              )}
+                            </div>
+                            <CardContent className="space-y-2 p-2">
+                              {!image.isDefault && (
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  className="w-full"
+                                  disabled={
+                                    busyAction === `default-${image.id}`
+                                  }
+                                  onClick={() =>
+                                    void makeDefault(product, image.id)
+                                  }
+                                >
+                                  <Star className="ml-1 size-3.5" />
+                                  پیش‌فرض کردن
+                                </Button>
+                              )}
                               <Button
                                 variant="outline"
                                 size="sm"
-                                className="w-full"
-                                disabled={busyAction === `default-${image.id}`}
+                                className="w-full text-destructive hover:text-destructive"
+                                disabled={busyAction === `delete-${image.id}`}
                                 onClick={() =>
-                                  void makeDefault(product, image.id)
+                                  void removeImage(product, image.id)
                                 }
                               >
-                                <Star className="ml-1 size-3.5" />
-                                پیش‌فرض کردن
+                                <Trash2 className="ml-1 size-3.5" />
+                                حذف تصویر
                               </Button>
-                            )}
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="w-full text-destructive hover:text-destructive"
-                              disabled={busyAction === `delete-${image.id}`}
-                              onClick={() =>
-                                void removeImage(product, image.id)
-                              }
-                            >
-                              <Trash2 className="ml-1 size-3.5" />
-                              حذف تصویر
-                            </Button>
-                          </CardContent>
-                        </Card>
-                      ))}
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            ))}
-          </section>
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              ))}
+            </section>
+          )
         )}
 
         {!loading && result.pagination.totalPages > 1 && (
