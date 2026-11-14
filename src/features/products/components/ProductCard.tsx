@@ -37,7 +37,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
   const stockInfo = Array.isArray(product.stockInfo) ? product.stockInfo : [];
 
-  const availableStock = stockInfo[0]?.quantity ?? product.stock ?? 0;
+  const availableStock = stockInfo[0]?.quantity ?? 0;
 
   const isAvailable =
     availableStock > 0 && product.isActive && product.isShowInOnlineShop;
