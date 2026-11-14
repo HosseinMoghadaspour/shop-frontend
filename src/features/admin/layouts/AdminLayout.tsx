@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import { Link, NavLink, Outlet } from "react-router-dom";
 import {
   LayoutDashboard,
   PackageSearch,
@@ -93,7 +93,16 @@ export function AdminLayout() {
           </Button>
         </div>
 
-        <div className="px-4 pt-7">
+        <div className="px-4 pt-5">
+          <Link
+            to="/"
+            onClick={() => setMobileOpen(false)}
+            className="mb-4 flex items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-3.5 py-3 text-sm font-bold text-emerald-900 transition hover:bg-emerald-100"
+          >
+            <Store className="size-[18px] shrink-0" />
+            <span>مشاهده فروشگاه و خرید</span>
+            <ChevronLeft className="mr-auto size-4" />
+          </Link>
           <nav className="space-y-1.5">
             {navigation.map(({ to, label, icon: Icon, end }) => (
               <NavLink
