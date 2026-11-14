@@ -6,6 +6,7 @@ export interface AuthUser {
     RowCode?: string;
     MobileNumber?: string;
     MobileForSMS?: string;
+    Mobile?: string;
 }
 
 export interface AuthSession {
