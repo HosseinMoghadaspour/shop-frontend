@@ -12,7 +12,7 @@ const PAGE_SIZE = 20;
 export function ProductsPage() {
   const [searchParams] = useSearchParams();
   const categoryParam = searchParams.get("categoryId");
-  const categoryId = categoryParam && /^\\d+$/.test(categoryParam) ? Number(categoryParam) : undefined;
+  const categoryId = categoryParam && /^\d+$/.test(categoryParam) ? Number(categoryParam) : undefined;
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
