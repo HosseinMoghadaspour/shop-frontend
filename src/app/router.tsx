@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import { StoreLayout } from "@/layouts/StoreLayout";
 import { ProductsPage } from "@/features/products/pages/ProductsPage";
+import { CategoriesPage } from "@/features/categories/pages/CategoriesPage";
 import { ProductDetailsPage } from "@/features/products/pages/ProductDetailsPage";
 import { CartPage } from "@/features/cart/pages/CartPage";
 import { LoginPage } from "@/features/auth/pages/LoginPage";
@@ -60,6 +61,7 @@ export const router = createBrowserRouter([
     children: [
       { path: "/", element: <HomePage /> },
       { path: "/products", element: <ProductsPage /> },
+      { path: "/categories", element: <CategoriesPage /> },
       { path: "/products/:id", element: <ProductDetailsPage /> },
       { path: "/auth/login", element: <LoginPage /> },
       { path: "/auth/verify", element: <VerifyPage /> },
