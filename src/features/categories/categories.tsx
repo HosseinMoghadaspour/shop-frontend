@@ -160,11 +160,11 @@ export function Category() {
             const card = (
               <article
                 className={[
-                  "flex h-[100px] flex-col items-center justify-center",
+                  "flex sm:h-[100px] h-[80px] flex-col items-center justify-center",
                   "gap-1.5 rounded-lg border px-2 py-2",
-                  "border-emerald-600 bg-gradient-to-b from-white to-slate-50",
+                  "border-emerald-600 sm:bg-gradient-to-b sm:from-white sm:to-slate-50 bg-gradient-to-b from-emerald-200 to-emerald-200",
                   "text-[#215E21] shadow-sm transition-all duration-300",
-                  "hover:-translate-y-0.5 hover:border-emerald-300",
+                  "hover:border-emerald-300",
                   "hover:from-emerald-500 hover:to-emerald-700",
                   "hover:text-white hover:shadow-md",
                 ].join(" ")}
