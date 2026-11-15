@@ -154,7 +154,7 @@ export function Category() {
         className="relative w-full"
       >
         <CarouselContent className="-ms-2 items-stretch">
-          {categories.map((category, index) => {
+          {categories.map((category) => {
             const Icon = getCategoryIcon(category.iconName);
 
             const card = (
