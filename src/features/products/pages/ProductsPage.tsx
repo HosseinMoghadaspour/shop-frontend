@@ -13,7 +13,7 @@ export function ProductsPage() {
   const [searchParams] = useSearchParams();
   const categoryParam = searchParams.get("categoryId");
   const categoryId =
-    categoryParam && /^\\d+$/.test(categoryParam)
+    categoryParam && /^\d+$/.test(categoryParam)
       ? Number(categoryParam)
       : undefined;
   const searchParam = searchParams.get("search") ?? "";
