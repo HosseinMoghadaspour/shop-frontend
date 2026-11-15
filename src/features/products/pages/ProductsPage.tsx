@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 import { ProductGrid } from "../components/ProductGrid";
 import { ProductPagination } from "../components/ProductPagination";
@@ -9,13 +10,27 @@ import { useProducts } from "../hooks/useProducts";
 const PAGE_SIZE = 20;
 
 export function ProductsPage() {
+  const [searchParams] = useSearchParams();
+  const categoryParam = searchParams.get("categoryId");
+  const categoryId = categoryParam && /^\\d+$/.test(categoryParam) ? Number(categoryParam) : undefined;
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => setDebouncedSearch(search.trim()), 350);
+    return () => window.clearTimeout(timeoutId);
+  }, [search]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [categoryId]);
 
   const { data, isLoading, isFetching, isError } = useProducts({
     page,
     limit: PAGE_SIZE,
-    search: search.trim() || undefined,
+    search: debouncedSearch || undefined,
+    categoryId,
   });
 
   function handleSearch(value: string) {
@@ -42,10 +57,10 @@ export function ProductsPage() {
       <div className="mb-8 rounded-3xl border border-emerald-950/5 bg-white p-5 shadow-sm sm:p-8">
       <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
         <div>
-          <h1 className="mt-1 text-2xl font-extrabold sm:text-3xl">محصولات</h1>
+          <h1 className="mt-1 text-2xl font-extrabold sm:text-3xl">{categoryId ? "محصولات دسته‌بندی" : "همه محصولات"}</h1>
 
           <p className="mt-1 text-sm text-muted-foreground">
-            هر آنچه برای یک خرید خوب نیاز داری، همین‌جاست.
+            {categoryId ? "کالاهای مرتبط با دسته‌بندی انتخاب‌شده" : "هر آنچه برای یک خرید خوب نیاز داری، همین‌جاست."}
           </p>
         </div>
 
@@ -56,6 +71,10 @@ export function ProductsPage() {
         />
       </div>
       </div>
+
+      {isFetching && !isLoading && (
+        <p className="mb-3 text-xs text-muted-foreground" role="status">در حال به‌روزرسانی نتایج...</p>
+      )}
 
       {isLoading ? (
         <ProductGridSkeleton />
