@@ -77,7 +77,7 @@ export function ProfilePage() {
             <div className="min-w-0">
               <Badge className="mb-2 border border-emerald-200/20 bg-emerald-300/15 text-emerald-50 hover:bg-emerald-300/15">
                 <ShieldCheck className="ml-1 size-3.5" />
-                حساب فعال
+                حساب مشتری
               </Badge>
               <h2 className="truncate text-xl font-extrabold sm:text-2xl">{userName}</h2>
               <p className="mt-1 flex items-center gap-2 text-sm text-emerald-100/80">
@@ -95,8 +95,8 @@ export function ProfilePage() {
               </p>
             </div>
             <div className="rounded-2xl border border-white/10 bg-white/10 p-3 backdrop-blur">
-              <p className="text-xs text-emerald-100/75">وضعیت حساب</p>
-              <p className="mt-1 text-base font-bold">تأیید شده</p>
+              <p className="text-xs text-emerald-100/75">نوع حساب</p>
+              <p className="mt-1 text-base font-bold">مشتری فروشگاه</p>
             </div>
           </div>
         </div>
