@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   Carousel,
   CarouselContent,
@@ -18,6 +19,11 @@ interface CategoriesItem {
   url: string | null;
   onlineCategoryImage: string | null;
   iconName: string | null;
+  children?: CategoriesItem[];
+}
+
+function flattenCategories(items: CategoriesItem[]): CategoriesItem[] {
+  return items.flatMap((item) => [item, ...flattenCategories(item.children ?? [])]);
 }
 
 function getCategoryIcon(iconName: string | null): LucideIcon {
@@ -36,7 +42,8 @@ function getCategoryIcon(iconName: string | null): LucideIcon {
 }
 
 export function Category() {
-  const [categories, setCategories] = useState<CategoriesItem[]>([]);
+  const [categoryTree, setCategoryTree] = useState<CategoriesItem[]>([]);
+  const categories = useMemo(() => flattenCategories(categoryTree), [categoryTree]);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [api, setApi] = useState<CarouselApi>();
@@ -56,9 +63,7 @@ export function Category() {
         throw new Error("پاسخ دسته‌بندی‌ها معتبر نیست.");
       }
 
-      console.log(response.data.data);
-
-      setCategories(response.data.data);
+      setCategoryTree(response.data.data);
     } catch (error) {
       console.error("خطا در دریافت دسته‌بندی‌ها:", error);
       setHasError(true);
@@ -149,8 +154,7 @@ export function Category() {
         className="relative w-full"
       >
         <CarouselContent className="-ms-2 items-stretch">
-          {categories.map((category, index) => {
-            const isActive = index === selectedIndex;
+          {categories.map((category) => {
             const Icon = getCategoryIcon(category.iconName);
 
             const card = (
@@ -182,17 +186,13 @@ export function Category() {
                 key={category.id}
                 className="basis-[110px] ps-2 sm:basis-[120px] lg:basis-[130px]"
               >
-                {category.url ? (
-                  <a
-                    href={category.url}
-                    aria-label={`مشاهده دسته‌بندی ${category.name}`}
-                    className="block rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
-                  >
-                    {card}
-                  </a>
-                ) : (
-                  card
-                )}
+                <Link
+                  to={`/products?categoryId=${category.id}`}
+                  aria-label={`مشاهده کالاهای دسته‌بندی ${category.name}`}
+                  className="block rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
+                >
+                  {card}
+                </Link>
               </CarouselItem>
             );
           })}
