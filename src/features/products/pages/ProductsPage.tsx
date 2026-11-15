@@ -23,8 +23,9 @@ export function ProductsPage() {
   }, [search]);
 
   useEffect(() => {
+    setSearch(searchParam);
     setPage(1);
-  }, [categoryId]);
+  }, [searchParam, categoryId]);
 
   const { data, isLoading, isFetching, isError } = useProducts({
     page,
