@@ -75,6 +75,25 @@ function CategoryTile({ category }: { category: CategoryItem }) {
   );
 }
 
+function CategoryChildren({
+  categories,
+}: {
+  categories: CategoryItem[];
+}) {
+  if (categories.length === 0) return null;
+
+  return (
+    <div className="mt-2 grid grid-cols-1 gap-2 border-r-2 border-emerald-100 pr-3 sm:grid-cols-2 lg:grid-cols-3">
+      {categories.map((category) => (
+        <div key={category.id} className="min-w-0">
+          <CategoryTile category={category} />
+          <CategoryChildren categories={category.children ?? []} />
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export function CategoriesPage() {
   const [search, setSearch] = useState("");
 
@@ -240,10 +259,8 @@ export function CategoriesPage() {
                 </div>
 
                 {category.children?.length ? (
-                  <div className="grid grid-cols-1 gap-2 border-t border-slate-100 pt-4 sm:grid-cols-2 lg:grid-cols-3">
-                    {category.children.map((child) => (
-                      <CategoryTile key={child.id} category={child} />
-                    ))}
+                  <div className="border-t border-slate-100 pt-4">
+                    <CategoryChildren categories={category.children} />
                   </div>
                 ) : (
                   <div className="rounded-xl bg-slate-50 px-4 py-3 text-xs text-slate-500">
