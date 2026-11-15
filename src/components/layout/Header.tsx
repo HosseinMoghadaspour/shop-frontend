@@ -215,7 +215,7 @@ export function Header() {
             </Button>
           </form>
 
-        
+
 
           {/* انتخاب آدرس و شعبه برای مشتری و ادمین */}
           <div className="border-t border-emerald-900/10 py-2">
@@ -234,7 +234,6 @@ export function Header() {
               { to: "/products", label: "محصولات" },
               { to: "/categories", label: "دسته‌بندی‌ها" },
               { to: "/discounts", label: "تخفیف‌ها" },
-              { to: "/blog", label: "وبلاگ" },
               { to: "/contact", label: "تماس با ما" },
             ].map((item) => (
               <NavLink

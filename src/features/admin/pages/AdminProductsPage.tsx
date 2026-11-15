@@ -467,9 +467,6 @@ export function AdminProductsPage() {
                         <ImageIcon className="size-4 text-muted-foreground" />
                         تصاویر کالا ({money.format(product.images.length)})
                       </h3>
-                      <p className="text-xs text-muted-foreground">
-                        هر تصویر حداکثر ۸ مگابایت؛ تا ۱۰ تصویر
-                      </p>
                     </div>
 
                     {product.images.length === 0 ? (

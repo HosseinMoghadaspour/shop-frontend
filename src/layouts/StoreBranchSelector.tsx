@@ -1,10 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   MapPin,
   MapPinned,
-  ChevronDown,
   LoaderCircle,
   RefreshCw,
   CheckCircle2,
@@ -372,14 +371,7 @@ export function StoreBranchSelector() {
         )}
       </div>
 
-      {/* مدیریت آدرس */}
-      <Link
-        to="/delivery-address"
-        className="mr-auto flex shrink-0 items-center gap-1 rounded-lg bg-white/60 px-2.5 py-2 text-[11px] font-semibold text-emerald-900 transition hover:bg-white sm:mr-0"
-      >
-        مدیریت آدرس‌ها
-        <ChevronDown className="size-3" />
-      </Link>
+
     </div>
   );
 }

@@ -279,24 +279,32 @@ export function ProductCard({ product }: ProductCardProps) {
       </CardContent>
 
       {/* دکمه خرید و تعداد */}
-      <CardFooter className="shrink-0 px-2.5 pb-2.5 pt-0">
+
+      <CardFooter className="shrink-0 px-3 pb-3 pt-2">
         {!isAvailable ? (
           <Button
             type="button"
             variant="secondary"
             disabled
-            className="h-8 w-full rounded-lg text-[11px] mt-2"
+            className="
+        h-10 w-full rounded-xl
+        bg-slate-100 text-slate-400
+        text-xs font-semibold
+        border border-slate-200
+      "
           >
+            <span className="ml-2 size-1.5 rounded-full bg-slate-400" />
             ناموجود
           </Button>
         ) : quantity > 0 ? (
           <div
             className="
-              flex h-8 w-full items-center
-              justify-between rounded-lg
-              bg-emerald-50 px-0.5
-              ring-1 ring-emerald-100 mt-4
-            "
+        flex h-10 w-full items-center
+        justify-between overflow-hidden
+        rounded-xl border border-emerald-200
+        bg-emerald-50/80
+        shadow-sm
+      "
           >
             <Button
               type="button"
@@ -304,25 +312,31 @@ export function ProductCard({ product }: ProductCardProps) {
               size="icon"
               aria-label={`افزایش تعداد ${name}`}
               className="
-                size-7 shrink-0 rounded-md
-                text-emerald-700
-                hover:bg-emerald-100
-              "
+          size-9 shrink-0 rounded-lg
+          text-emerald-700
+          hover:bg-emerald-100
+          bg-emerald-100
+          sm:bg-emerald-50/80
+          active:scale-90 transition
+        "
               disabled={
                 isBusy || isCartUpdating || isCartLoading || !canIncrease
               }
               onClick={() => void handleIncrease()}
             >
               {isBusy ? (
-                <LoaderCircle className="size-3.5 animate-spin" />
+                <LoaderCircle className="size-4 animate-spin" />
               ) : (
-                <Plus className="size-3.5" />
+                <Plus className="size-4" strokeWidth={2.5} />
               )}
             </Button>
 
-            <span className="min-w-0 text-center text-[11px] font-bold tabular-nums">
-              {quantity.toLocaleString("fa-IR")}
-            </span>
+            <div className="flex flex-1 items-center justify-center gap-1">
+              <span className="text-xs font-bold text-emerald-800 tabular-nums">
+                {quantity.toLocaleString("fa-IR")}
+              </span>
+              <span className="text-[10px] text-emerald-700/70">عدد</span>
+            </div>
 
             <Button
               type="button"
@@ -330,39 +344,50 @@ export function ProductCard({ product }: ProductCardProps) {
               size="icon"
               aria-label={`کاهش تعداد ${name}`}
               className="
-                size-7 shrink-0 rounded-md
-                text-emerald-700
-                hover:bg-emerald-100,
-
-              "
+          size-9 shrink-0 rounded-lg
+          text-emerald-700
+          hover:bg-red-100
+          bg-red-100
+          sm:bg-emerald-50/80
+          active:scale-90 transition
+        "
               disabled={isBusy || isCartUpdating || isCartLoading}
               onClick={() => void handleDecrease()}
             >
-              <Minus className="size-3.5" />
+              <Minus className="size-4" strokeWidth={2.5} />
             </Button>
           </div>
         ) : (
           <Button
             type="button"
             className="
-              h-8 w-full rounded-lg
-              bg-emerald-700 px-1.5
-              text-[10px] font-bold text-white
-              shadow-sm transition
-              hover:bg-emerald-800
-              sm:text-[11px],
-              mt-2
-            "
+        group relative h-10 w-full
+        overflow-hidden rounded-xl
+        bg-emerald-700
+        text-xs font-bold text-white
+        shadow-sm shadow-emerald-900/10
+        transition-all duration-200
+        hover:bg-emerald-800
+        hover:shadow-md hover:shadow-emerald-900/15
+        active:scale-[0.98]
+        disabled:opacity-60
+      "
             disabled={isBusy || isCartUpdating || isCartLoading || !canAdd}
             onClick={() => void handleAdd()}
           >
             {isBusy ? (
-              <LoaderCircle className="ml-1 size-3.5 shrink-0 animate-spin" />
+              <LoaderCircle className="ml-2 size-4 animate-spin" />
             ) : (
-              <ShoppingCart className="ml-1 size-3.5 shrink-0" />
+              <ShoppingCart
+                className="
+            ml-2 size-4 shrink-0
+            transition-transform duration-200
+            group-hover:-translate-x-0.5
+          "
+              />
             )}
 
-            <span className="truncate">افزودن به سبد</span>
+            <span>{isBusy ? "در حال افزودن..." : "افزودن به سبد خرید"}</span>
           </Button>
         )}
       </CardFooter>

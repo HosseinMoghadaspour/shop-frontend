@@ -52,12 +52,15 @@ export function ProfilePage() {
 
   const userName = user?.RowName?.trim() || "کاربر";
 
-  const mobile = user?.MobileNumber || user?.MobileForSMS || user?.Mobile || "-";
+  const mobile =
+    user?.MobileNumber || user?.MobileForSMS || user?.Mobile || "-";
 
   return (
     <main className="container mx-auto max-w-5xl px-4 py-8 sm:py-12">
       <div className="mb-6">
-        <h1 className="mt-1 text-2xl font-extrabold sm:text-3xl">حساب کاربری</h1>
+        <h1 className="mt-1 text-2xl font-extrabold sm:text-3xl">
+          حساب کاربری
+        </h1>
         <p className="mt-2 text-sm text-muted-foreground">
           مدیریت اطلاعات حساب و آدرس‌های شما
         </p>
@@ -82,6 +85,13 @@ export function ProfilePage() {
               </p>
             </div>
             <Link
+              to="/delivery-address"
+              className="flex items-center gap-2 rounded-lg border px-4 py-3 text-sm transition hover:bg-muted"
+            >
+              <MapPin className="h-4 w-4" />
+              آدرس‌های من
+            </Link>
+            <Link
               to="/orders"
               className="flex items-center gap-2 rounded-lg border px-4 py-3 text-sm transition hover:bg-muted"
             >
@@ -100,7 +110,10 @@ export function ProfilePage() {
 
           <CardContent>
             {isLoadingAddresses && (
-              <div className="space-y-3 rounded-lg border p-5" aria-label="در حال دریافت آدرس‌ها">
+              <div
+                className="space-y-3 rounded-lg border p-5"
+                aria-label="در حال دریافت آدرس‌ها"
+              >
                 <Skeleton className="h-4 w-1/3" />
                 <Skeleton className="h-4 w-full" />
                 <Skeleton className="h-4 w-2/3" />
@@ -131,13 +144,17 @@ export function ProfilePage() {
                   <div key={address.id} className="rounded-xl border p-4">
                     <div className="mb-3 flex items-center justify-between">
                       <div className="font-medium">
-                        <span className="text-muted-foreground">نام گیرنده:</span>{" "}
+                        <span className="text-muted-foreground">
+                          نام گیرنده:
+                        </span>{" "}
                         {address.recipient.name || "تحویل گیرنده"}
-
                       </div>
 
                       {address.isActive && (
-                        <Badge variant="secondary" className="bg-emerald-50 text-emerald-700 hover:bg-emerald-50">
+                        <Badge
+                          variant="secondary"
+                          className="bg-emerald-50 text-emerald-700 hover:bg-emerald-50"
+                        >
                           فعال
                         </Badge>
                       )}
