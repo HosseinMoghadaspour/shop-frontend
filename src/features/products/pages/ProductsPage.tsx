@@ -12,20 +12,28 @@ const PAGE_SIZE = 20;
 export function ProductsPage() {
   const [searchParams] = useSearchParams();
   const categoryParam = searchParams.get("categoryId");
-  const categoryId = categoryParam && /^\d+$/.test(categoryParam) ? Number(categoryParam) : undefined;
-  const [page, setPage] = useState(1);
-  const [search, setSearch] = useState("");
-  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const categoryId =
+    categoryParam && /^\\d+$/.test(categoryParam)
+      ? Number(categoryParam)
+      : undefined;
+  const searchParam = searchParams.get("search") ?? "";
 
-  useEffect(() => {
-    const timeoutId = window.setTimeout(() => setDebouncedSearch(search.trim()), 350);
-    return () => window.clearTimeout(timeoutId);
-  }, [search]);
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState(searchParam);
+  const [debouncedSearch, setDebouncedSearch] = useState(searchParam);
 
   useEffect(() => {
     setSearch(searchParam);
     setPage(1);
   }, [searchParam, categoryId]);
+
+  useEffect(() => {
+    const timeoutId = window.setTimeout(
+      () => setDebouncedSearch(search.trim()),
+      350,
+    );
+    return () => window.clearTimeout(timeoutId);
+  }, [search]);
 
   const { data, isLoading, isFetching, isError } = useProducts({
     page,
@@ -46,35 +54,36 @@ export function ProductsPage() {
 
   function handlePageChange(nextPage: number) {
     setPage(nextPage);
-
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   return (
     <section className="mx-auto max-w-7xl px-4 py-8 sm:py-12">
       <div className="mb-8 rounded-3xl border border-emerald-950/5 bg-white p-5 shadow-sm sm:p-8">
-      <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
-        <div>
-          <h1 className="mt-1 text-2xl font-extrabold sm:text-3xl">{categoryId ? "محصولات دسته‌بندی" : "همه محصولات"}</h1>
+        <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+          <div>
+            <h1 className="mt-1 text-2xl font-extrabold sm:text-3xl">
+              {categoryId ? "محصولات دسته‌بندی" : "همه محصولات"}
+            </h1>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {categoryId
+                ? "کالاهای مرتبط با دسته‌بندی انتخاب‌شده"
+                : "هر آنچه برای یک خرید خوب نیاز داری، همین‌جاست."}
+            </p>
+          </div>
 
-          <p className="mt-1 text-sm text-muted-foreground">
-            {categoryId ? "کالاهای مرتبط با دسته‌بندی انتخاب‌شده" : "هر آنچه برای یک خرید خوب نیاز داری، همین‌جاست."}
-          </p>
+          <ProductSearch
+            value={search}
+            onChange={handleSearch}
+            onClear={handleClearSearch}
+          />
         </div>
-
-        <ProductSearch
-          value={search}
-          onChange={handleSearch}
-          onClear={handleClearSearch}
-        />
-      </div>
       </div>
 
       {isFetching && !isLoading && (
-        <p className="mb-3 text-xs text-muted-foreground" role="status">در حال به‌روزرسانی نتایج...</p>
+        <p className="mb-3 text-xs text-muted-foreground" role="status">
+          در حال به‌روزرسانی نتایج...
+        </p>
       )}
 
       {isLoading ? (
@@ -82,7 +91,6 @@ export function ProductsPage() {
       ) : isError ? (
         <div className="rounded-2xl border border-destructive/20 bg-white p-8 text-center">
           <p className="font-medium">دریافت محصولات با خطا مواجه شد.</p>
-
           <p className="mt-2 text-sm text-muted-foreground">
             لطفاً دوباره تلاش کنید.
           </p>
@@ -90,7 +98,6 @@ export function ProductsPage() {
       ) : !data || data.products.length === 0 ? (
         <div className="rounded-2xl border bg-white p-10 text-center">
           <p className="font-medium">محصولی پیدا نشد.</p>
-
           {search && (
             <p className="mt-2 text-sm text-muted-foreground">
               برای «{search}» محصولی پیدا نشد.
@@ -100,7 +107,6 @@ export function ProductsPage() {
       ) : (
         <>
           <ProductGrid products={data.products} />
-
           <ProductPagination
             page={data.pagination.page}
             totalPages={data.pagination.totalPages}
