@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate, useSearchParams } from "react-router-dom";
 import {
   ShoppingCart,
   UserRound,
@@ -21,7 +21,13 @@ import { StoreBranchSelector } from "@/layouts/StoreBranchSelector";
 
 export function Header() {
   const navigate = useNavigate();
-  const [search, setSearch] = useState("");
+  const [searchParams] = useSearchParams();
+  const currentSearch = searchParams.get("search") ?? "";
+  const [search, setSearch] = useState(currentSearch);
+
+  useEffect(() => {
+    setSearch(currentSearch);
+  }, [currentSearch]);
 
   const user = useAuthStore((state) => state.user);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -120,7 +126,7 @@ export function Header() {
                 type="search"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="جستجوی محصول، برند یا دسته‌بندی..."
+                placeholder="جستجوی نام یا کد محصول..."
                 aria-label="جستجوی محصولات"
                 className="h-full w-auto min-w-0 flex-1 rounded-none border-0 bg-transparent px-4 text-sm text-slate-700 shadow-none outline-none focus-visible:ring-0 placeholder:text-slate-400"
               />
@@ -202,7 +208,7 @@ export function Header() {
               type="search"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="جستجوی محصولات..."
+              placeholder="جستجوی نام یا کد محصول..."
               aria-label="جستجوی محصولات"
               className="h-full w-auto min-w-0 flex-1 rounded-none border-0 bg-transparent px-3 text-sm shadow-none outline-none focus-visible:ring-0 placeholder:text-slate-400"
             />
