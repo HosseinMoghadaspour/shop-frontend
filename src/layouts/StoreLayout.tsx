@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useAuthStore } from "@/stores/auth.store";
 import { getMyAddresses } from "@/services/addresses.api";
 import { useSelectedBranchId } from "@/hooks/useSelectedBranchId";
+import { PageLoader, RouteLoadingOverlay } from "@/components/ui/PageLoader";
 
 export function StoreLayout() {
   const navigate = useNavigate();
@@ -30,7 +31,7 @@ export function StoreLayout() {
       <Header />
       <main className="mx-auto w-full max-w-[1000px] flex-1 p-5">
         {isAuthenticated && location.pathname !== "/delivery-address" && !addressesQuery.isSuccess ? (
-          <div className="rounded-2xl border bg-white p-8 text-center text-sm text-slate-500">در حال بررسی آدرس و شعبه انتخابی...</div>
+          <PageLoader label="در حال بررسی آدرس و شعبه انتخابی..." />
         ) : isAuthenticated && location.pathname !== "/delivery-address" && addressesQuery.data?.length && !branchId ? (
           <div dir="rtl" className="rounded-2xl border border-amber-200 bg-amber-50 p-8 text-center text-sm text-amber-900">
             برای مشاهده کالاها ابتدا از نوار بالای صفحه یک شعبه فعال انتخاب کنید.
@@ -40,6 +41,7 @@ export function StoreLayout() {
         )}
       </main>
       <Footer />
+      <RouteLoadingOverlay />
     </div>
   );
 }
