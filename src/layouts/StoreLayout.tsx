@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useAuthStore } from "@/stores/auth.store";
 import { getMyAddresses } from "@/services/addresses.api";
 import { useSelectedBranchId } from "@/hooks/useSelectedBranchId";
-import { PageLoader, RouteLoadingOverlay } from "@/components/ui/PageLoader";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function StoreLayout() {
   const navigate = useNavigate();
@@ -31,7 +31,15 @@ export function StoreLayout() {
       <Header />
       <main className="mx-auto w-full max-w-[1000px] flex-1 p-5">
         {isAuthenticated && location.pathname !== "/delivery-address" && addressesQuery.isLoading ? (
-          <PageLoader label="در حال بررسی آدرس و شعبه انتخابی..." />
+          <div dir="rtl" className="space-y-5 py-4" role="status" aria-label="در حال بارگذاری اطلاعات حساب">
+            <Skeleton className="h-12 w-2/3 rounded-2xl" />
+            <Skeleton className="h-40 w-full rounded-3xl" />
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+              {Array.from({ length: 6 }).map((_, index) => (
+                <Skeleton key={index} className="h-36 rounded-2xl" />
+              ))}
+            </div>
+          </div>
         ) : isAuthenticated && location.pathname !== "/delivery-address" && addressesQuery.isError ? (
           <div dir="rtl" className="rounded-2xl border border-rose-200 bg-rose-50 p-8 text-center text-sm text-rose-800">
             بررسی آدرس‌های حساب کاربری با خطا مواجه شد. لطفاً صفحه را دوباره بارگذاری کنید.
@@ -45,7 +53,6 @@ export function StoreLayout() {
         )}
       </main>
       <Footer />
-      <RouteLoadingOverlay />
     </div>
   );
 }
