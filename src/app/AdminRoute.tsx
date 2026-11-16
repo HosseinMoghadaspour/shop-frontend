@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuthStore } from "@/stores/auth.store";
-import { Skeleton } from "@/components/ui/skeleton";
+import { PageLoader } from "@/components/ui/PageLoader";
 
 export function AdminRoute() {
   const isInitialized = useAuthStore(
@@ -17,9 +17,7 @@ export function AdminRoute() {
 
   if (!isInitialized) {
     return (
-      <div className="mx-auto max-w-7xl px-4 py-10">
-        <Skeleton className="h-10 w-full" />
-      </div>
+      <PageLoader label="در حال بررسی دسترسی مدیریت..." />
     );
   }
 
