@@ -30,8 +30,12 @@ export function StoreLayout() {
     <div className="flex min-h-screen flex-col bg-[#EDF7F3] pb-[calc(5.25rem+env(safe-area-inset-bottom))] text-foreground md:pb-0">
       <Header />
       <main className="mx-auto w-full max-w-[1000px] flex-1 p-5">
-        {isAuthenticated && location.pathname !== "/delivery-address" && !addressesQuery.isSuccess ? (
+        {isAuthenticated && location.pathname !== "/delivery-address" && addressesQuery.isLoading ? (
           <PageLoader label="در حال بررسی آدرس و شعبه انتخابی..." />
+        ) : isAuthenticated && location.pathname !== "/delivery-address" && addressesQuery.isError ? (
+          <div dir="rtl" className="rounded-2xl border border-rose-200 bg-rose-50 p-8 text-center text-sm text-rose-800">
+            بررسی آدرس‌های حساب کاربری با خطا مواجه شد. لطفاً صفحه را دوباره بارگذاری کنید.
+          </div>
         ) : isAuthenticated && location.pathname !== "/delivery-address" && addressesQuery.data?.length && !branchId ? (
           <div dir="rtl" className="rounded-2xl border border-amber-200 bg-amber-50 p-8 text-center text-sm text-amber-900">
             برای مشاهده کالاها ابتدا از نوار بالای صفحه یک شعبه فعال انتخاب کنید.
