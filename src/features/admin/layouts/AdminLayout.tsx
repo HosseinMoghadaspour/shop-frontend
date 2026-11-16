@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/stores/auth.store";
+import { RouteLoadingOverlay } from "@/components/ui/PageLoader";
 
 const navigation = [
   { to: "/admin", label: "داشبورد", icon: LayoutDashboard, end: true },
@@ -150,6 +151,7 @@ export function AdminLayout() {
           <Outlet />
         </main>
       </div>
+      <RouteLoadingOverlay />
     </div>
   );
 }
