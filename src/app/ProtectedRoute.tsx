@@ -4,7 +4,7 @@ import {
   useLocation,
 } from "react-router-dom";
 
-import { Skeleton } from "@/components/ui/skeleton";
+import { PageLoader } from "@/components/ui/PageLoader";
 import { useAuthStore } from "@/stores/auth.store";
 
 export function ProtectedRoute() {
@@ -25,9 +25,7 @@ export function ProtectedRoute() {
 
   if (!isInitialized) {
     return (
-      <div className="mx-auto max-w-7xl px-4 py-10">
-        <Skeleton className="h-10 w-full" />
-      </div>
+      <PageLoader label="در حال بررسی وضعیت ورود..." />
     );
   }
 
