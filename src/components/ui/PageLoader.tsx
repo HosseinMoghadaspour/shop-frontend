@@ -1,6 +1,3 @@
-import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-
 interface PageLoaderProps {
   label?: string;
 }
@@ -46,18 +43,4 @@ export function PageLoader({
       </div>
     </div>
   );
-}
-
-export function RouteLoadingOverlay() {
-  const location = useLocation();
-  const [visible, setVisible] = useState(true);
-
-  useEffect(() => {
-    setVisible(true);
-    const timeoutId = window.setTimeout(() => setVisible(false), 420);
-
-    return () => window.clearTimeout(timeoutId);
-  }, [location.key]);
-
-  return visible ? <PageLoader label="در حال آماده‌سازی صفحه..." /> : null;
 }
