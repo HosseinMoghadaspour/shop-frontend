@@ -14,7 +14,7 @@ const numberFormat = new Intl.NumberFormat("fa-IR");
 const statusLabel: Record<number, string> = {
   1: "ثبت‌شده",
   2: "در حال بررسی",
-  3: "پاسخ داده‌شده",
+  3: "بسته‌شده",
   4: "رد شده",
 };
 
@@ -70,6 +70,8 @@ export function AdminOrderRequestsPage() {
         </div>
         <Button variant="outline" onClick={() => void load()} disabled={loading}><RefreshCw className="ml-2 size-4" /> بروزرسانی</Button>
       </div>
+
+      <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-7 text-amber-900">تغییر وضعیت این درخواست فقط نتیجه بررسی پشتیبانی را ثبت می‌کند. تأیید درخواست لغو در این صفحه به‌تنهایی سفارش را لغو نمی‌کند و سند برگشت انبار یا عملیات بازپرداخت ایجاد نمی‌شود.</div>
 
       <div className="flex flex-wrap gap-2">
         {[["all", "همه"], ["1", "ثبت‌شده"], ["2", "در حال بررسی"], ["3", "پاسخ داده‌شده"], ["4", "رد شده"]].map(([value, label]) => (
