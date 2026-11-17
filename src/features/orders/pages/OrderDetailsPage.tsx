@@ -287,7 +287,7 @@ export function OrderDetailsPage() {
                     {request.requestType === 1 ? "درخواست لغو سفارش" : "درخواست پشتیبانی"}
                   </span>
                   <span className="rounded-full bg-white px-2.5 py-1 text-xs font-medium text-slate-600">
-                    {request.status === 1 ? "ثبت‌شده" : request.status === 2 ? "در حال بررسی" : request.status === 3 ? "پاسخ داده‌شده" : "رد شده"}
+                    {request.status === 1 ? "ثبت‌شده" : request.status === 2 ? "در حال بررسی" : request.status === 3 ? "بسته‌شده" : "رد شده"}
                   </span>
                 </div>
                 {request.message && <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-slate-600">{request.message}</p>}
