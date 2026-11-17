@@ -47,6 +47,7 @@ import { useAuthStore } from "@/stores/auth.store";
 import {
   getAdminCategories,
   setCategoryIcon,
+  setCategoryParent,
   setCategoryVisibility,
   type AdminCategoriesResult,
   type AdminCategory,
@@ -90,6 +91,7 @@ const CATEGORY_ICONS = [
 const numberFormat = new Intl.NumberFormat("fa-IR");
 const emptyResult: AdminCategoriesResult = {
   categories: [],
+  parents: [],
   pagination: { page: 1, limit: PAGE_SIZE, total: 0, totalPages: 0 },
 };
 
@@ -170,6 +172,23 @@ export function AdminCategoriesPage() {
     }
   }
 
+  async function saveCategoryParent(category: AdminCategory, parentId: number | null) {
+    setBusyAction(`parent-${category.id}`);
+    setError(null);
+    setNotice(null);
+    try {
+      await setCategoryParent(category.id, parentId);
+      const parentName = result.parents.find((item) => item.id === parentId)?.name;
+      setNotice(parentId === null
+        ? `«${category.name}» به دسته اصلی منتقل شد.`
+        : `«${category.name}» زیرمجموعه «${parentName ?? "دسته انتخاب‌شده"}» شد.`);
+      await loadCategories();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "تغییر ساختار دسته‌بندی ناموفق بود.");
+    } finally {
+      setBusyAction(null);
+    }
+  }
   async function handleLogout() {
     try {
       await logout();
@@ -265,7 +284,7 @@ export function AdminCategoriesPage() {
           <section className="grid gap-4 xl:grid-cols-2">
             {result.categories.map((category) => {
             //  const image = categoryImageUrl(category.image);
-              const isBusy = busyAction === `visibility-${category.id}` || busyAction === `order-${category.id}` || busyAction === `icon-${category.id}`;
+              const isBusy = busyAction === `visibility-${category.id}` || busyAction === `order-${category.id}` || busyAction === `icon-${category.id}` || busyAction === `parent-${category.id}`;
               return (
                 <Card key={category.id} className="overflow-hidden">
                   <CardHeader className="pb-3">
@@ -295,7 +314,25 @@ export function AdminCategoriesPage() {
                     </div>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    <div className="space-y-3 rounded-xl border p-3">
+                    <div className="rounded-xl border border-emerald-100 bg-emerald-50/40 p-3">
+                      <label className="space-y-2 text-sm font-semibold">
+                        جایگاه در درخت دسته‌بندی‌ها
+                        <select
+                          value={category.parentId ?? ""}
+                          disabled={isBusy}
+                          onChange={(event) => void saveCategoryParent(category, event.target.value ? Number(event.target.value) : null)}
+                          className="h-10 w-full rounded-lg border border-slate-200 bg-white px-3 text-sm font-normal outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
+                        >
+                          <option value="">دسته اصلی (بدون والد)</option>
+                          {result.parents.filter((parent) => parent.id !== category.id).map((parent) => (
+                            <option key={parent.id} value={parent.id}>{parent.name}</option>
+                          ))}
+                        </select>
+                      </label>
+                      <p className="mt-2 text-[11px] leading-5 text-slate-500">این تغییر فقط ساختار نمایش فروشگاه را تغییر می‌دهد و به رابطه دسته‌ها در حسابداری دست نمی‌زند.</p>
+                      {busyAction === `parent-${category.id}` && <p className="mt-2 text-xs text-emerald-700">در حال ذخیره جایگاه...</p>}
+                    </div>
+                    <div className="space-y-3 rounded-xl border p-3>
                       <div className="flex flex-wrap items-center justify-between gap-3">
                         <div>
                           <p className="text-sm font-semibold">آیکون دسته‌بندی</p>
