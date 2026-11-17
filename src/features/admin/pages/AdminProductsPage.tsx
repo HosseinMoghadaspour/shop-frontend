@@ -27,6 +27,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useAuthStore } from "@/stores/auth.store";
+import { ImageCropDialog } from "@/components/admin/ImageCropDialog";
 
 import {
   deleteProductImage,
@@ -94,6 +95,8 @@ export function AdminProductsPage() {
   const [busyAction, setBusyAction] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
+  const [cropFiles, setCropFiles] = useState<File[] | null>(null);
+  const [cropProduct, setCropProduct] = useState<AdminProduct | null>(null);
 
   const loadProducts = useCallback(async () => {
     setLoading(true);
@@ -168,23 +171,34 @@ export function AdminProductsPage() {
       return;
     }
 
-    setBusyAction(`upload-${product.id}`);
+    const invalid = selected.find((file) => !["image/jpeg", "image/png", "image/webp", "image/avif"].includes(file.type));
+    if (invalid) {
+      setError(`فرمت تصویر «${invalid.name}» پشتیبانی نمی‌شود.`);
+      input.value = "";
+      return;
+    }
+
     setError(null);
     setNotice(null);
+    setCropProduct(product);
+    setCropFiles(selected);
+    input.value = "";
+  }
 
+  async function finishProductCrop(files: File[]) {
+    if (!cropProduct) return;
+    const product = cropProduct;
+    setBusyAction(`upload-${product.id}`);
+    setCropFiles(null);
+    setCropProduct(null);
     try {
-      await uploadProductImages(product.id, selected);
-      setNotice(
-        `تصاویر «${product.name ?? product.code ?? product.id}» بارگذاری شدند.`,
-      );
+      await uploadProductImages(product.id, files);
+      setNotice(`تصاویر «${product.name ?? product.code ?? product.id}» برش خوردند و بارگذاری شدند.`);
       await loadProducts();
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "بارگذاری تصاویر ناموفق بود.",
-      );
+      setError(err instanceof Error ? err.message : "بارگذاری تصاویر ناموفق بود.");
     } finally {
       setBusyAction(null);
-      input.value = "";
     }
   }
 
@@ -572,6 +586,16 @@ export function AdminProductsPage() {
           </div>
         )}
       </div>
+      {cropFiles && cropProduct && (
+        <ImageCropDialog
+          files={cropFiles}
+          aspectRatio={1}
+          outputWidth={1200}
+          title={`برش تصاویر کالا: ${cropProduct.name ?? cropProduct.code ?? cropProduct.id}`}
+          onComplete={(files) => void finishProductCrop(files)}
+          onCancel={() => { setCropFiles(null); setCropProduct(null); }}
+        />
+      )}
     </main>
   );
 }
