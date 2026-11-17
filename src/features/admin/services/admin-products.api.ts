@@ -1,3 +1,4 @@
+import { getApiErrorMessage } from "@/services/api/errors";
 
 import { apiClient } from "@/services/api/client";
 
@@ -43,24 +44,6 @@ interface ListResponse {
   pagination: AdminProductsResult["pagination"];
 }
 
-function getErrorMessage(error: unknown, fallback: string) {
-  if (
-    typeof error === "object" &&
-    error !== null &&
-    "response" in error
-  ) {
-    const response = (
-      error as {
-        response?: { data?: { message?: string } };
-      }
-    ).response;
-
-    if (response?.data?.message) return response.data.message;
-  }
-
-  return error instanceof Error ? error.message : fallback;
-}
-
 export async function getAdminProducts(params: {
   search?: string;
   visibility: "all" | "visible" | "hidden";
@@ -89,7 +72,7 @@ export async function setProductVisibility(
 
     return response.data.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "تغییر وضعیت نمایش کالا ناموفق بود."));
+    throw new Error(getApiErrorMessage(error, "تغییر وضعیت نمایش کالا ناموفق بود."));
   }
 }
 
@@ -111,7 +94,7 @@ export async function uploadProductImages(
 
     return response.data.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "بارگذاری تصاویر ناموفق بود."));
+    throw new Error(getApiErrorMessage(error, "بارگذاری تصاویر ناموفق بود."));
   }
 }
 
@@ -124,7 +107,7 @@ export async function setDefaultProductImage(
       `/admin/products/${productId}/images/${imageId}/default`,
     );
   } catch (error) {
-    throw new Error(getErrorMessage(error, "تغییر تصویر پیش‌فرض ناموفق بود."));
+    throw new Error(getApiErrorMessage(error, "تغییر تصویر پیش‌فرض ناموفق بود."));
   }
 }
 
@@ -137,6 +120,6 @@ export async function deleteProductImage(
       `/admin/products/${productId}/images/${imageId}`,
     );
   } catch (error) {
-    throw new Error(getErrorMessage(error, "حذف تصویر ناموفق بود."));
+    throw new Error(getApiErrorMessage(error, "حذف تصویر ناموفق بود."));
   }
 }
