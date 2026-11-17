@@ -176,3 +176,77 @@ select {
   color: white;
   background: #18785e;
 }
+
+@keyframes adina-loader-orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes adina-loader-logo {
+  0%,
+  100% {
+    transform: translateY(0) scale(0.96);
+  }
+  50% {
+    transform: translateY(-4px) scale(1.04);
+  }
+}
+
+@keyframes adina-loader-glow {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(0.9);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.12);
+  }
+}
+
+@keyframes adina-loader-dot {
+  0%,
+  80%,
+  100% {
+    opacity: 0.35;
+    transform: translateY(0);
+  }
+  40% {
+    opacity: 1;
+    transform: translateY(-4px);
+  }
+}
+
+.adina-loader__orbit {
+  animation: adina-loader-orbit 1.25s linear infinite;
+}
+
+.adina-loader__logo {
+  animation: adina-loader-logo 1.8s ease-in-out infinite;
+}
+
+.adina-loader__glow {
+  animation: adina-loader-glow 1.8s ease-in-out infinite;
+}
+
+.adina-loader__dot {
+  animation: adina-loader-dot 1s ease-in-out infinite;
+}
+
+.adina-loader__dot--delay-1 {
+  animation-delay: 0.15s;
+}
+
+.adina-loader__dot--delay-2 {
+  animation-delay: 0.3s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .adina-loader__orbit,
+  .adina-loader__logo,
+  .adina-loader__glow,
+  .adina-loader__dot {
+    animation: none;
+  }
+}

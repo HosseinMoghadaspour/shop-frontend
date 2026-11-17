@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useAuthStore } from "@/stores/auth.store";
 import { getMyAddresses } from "@/services/addresses.api";
 import { useSelectedBranchId } from "@/hooks/useSelectedBranchId";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function StoreLayout() {
   const navigate = useNavigate();
@@ -20,20 +21,69 @@ export function StoreLayout() {
 
   useEffect(() => {
     if (!isAuthenticated || !addressesQuery.isSuccess) return;
-    if (addressesQuery.data.length === 0 && location.pathname !== "/delivery-address") {
+    if (
+      addressesQuery.data.length === 0 &&
+      location.pathname !== "/delivery-address"
+    ) {
       navigate("/delivery-address", { replace: true });
     }
-  }, [isAuthenticated, addressesQuery.isSuccess, addressesQuery.data, location.pathname, navigate]);
+  }, [
+    isAuthenticated,
+    addressesQuery.isSuccess,
+    addressesQuery.data,
+    location.pathname,
+    navigate,
+  ]);
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "instant",
+    });
+  }, [location.pathname]);
 
   return (
     <div className="flex min-h-screen flex-col bg-[#EDF7F3] pb-[calc(5.25rem+env(safe-area-inset-bottom))] text-foreground md:pb-0">
       <Header />
       <main className="mx-auto w-full max-w-[1000px] flex-1 p-5">
-        {isAuthenticated && location.pathname !== "/delivery-address" && !addressesQuery.isSuccess ? (
-          <div className="rounded-2xl border bg-white p-8 text-center text-sm text-slate-500">در حال بررسی آدرس و شعبه انتخابی...</div>
-        ) : isAuthenticated && location.pathname !== "/delivery-address" && addressesQuery.data?.length && !branchId ? (
-          <div dir="rtl" className="rounded-2xl border border-amber-200 bg-amber-50 p-8 text-center text-sm text-amber-900">
-            برای مشاهده کالاها ابتدا از نوار بالای صفحه یک شعبه فعال انتخاب کنید.
+        {isAuthenticated &&
+        location.pathname !== "/delivery-address" &&
+        addressesQuery.isLoading ? (
+          <div
+            dir="rtl"
+            className="space-y-5 py-4"
+            role="status"
+            aria-label="در حال بارگذاری اطلاعات حساب"
+          >
+            <Skeleton className="h-12 w-2/3 rounded-2xl" />
+            <Skeleton className="h-40 w-full rounded-3xl" />
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+              {Array.from({ length: 6 }).map((_, index) => (
+                <Skeleton key={index} className="h-36 rounded-2xl" />
+              ))}
+            </div>
+          </div>
+        ) : isAuthenticated &&
+          location.pathname !== "/delivery-address" &&
+          addressesQuery.isError ? (
+          <div
+            dir="rtl"
+            className="rounded-2xl border border-rose-200 bg-rose-50 p-8 text-center text-sm text-rose-800"
+          >
+            بررسی آدرس‌های حساب کاربری با خطا مواجه شد. لطفاً صفحه را دوباره
+            بارگذاری کنید.
+          </div>
+        ) : isAuthenticated &&
+          location.pathname !== "/delivery-address" &&
+          addressesQuery.data?.length &&
+          !branchId ? (
+          <div
+            dir="rtl"
+            className="rounded-2xl border border-amber-200 bg-amber-50 p-8 text-center text-sm text-amber-900"
+          >
+            برای مشاهده کالاها ابتدا از نوار بالای صفحه یک شعبه فعال انتخاب
+            کنید.
           </div>
         ) : (
           <Outlet />
