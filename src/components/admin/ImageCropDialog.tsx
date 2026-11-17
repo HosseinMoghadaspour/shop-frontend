@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Check, ImagePlus, Loader2, RotateCcw, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Slider } from "@/components/ui/slider";
 
 type ImageCropDialogProps = {
   files: File[];
@@ -26,6 +25,7 @@ export function ImageCropDialog({
   const [zoom, setZoom] = useState(1);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [imageSize, setImageSize] = useState<ImageSize | null>(null);
+  const [frameSize, setFrameSize] = useState<ImageSize>({ width: 640, height: 640 / aspectRatio });
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [completed, setCompleted] = useState<File[]>([]);
@@ -168,7 +168,7 @@ export function ImageCropDialog({
           </div>
           {error && <p className="text-sm text-destructive">{error}</p>}
           <div className="flex flex-wrap items-center justify-between gap-2 border-t pt-4">
-            <p className="text-xs text-muted-foreground">نسبت تصویر: {aspectRatio === 1 ? "۱:۱ مربع" : "۱۶:۹ افقی"}</p>
+            <p className="text-xs text-muted-foreground">نسبت تصویر: {aspectRatio === 1 ? "۱:۱ مربع" : aspectRatio === 3 ? "۳:۱ افقی" : aspectRatio.toFixed(2)}</p>
             <div className="flex gap-2">
               <Button type="button" variant="outline" onClick={onCancel} disabled={busy}>انصراف</Button>
               <Button type="button" onClick={() => void cropCurrent()} disabled={!imageSize || busy}>
