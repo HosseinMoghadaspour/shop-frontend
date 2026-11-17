@@ -145,6 +145,7 @@ function FooterImageUploader({
 }) {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [cropFile, setCropFile] = useState<File | null>(null);
 
   async function handleUpload(event: React.ChangeEvent<HTMLInputElement>) {
     const input = event.currentTarget;
