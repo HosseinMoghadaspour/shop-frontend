@@ -144,3 +144,38 @@ export async function getOrderById(
 
   return response.data.data;
 }
+
+export interface OrderRequest {
+  id: number;
+  requestType: 1 | 2;
+  message: string;
+  status: 1 | 2 | 3 | 4;
+  adminResponse: string | null;
+  createdAt: string;
+  updatedAt: string | null;
+}
+
+export async function getOrderRequests(orderId: number): Promise<OrderRequest[]> {
+  const response = await apiClient.get<ApiResponse<OrderRequest[]>>(
+    `/orders/${orderId}/requests`,
+  );
+  if (!response.data.success) {
+    throw new Error(response.data.message || "دریافت درخواست‌ها ناموفق بود.");
+  }
+  return response.data.data;
+}
+
+export async function createOrderRequest(
+  orderId: number,
+  requestType: 1 | 2,
+  message = "",
+): Promise<OrderRequest> {
+  const response = await apiClient.post<ApiResponse<OrderRequest>>(
+    `/orders/${orderId}/requests`,
+    { requestType, message },
+  );
+  if (!response.data.success) {
+    throw new Error(response.data.message || "ثبت درخواست ناموفق بود.");
+  }
+  return response.data.data;
+}
