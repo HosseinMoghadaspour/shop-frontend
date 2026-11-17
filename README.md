@@ -1,32 +1,79 @@
-# React + TypeScript + Vite
+# فروشگاه آنلاین
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+فرانت‌اند فروشگاه آنلاین با React، TypeScript و Vite پیاده‌سازی شده است. رابط کاربری فارسی و راست‌چین است و بخش فروشگاه و پنل مدیریت را در یک برنامه ارائه می‌کند.
 
-Currently, two official plugins are available:
+## پیش‌نیازها
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Node.js نسخه 22 یا بالاتر
+- pnpm
+- سرویس بک‌اند فروشگاه در دسترس
 
-## React Compiler
+## راه‌اندازی
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+pnpm install
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+در ریشه پروژه فایل .env.local بسازید و آدرس API بک‌اند را در آن قرار دهید:
+
+```env
+VITE_API_URL=http://localhost:3002
+```
+
+سپس برنامه را در حالت توسعه اجرا کنید:
+
+```bash
+pnpm dev
+```
+
+Vite آدرس محلی اجرا را در ترمینال نمایش می‌دهد.
+
+## فرمان‌های پروژه
+
+| فرمان | کاربرد |
+| --- | --- |
+| `pnpm dev` | اجرای محیط توسعه |
+| `pnpm build` | بررسی TypeScript و ساخت نسخه production |
+| `pnpm preview` | پیش‌نمایش خروجی production |
+| `pnpm lint` | اجرای Oxlint |
+
+## ساختار سورس
+
+```text
+src/
+├── app/             # راه‌اندازی برنامه، Router و Providerها
+├── components/      # کامپوننت‌های مشترک و UI
+├── features/        # قابلیت‌های فروشگاه و پنل مدیریت
+├── layouts/         # چیدمان صفحات
+├── services/        # ارتباط HTTP و سرویس‌های API
+├── stores/          # وضعیت سراسری با Zustand
+├── lib/             # ابزارها و توابع کمکی
+└── styles/          # استایل‌های برنامه
+```
+
+قابلیت‌های اصلی در پوشه‌های features قرار دارند؛ از جمله احراز هویت، محصولات، دسته‌بندی‌ها، سبد خرید، تسویه‌حساب، سفارش‌ها، پروفایل، نشانی‌ها و مدیریت فروشگاه.
+
+## فناوری‌های اصلی
+
+- React و TypeScript
+- Vite
+- Tailwind CSS و shadcn/ui
+- React Router
+- TanStack Query
+- Zustand
+- Axios
+- Sonner
+- React Leaflet و Leaflet
+
+## احراز هویت و درخواست‌ها
+
+- درخواست‌های API از طریق Axios instance مرکزی در src/services/api/client.ts ارسال می‌شوند.
+- کوکی‌های نشست با withCredentials در درخواست‌ها پشتیبانی می‌شوند.
+- وضعیت احراز هویت در Zustand نگهداری و هنگام راه‌اندازی برنامه بازیابی می‌شود.
+- مسیرهای مشتری و مدیر با Guardهای جداگانه محافظت می‌شوند.
+
+## نکات توسعه
+
+- متغیرهای محیطی سمت مرورگر باید با پیشوند VITE_ تعریف شوند؛ مقادیر این متغیرها محرمانه نیستند و داخل bundle قابل مشاهده‌اند.
+- منطق و قرارداد API را در زمان تغییر سرویس‌ها با بک‌اند هماهنگ نگه دارید.
+- پیش از انتشار، pnpm build و pnpm lint را اجرا کنید.
