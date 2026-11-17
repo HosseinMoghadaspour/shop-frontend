@@ -8,6 +8,7 @@ export interface AdminCategory {
   code: string;
   name: string;
   parentId: number | null;
+  parentName: string | null;
   isActive: boolean;
   isVisible: boolean;
   sortOrder: number;
