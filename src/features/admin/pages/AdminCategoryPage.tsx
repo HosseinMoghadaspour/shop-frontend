@@ -332,7 +332,7 @@ export function AdminCategoriesPage() {
                       <p className="mt-2 text-[11px] leading-5 text-slate-500">این تغییر فقط ساختار نمایش فروشگاه را تغییر می‌دهد و به رابطه دسته‌ها در حسابداری دست نمی‌زند.</p>
                       {busyAction === `parent-${category.id}` && <p className="mt-2 text-xs text-emerald-700">در حال ذخیره جایگاه...</p>}
                     </div>
-                    <div className="space-y-3 rounded-xl border p-3>
+                    <div className="space-y-3 rounded-xl border p-3">
                       <div className="flex flex-wrap items-center justify-between gap-3">
                         <div>
                           <p className="text-sm font-semibold">آیکون دسته‌بندی</p>
