@@ -18,6 +18,7 @@ export interface AdminCategory {
 
 export interface AdminCategoriesResult {
   categories: AdminCategory[];
+  parents: Array<{ id: number; name: string }>;
   pagination: {
     page: number;
     limit: number;
@@ -36,6 +37,7 @@ interface ListResponse {
   success: boolean;
   message?: string;
   data: AdminCategory[];
+  parents: Array<{ id: number; name: string }>;
   pagination: AdminCategoriesResult["pagination"];
 }
 
@@ -56,6 +58,7 @@ export async function getAdminCategories(params: {
 
     return {
       categories: response.data.data,
+      parents: response.data.parents ?? [],
       pagination: response.data.pagination,
     };
   } catch (error) {
@@ -96,5 +99,18 @@ export async function setCategoryIcon(id: number, iconName: string | null) {
     return response.data.data;
   } catch (error) {
     throw new Error(getApiErrorMessage(error, "ذخیره آیکون دسته‌بندی ناموفق بود."));
+  }
+}
+
+export async function setCategoryParent(id: number, parentId: number | null) {
+  try {
+    const response = await apiClient.patch<ApiResponse<{
+      id: number;
+      parentId: number | null;
+      parentName: string | null;
+    }>>(`/admin/categories/${id}/parent`, { parentId });
+    return response.data.data;
+  } catch (error) {
+    throw new Error(getApiErrorMessage(error, "تغییر والد دسته‌بندی ناموفق بود."));
   }
 }
