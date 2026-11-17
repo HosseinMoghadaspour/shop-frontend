@@ -29,6 +29,7 @@ import { AdminPaymentMethodsPage } from "@/features/admin/pages/AdminPaymentMeth
 import { AdminBankAccountsPage } from "@/features/admin/pages/AdminBankAccountsPage";
 import { AdminBranchesPage } from "@/features/admin/pages/AdminBranchesPage";
 import { AdminOrdersPage } from "@/features/admin/pages/AdminOrdersPage";
+import { AdminOrderRequestsPage } from "@/features/admin/pages/AdminOrderRequestsPage";
 import { DeliveryAddressPage } from "@/features/addresses/pages/DeliveryAddressPage";
 
 function NotFoundPage() {
@@ -91,6 +92,7 @@ export const router = createBrowserRouter([
           { path: "/admin", element: <AdminDashboardPage /> },
           { path: "/admin/products", element: <AdminProductsPage /> },
           { path: "/admin/orders", element: <AdminOrdersPage /> },
+          { path: "/admin/order-requests", element: <AdminOrderRequestsPage /> },
           { path: "/admin/categories", element: <AdminCategoriesPage /> },
           { path: "/admin/sliders", element: <AdminSlidersPage /> },
           { path: "/admin/footer", element: <AdminFooterPage /> },
