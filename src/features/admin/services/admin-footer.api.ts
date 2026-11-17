@@ -1,3 +1,4 @@
+import { getApiErrorMessage } from "@/services/api/errors";
 
 import { apiClient } from "@/services/api/client";
 
@@ -40,30 +41,6 @@ interface ApiResponse<T> {
   data: T;
 }
 
-function getErrorMessage(error: unknown, fallback: string) {
-  if (
-    typeof error === "object" &&
-    error !== null &&
-    "response" in error
-  ) {
-    const response = (
-      error as {
-        response?: {
-          data?: {
-            message?: string;
-          };
-        };
-      }
-    ).response;
-
-    if (response?.data?.message) {
-      return response.data.message;
-    }
-  }
-
-  return error instanceof Error ? error.message : fallback;
-}
-
 export async function getAdminFooter(): Promise<AdminFooter | null> {
   try {
     const response = await apiClient.get<ApiResponse<AdminFooter | null>>(
@@ -73,7 +50,7 @@ export async function getAdminFooter(): Promise<AdminFooter | null> {
     return response.data.data;
   } catch (error) {
     throw new Error(
-      getErrorMessage(error, "دریافت اطلاعات فوتر ناموفق بود."),
+      getApiErrorMessage(error, "دریافت اطلاعات فوتر ناموفق بود."),
     );
   }
 }
@@ -88,7 +65,7 @@ export async function updateAdminFooter(data: AdminFooterForm) {
     return response.data.data;
   } catch (error) {
     throw new Error(
-      getErrorMessage(error, "ذخیره اطلاعات فوتر ناموفق بود."),
+      getApiErrorMessage(error, "ذخیره اطلاعات فوتر ناموفق بود."),
     );
   }
 }
