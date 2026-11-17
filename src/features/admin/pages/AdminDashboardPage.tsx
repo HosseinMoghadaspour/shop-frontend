@@ -2,11 +2,9 @@ import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowLeft,
-  CheckCircle2,
   CircleAlert,
   Eye,
   FolderTree,
-  ImagePlus,
   Images,
   Package,
   PackageSearch,
@@ -57,7 +55,6 @@ export function AdminDashboardPage() {
   const [stats, setStats] = useState<AdminDashboardStats>(initialStats);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
   const loadStats = useCallback(async () => {
     setLoading(true);
@@ -65,7 +62,6 @@ export function AdminDashboardPage() {
     try {
       const data = await getAdminDashboardStats();
       setStats(data);
-      setLastUpdated(new Date());
     } catch (err) {
       setError(err instanceof Error ? err.message : "دریافت آمار داشبورد ناموفق بود.");
     } finally {
