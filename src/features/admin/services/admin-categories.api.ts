@@ -1,3 +1,4 @@
+import { getApiErrorMessage } from "@/services/api/errors";
 import { apiClient } from "@/services/api/client";
 
 export type CategoryVisibilityFilter = "all" | "visible" | "hidden";
@@ -37,23 +38,6 @@ interface ListResponse {
   pagination: AdminCategoriesResult["pagination"];
 }
 
-function getErrorMessage(error: unknown, fallback: string) {
-  if (
-    typeof error === "object" &&
-    error !== null &&
-    "response" in error
-  ) {
-    const response = (
-      error as { response?: { data?: { message?: string; error?: { message?: string } } } }
-    ).response;
-
-    if (response?.data?.message) return response.data.message;
-    if (response?.data?.error?.message) return response.data.error.message;
-  }
-
-  return error instanceof Error ? error.message : fallback;
-}
-
 export async function getAdminCategories(params: {
   search?: string;
   visibility: CategoryVisibilityFilter;
@@ -74,7 +58,7 @@ export async function getAdminCategories(params: {
       pagination: response.data.pagination,
     };
   } catch (error) {
-    throw new Error(getErrorMessage(error, "دریافت دسته‌بندی‌ها ناموفق بود."));
+    throw new Error(getApiErrorMessage(error, "دریافت دسته‌بندی‌ها ناموفق بود."));
   }
 }
 
@@ -86,7 +70,7 @@ export async function setCategoryVisibility(id: number, isVisible: boolean) {
     );
     return response.data.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "تغییر وضعیت نمایش دسته‌بندی ناموفق بود."));
+    throw new Error(getApiErrorMessage(error, "تغییر وضعیت نمایش دسته‌بندی ناموفق بود."));
   }
 }
 
@@ -98,7 +82,7 @@ export async function setCategoryDisplayOrder(id: number, sortOrder: number) {
     );
     return response.data.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "ذخیره ترتیب نمایش ناموفق بود."));
+    throw new Error(getApiErrorMessage(error, "ذخیره ترتیب نمایش ناموفق بود."));
   }
 }
 
@@ -110,6 +94,6 @@ export async function setCategoryIcon(id: number, iconName: string | null) {
     );
     return response.data.data;
   } catch (error) {
-    throw new Error(getErrorMessage(error, "ذخیره آیکون دسته‌بندی ناموفق بود."));
+    throw new Error(getApiErrorMessage(error, "ذخیره آیکون دسته‌بندی ناموفق بود."));
   }
 }
