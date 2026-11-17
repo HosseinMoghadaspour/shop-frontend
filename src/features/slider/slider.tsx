@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/carousel";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowLeft, ArrowUpLeft, RefreshCw } from "lucide-react";
+import { ArrowUpLeft, RefreshCw } from "lucide-react";
 import { apiClient } from "@/services/api/client";
 
 interface SliderItem {
