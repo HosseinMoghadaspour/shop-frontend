@@ -30,7 +30,7 @@ export const useOrderStore = create<OrderState>((set) => ({
     });
 
     try {
-      const result = await createOrder(data);
+      const result = await createOrder(data, crypto.randomUUID());
 
       set({
         order: result,
