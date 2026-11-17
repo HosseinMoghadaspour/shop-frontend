@@ -31,7 +31,7 @@ export function ImageCropDialog({
   const [completed, setCompleted] = useState<File[]>([]);
   const frameRef = useRef<HTMLDivElement>(null);
   const dragRef = useRef<{ x: number; y: number; startX: number; startY: number } | null>(null);
-  const file = files[index];
+  const file = files[index]!;
   const previewUrl = useMemo(() => URL.createObjectURL(file), [file]);
 
   useEffect(() => () => URL.revokeObjectURL(previewUrl), [previewUrl]);
@@ -88,7 +88,7 @@ export function ImageCropDialog({
       canvas.height = Math.round(outputWidth / aspectRatio);
       const context = canvas.getContext("2d");
       if (!context) throw new Error("امکان پردازش تصویر وجود ندارد.");
-      if (file.type !== "image/png") {
+      const mimeType = file.type === "image/png" ? "image/png" : file.type === "image/jpeg" ? "image/jpeg" : "image/webp";\n      if (mimeType === "image/jpeg") {
         context.fillStyle = "#ffffff";
         context.fillRect(0, 0, canvas.width, canvas.height);
       }
@@ -100,7 +100,7 @@ export function ImageCropDialog({
       const blob = await new Promise<Blob>((resolve, reject) => {
         canvas.toBlob((value) => value ? resolve(value) : reject(new Error("ساخت تصویر برش‌خورده ناموفق بود.")), mimeType, 0.92);
       });
-      const cropped = new File([blob], file.name.replace(/\\.[^.]+$/, "") + (mimeType === "image/png" ? ".png" : ".jpg"), {
+      const cropped = new File([blob], file.name.replace(/\\.[^.]+$/, "") + (mimeType === "image/png" ? ".png" : mimeType === "image/webp" ? ".webp" : ".jpg"), {
         type: mimeType,
         lastModified: Date.now(),
       });
