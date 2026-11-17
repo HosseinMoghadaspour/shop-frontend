@@ -14,6 +14,7 @@ import {
   Landmark,
   Store,
   ClipboardList,
+  Headset,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/stores/auth.store";
@@ -22,6 +23,7 @@ const navigation = [
   { to: "/admin", label: "داشبورد", icon: LayoutDashboard, end: true },
   { to: "/admin/products", label: "مدیریت کالاها", icon: PackageSearch },
   { to: "/admin/orders", label: "مدیریت سفارش‌ها", icon: ClipboardList },
+  { to: "/admin/order-requests", label: "درخواست‌ها و پشتیبانی", icon: Headset },
   { to: "/admin/branches", label: "مدیریت شعب", icon: Store },
   { to: "/admin/categories", label: "دسته‌بندی‌ها", icon: FolderTree },
   { to: "/admin/sliders", label: "مدیریت اسلایدرها", icon: Images },
