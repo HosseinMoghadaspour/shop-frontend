@@ -20,6 +20,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { getApiAssetUrl } from "@/lib/api-url";
+import { ImageCropDialog } from "@/components/admin/ImageCropDialog";
 import {
   uploadFooterImage,
   deleteFooterImage,
@@ -148,39 +149,32 @@ function FooterImageUploader({
   async function handleUpload(event: React.ChangeEvent<HTMLInputElement>) {
     const input = event.currentTarget;
     const file = input.files?.[0];
-
+    input.value = "";
     if (!file) return;
 
     setError(null);
-
     if (file.size > 8 * 1024 * 1024) {
       setError("حجم تصویر نباید بیشتر از ۸ مگابایت باشد.");
-      input.value = "";
       return;
     }
-
-    if (
-      file.type &&
-      !["image/jpeg", "image/png", "image/webp", "image/avif"].includes(
-        file.type,
-      )
-    ) {
+    if (file.type && !["image/jpeg", "image/png", "image/webp", "image/avif"].includes(file.type)) {
       setError("فرمت تصویر باید JPEG، PNG، WebP یا AVIF باشد.");
-      input.value = "";
       return;
     }
+    setCropFile(file);
+  }
 
+  async function uploadCroppedImage(file: File) {
     setUploading(true);
-
+    setError(null);
+    setCropFile(null);
     try {
       const result = await uploadFooterImage(field, file);
-
       onChange(result.url ?? "");
     } catch (error) {
       setError(getErrorMessage(error));
     } finally {
       setUploading(false);
-      input.value = "";
     }
   }
 
@@ -202,6 +196,17 @@ function FooterImageUploader({
 
   return (
     <div className="space-y-3 rounded-xl border border-dashed bg-muted/20 p-4">
+      {cropFile && (
+        <ImageCropDialog
+          files={[cropFile]}
+          aspectRatio={field === "LogoImageUrl" ? 3 : 1}
+          outputWidth={field === "LogoImageUrl" ? 1500 : 800}
+          title={field === "LogoImageUrl" ? "برش لوگو (۳:۱)" : field === "SiteIcon" ? "برش آیکون سایت (۱:۱)" : "برش نماد (۱:۱)"}
+          onComplete={(files) => { const cropped = files[0]; if (cropped) void uploadCroppedImage(cropped); }}
+          onCancel={() => setCropFile(null)}
+        />
+      )}
+
       <div className="flex items-center justify-between gap-2">
         <Label className="text-sm font-semibold">{label}</Label>
 
