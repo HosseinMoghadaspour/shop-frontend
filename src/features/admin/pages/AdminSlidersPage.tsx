@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import { ImageCropDialog } from "@/components/admin/ImageCropDialog";
 import {
   createAdminSlider,
   deleteAdminSlider,
@@ -54,6 +55,7 @@ function SliderEditor({
   const [targetUrl, setTargetUrl] = useState(slider.UrlSend ?? "");
   const [active, setActive] = useState(Boolean(slider.Status));
   const [file, setFile] = useState<File | null>(null);
+  const [cropOpen, setCropOpen] = useState(false);
 
   async function save() {
     onBusy(slider.RowID);
@@ -118,7 +120,7 @@ function SliderEditor({
               )}
             </div>
             <Label className="block text-sm font-medium">جایگزینی تصویر (JPEG، PNG، WebP یا AVIF؛ حداکثر ۸ مگابایت)</Label>
-            <Input type="file" accept="image/jpeg,image/png,image/webp,image/avif" onChange={(event) => setFile(event.target.files?.[0] ?? null)} />
+            <Input type="file" accept="image/jpeg,image/png,image/webp,image/avif" onChange={(event) => { const selected = event.target.files?.[0] ?? null; setFile(selected); setCropOpen(Boolean(selected)); event.currentTarget.value = ""; }} />
             {file && <p className="text-xs text-muted-foreground">فایل انتخاب‌شده: {file.name}</p>}
           </div>
           <div className="space-y-3">
@@ -210,7 +212,7 @@ export function AdminSlidersPage() {
   const [buttonText, setButtonText] = useState("");
   const [buttonColor, setButtonColor] = useState("#047857");
   const [targetUrl, setTargetUrl] = useState("");
-  const [newFile, setNewFile] = useState<File | null>(null);
+  const [newFile, setNewFile] = useState<File | null>(null);\n  const [newCropOpen, setNewCropOpen] = useState(false);
 
   const loadSliders = useCallback(async () => {
     setLoading(true);
@@ -285,11 +287,11 @@ export function AdminSlidersPage() {
       <Card>
         <CardHeader><CardTitle className="flex items-center gap-2"><ImagePlus className="size-5" /> افزودن اسلایدر جدید</CardTitle></CardHeader>
         <CardContent>
-          <form onSubmit={(event) => void createSlider(event)} className="space-y-4">
+          <form onSubmit={(event) => void createSlider(event)} className="space-y-4">\n            {newCropOpen && newFile && (\n              <ImageCropDialog files={[newFile]} aspectRatio={16 / 9} outputWidth={1600} title="برش تصویر اسلایدر (۱۶:۹)" onComplete={(files) => { setNewFile(files[0] ?? null); setNewCropOpen(false); }} onCancel={() => { setNewCropOpen(false); setNewFile(null); }} />\n            )}
             <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
               <div className="space-y-2">
                 <Label className="block text-sm font-medium" htmlFor="new-slider-image">تصویر اسلایدر (الزامی)</Label>
-                <Input id="new-slider-image" type="file" accept="image/jpeg,image/png,image/webp,image/avif" onChange={(event) => setNewFile(event.target.files?.[0] ?? null)} />
+                <Input id="new-slider-image" type="file" accept="image/jpeg,image/png,image/webp,image/avif" onChange={(event) => { const selected = event.target.files?.[0] ?? null; setNewFile(selected); setNewCropOpen(Boolean(selected)); event.currentTarget.value = ""; }} />
                 <p className="text-xs text-muted-foreground">تصویر به WebP تبدیل و با اندازه مناسب ذخیره می‌شود. حداکثر حجم فایل ۸ مگابایت است.</p>
               </div>
               <div className="grid gap-3 sm:grid-cols-2">
