@@ -141,13 +141,13 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <Card
       className="
-    group flex h-[290px] w-full max-w-[190px] min-w-0 flex-col
+    group flex h-[300px] w-full max-w-[190px] min-w-0 flex-col
     overflow-hidden rounded-2xl border-0 bg-white
     shadow-[0_3px_18px_rgba(15,23,42,0.06)]
     ring-1 ring-slate-900/[0.035]
     transition-shadow duration-300
     hover:shadow-[0_14px_32px_rgba(15,23,42,0.12)]
-    sm:h-[290px]
+    sm:h-[330px]
   "
     >
       {/* تصویر محصول */}
