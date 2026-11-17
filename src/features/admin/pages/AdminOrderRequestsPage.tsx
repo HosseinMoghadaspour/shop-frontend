@@ -114,7 +114,7 @@ export function AdminOrderRequestsPage() {
                   <select value={statuses[item.id] ?? item.status} onChange={(event) => setStatuses((current) => ({ ...current, [item.id]: Number(event.target.value) }))} className="h-11 w-full rounded-xl border bg-white px-3 font-normal">
                     <option value={1}>ثبت‌شده</option>
                     <option value={2}>در حال بررسی</option>
-                    <option value={3}>پاسخ داده‌شده</option>
+                    <option value={3}>بسته‌شده</option>
                     <option value={4}>رد شده</option>
                   </select>
                 </label>
