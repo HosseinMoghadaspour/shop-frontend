@@ -319,7 +319,7 @@ export function AdminCategoriesPage() {
                         جایگاه در درخت دسته‌بندی‌ها
                         <select
                           value={category.parentId ?? ""}
-                          disabled={isBusy}
+                          disabled={isBusy || !category.isActive}
                           onChange={(event) => void saveCategoryParent(category, event.target.value ? Number(event.target.value) : null)}
                           className="h-10 w-full rounded-lg border border-slate-200 bg-white px-3 text-sm font-normal outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
                         >
