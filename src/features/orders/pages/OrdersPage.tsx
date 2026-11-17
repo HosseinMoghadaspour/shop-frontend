@@ -138,6 +138,15 @@ export function OrdersPage() {
                 </div>
               </div>
 
+              <div className="mb-4 flex flex-wrap gap-2">
+                <span className="rounded-full bg-sky-50 px-3 py-1.5 text-xs font-semibold text-sky-800">
+                  ارسال: {order.DeliveryStatusName || "در حال بررسی"}
+                </span>
+                <span className="rounded-full bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-800">
+                  پرداخت: {order.PaymentStatusName || "در انتظار بررسی"}
+                </span>
+              </div>
+
               <div className="mb-4">
                 <p className="mb-2 text-sm font-medium">اقلام سفارش</p>
 
