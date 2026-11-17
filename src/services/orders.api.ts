@@ -71,6 +71,8 @@ export interface OrderHeader {
   TaxPrice: number | null;
   PayablePrice: number | null;
   OrderStatus: boolean | null;
+  DeliveryStatusName?: string | null;
+  PaymentStatusName?: string | null;
 }
 
 export interface OrderProduct {
