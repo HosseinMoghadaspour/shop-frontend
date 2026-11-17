@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState, type FormEvent } from "react";
-import { ClipboardList, Search, RefreshCw, Eye, ChevronRight, PackageCheck } from "lucide-react";
+import { ClipboardList, Search, RefreshCw, Eye, PackageCheck } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
