@@ -1,24 +1,24 @@
+
 import { useEffect, useState } from "react";
-import { Flame, Sparkles, Zap } from "lucide-react";
+import { Zap } from "lucide-react";
 
 const DAY = 24 * 60 * 60 * 1000;
-
 const STORAGE_KEY = "amazing-offer-end";
 
 export function AmazingCountdown() {
   const [remaining, setRemaining] = useState(DAY);
 
   useEffect(() => {
-    const now = Date.now();
-    const saved = Number(localStorage.getItem(STORAGE_KEY));
+    const getNextMidnight = () => {
+      const now = new Date();
+      const midnight = new Date(now);
 
-    let endTime = saved;
+      midnight.setHours(24, 0, 0, 0);
 
-    if (!saved || !Number.isFinite(saved)) {
-      endTime = now + DAY;
-    } else if (now >= saved) {
-      endTime = saved + (Math.floor((now - saved) / DAY) + 1) * DAY;
-    }
+      return midnight.getTime();
+    };
+
+    let endTime = getNextMidnight();
 
     localStorage.setItem(STORAGE_KEY, String(endTime));
 
@@ -26,14 +26,15 @@ export function AmazingCountdown() {
       const current = Date.now();
 
       if (current >= endTime) {
-        endTime += (Math.floor((current - endTime) / DAY) + 1) * DAY;
+        endTime = getNextMidnight();
         localStorage.setItem(STORAGE_KEY, String(endTime));
       }
 
-      setRemaining(endTime - current);
+      setRemaining(Math.max(0, endTime - current));
     };
 
     update();
+
     const interval = window.setInterval(update, 1000);
 
     return () => window.clearInterval(interval);
@@ -46,14 +47,10 @@ export function AmazingCountdown() {
   const format = (value: number) => String(value).padStart(2, "0");
 
   return (
-    <div className="relative isolate overflow-hidden rounded-3xl text-rose-600 bg-rose-200 border- p-3">
-      {/* <div className="pointer-events-none absolute -right-16 -top-20 size-64 rounded-full bg-orange-400/20 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-24 left-1/4 size-64 rounded-full bg-rose-400/20 blur-3xl" /> */}
-
+    <div className="relative isolate overflow-hidden rounded-3xl text-rose-600 bg-rose-200 p-3">
       <div className="relative flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-        {/* تایمر */}
         <div className="shrink-0">
-          <div className="mb-3 flex items-center justify-center gap-2 text-sm font-bold ">
+          <div className="mb-3 flex items-center justify-center gap-2 text-sm font-bold">
             <Zap className="size-4" />
             زمان باقی‌مانده
           </div>
