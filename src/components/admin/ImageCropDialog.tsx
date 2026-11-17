@@ -11,7 +11,7 @@ type ImageCropDialogProps = {
   onCancel: () => void;
 };
 
-type ImageSize = { width: number; height: number };
+type Size = { width: number; height: number };
 
 export function ImageCropDialog({
   files,
@@ -24,8 +24,8 @@ export function ImageCropDialog({
   const [index, setIndex] = useState(0);
   const [zoom, setZoom] = useState(1);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
-  const [imageSize, setImageSize] = useState<ImageSize | null>(null);
-  const [frameSize, setFrameSize] = useState<ImageSize>({ width: 640, height: 640 / aspectRatio });
+  const [imageSize, setImageSize] = useState<Size | null>(null);
+  const [frameSize, setFrameSize] = useState<Size>({ width: 640, height: 640 / aspectRatio });
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [completed, setCompleted] = useState<File[]>([]);
@@ -35,6 +35,16 @@ export function ImageCropDialog({
   const previewUrl = useMemo(() => URL.createObjectURL(file), [file]);
 
   useEffect(() => () => URL.revokeObjectURL(previewUrl), [previewUrl]);
+
+  useEffect(() => {
+    const frame = frameRef.current;
+    if (!frame) return;
+    const observer = new ResizeObserver(([entry]) => {
+      if (entry) setFrameSize({ width: entry.contentRect.width, height: entry.contentRect.height });
+    });
+    observer.observe(frame);
+    return () => observer.disconnect();
+  }, [aspectRatio]);
 
   useEffect(() => {
     const image = new Image();
@@ -47,37 +57,32 @@ export function ImageCropDialog({
     setError(null);
   }, [previewUrl]);
 
-  const frameWidth = 640;
-  const frameHeight = frameWidth / aspectRatio;
   const baseScale = imageSize
-    ? Math.max(frameWidth / imageSize.width, frameHeight / imageSize.height)
+    ? Math.max(frameSize.width / imageSize.width, frameSize.height / imageSize.height)
     : 1;
-  const renderedWidth = (imageSize?.width ?? 0) * baseScale * zoom;
-  const renderedHeight = (imageSize?.height ?? 0) * baseScale * zoom;
-  const maxX = Math.max(0, (renderedWidth - frameWidth) / 2);
-  const maxY = Math.max(0, (renderedHeight - frameHeight) / 2);
+  const scale = baseScale * zoom;
+  const renderedWidth = (imageSize?.width ?? 0) * scale;
+  const renderedHeight = (imageSize?.height ?? 0) * scale;
+  const maxX = Math.max(0, (renderedWidth - frameSize.width) / 2);
+  const maxY = Math.max(0, (renderedHeight - frameSize.height) / 2);
 
   function moveImage(event: React.PointerEvent<HTMLDivElement>) {
     if (!dragRef.current) return;
-    const dx = event.clientX - dragRef.current.x;
-    const dy = event.clientY - dragRef.current.y;
     setOffset({
-      x: Math.max(-maxX, Math.min(maxX, dragRef.current.startX + dx)),
-      y: Math.max(-maxY, Math.min(maxY, dragRef.current.startY + dy)),
+      x: Math.max(-maxX, Math.min(maxX, dragRef.current.startX + event.clientX - dragRef.current.x)),
+      y: Math.max(-maxY, Math.min(maxY, dragRef.current.startY + event.clientY - dragRef.current.y)),
     });
   }
 
   async function cropCurrent() {
-    const frame = frameRef.current;
-    if (!frame || !imageSize || !file) return;
+    if (!frameRef.current || !imageSize || !file) return;
     setBusy(true);
     setError(null);
     try {
-      const scale = baseScale * zoom;
-      const sourceX = Math.max(0, Math.min(imageSize.width, (frameWidth / 2 - offset.x - frameWidth / 2 + (renderedWidth - frameWidth) / 2) / scale));
-      const sourceY = Math.max(0, Math.min(imageSize.height, (frameHeight / 2 - offset.y - frameHeight / 2 + (renderedHeight - frameHeight) / 2) / scale));
-      const sourceWidth = Math.min(imageSize.width - sourceX, frameWidth / scale);
-      const sourceHeight = Math.min(imageSize.height - sourceY, frameHeight / scale);
+      const sourceX = Math.max(0, (renderedWidth - frameSize.width) / (2 * scale) - offset.x / scale);
+      const sourceY = Math.max(0, (renderedHeight - frameSize.height) / (2 * scale) - offset.y / scale);
+      const sourceWidth = frameSize.width / scale;
+      const sourceHeight = frameSize.height / scale;
       const canvas = document.createElement("canvas");
       canvas.width = outputWidth;
       canvas.height = Math.round(outputWidth / aspectRatio);
@@ -102,7 +107,7 @@ export function ImageCropDialog({
       const next = [...completed, cropped];
       if (index < files.length - 1) {
         setCompleted(next);
-        setIndex((value) => value + 1);
+        setIndex((current) => current + 1);
       } else {
         onComplete(next);
       }
@@ -111,11 +116,6 @@ export function ImageCropDialog({
     } finally {
       setBusy(false);
     }
-  }
-
-  function changeZoom(value: number[]) {
-    setZoom(value[0] ?? 1);
-    setOffset({ x: 0, y: 0 });
   }
 
   return (
@@ -132,7 +132,7 @@ export function ImageCropDialog({
           <div className="flex justify-center overflow-hidden rounded-xl bg-neutral-950 p-2">
             <div
               ref={frameRef}
-              className="relative max-h-[55vh] w-full touch-none cursor-grab overflow-hidden bg-neutral-900 active:cursor-grabbing"
+              className="relative w-full touch-none cursor-grab overflow-hidden bg-neutral-900 active:cursor-grabbing"
               style={{ aspectRatio: String(aspectRatio), maxWidth: 640 }}
               onPointerDown={(event) => {
                 event.currentTarget.setPointerCapture(event.pointerId);
@@ -163,12 +163,12 @@ export function ImageCropDialog({
           <div className="flex items-center gap-3">
             <Button type="button" size="icon" variant="outline" onClick={() => { setZoom(1); setOffset({ x: 0, y: 0 }); }} aria-label="بازنشانی برش"><RotateCcw className="size-4" /></Button>
             <span className="shrink-0 text-xs text-muted-foreground">بزرگ‌نمایی</span>
-            <Slider min={1} max={3} step={0.05} value={[zoom]} onValueChange={changeZoom} />
+            <input aria-label="بزرگ‌نمایی تصویر" type="range" min="1" max="3" step="0.05" value={zoom} onChange={(event) => { setZoom(Number(event.target.value)); setOffset({ x: 0, y: 0 }); }} className="h-2 min-w-0 flex-1 cursor-pointer accent-primary" />
             <span className="w-10 text-left text-xs tabular-nums">{zoom.toFixed(1)}×</span>
           </div>
           {error && <p className="text-sm text-destructive">{error}</p>}
           <div className="flex flex-wrap items-center justify-between gap-2 border-t pt-4">
-            <p className="text-xs text-muted-foreground">نسبت تصویر: {aspectRatio === 1 ? "۱:۱ مربع" : aspectRatio === 3 ? "۳:۱ افقی" : aspectRatio.toFixed(2)}</p>
+            <p className="text-xs text-muted-foreground">نسبت تصویر: {aspectRatio === 1 ? "۱:۱ مربع" : aspectRatio === 3 ? "۳:۱ افقی" : aspectRatio === 16 / 9 ? "۱۶:۹ افقی" : aspectRatio.toFixed(2)}</p>
             <div className="flex gap-2">
               <Button type="button" variant="outline" onClick={onCancel} disabled={busy}>انصراف</Button>
               <Button type="button" onClick={() => void cropCurrent()} disabled={!imageSize || busy}>
