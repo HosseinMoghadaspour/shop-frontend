@@ -7,7 +7,6 @@ import {
   MessageCircle,
   MapPin,
   Phone,
-  ExternalLink,
 } from "lucide-react";
 
 import { getApiAssetUrl } from "@/lib/api-url";
