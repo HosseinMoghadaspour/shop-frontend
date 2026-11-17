@@ -22,7 +22,7 @@ function readServerMessage(payload: unknown): string | undefined {
   if (body.errors) {
     const messages = Object.values(body.errors)
       .flatMap((value) => (Array.isArray(value) ? value : [value]))
-      .filter((value): value is string => typeof value === "string" && value.trim());
+      .filter((value): value is string => typeof value === "string" && value.trim().length > 0);
     if (messages.length) return messages.join("، ");
   }
 
