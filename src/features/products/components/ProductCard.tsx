@@ -176,8 +176,10 @@ export function ProductCard({ product }: ProductCardProps) {
               }}
               className="
                 absolute inset-0 m-auto
-                h-[90%] w-[90%]
-                object-contain object-center
+                sm:h-[100%] sm:w-[90%]
+                h-[100%] w-[70%]
+                object-cover object-center
+
                 transition-transform duration-300
                 group-hover:scale-105
               "
@@ -195,7 +197,7 @@ export function ProductCard({ product }: ProductCardProps) {
             className="
               absolute right-1.5 top-1.5
               rounded-full border-0
-              bg-emerald-600 px-2 py-0.5
+              bg-rose-600 px-2 py-0.5
               text-[9px] font-bold text-white
               shadow-sm
             "

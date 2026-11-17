@@ -27,6 +27,7 @@ import { Category } from "@/features/categories/categories";
 import { useCartStore } from "@/stores/cart.store";
 import { useSelectedBranchId } from "@/hooks/useSelectedBranchId";
 import { AmazingCountdown } from "@/features/products/components/AmazingCountdown";
+import { PageLoader } from "@/components/ui/PageLoader";
 
 function ProductSection({
   eyebrow,
@@ -189,6 +190,16 @@ export function HomePage() {
     queryKey: ["products", "best-selling", 12, branchId],
     queryFn: () => getBestSellingProducts(12),
   });
+
+  // The branded full-screen loader is reserved for the initial homepage load.
+  if (
+    recommendedQuery.isLoading &&
+    amazingQuery.isLoading &&
+    newQuery.isLoading &&
+    bestSellingQuery.isLoading
+  ) {
+    return <PageLoader label="در حال آماده‌سازی فروشگاه..." />;
+  }
 
   return (
     <div className="pb-16 min-h-screen">
