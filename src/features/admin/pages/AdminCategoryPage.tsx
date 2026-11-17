@@ -283,6 +283,7 @@ export function AdminCategoriesPage() {
                         <CardTitle className="text-base leading-7">{category.name || "بدون نام"}</CardTitle>
                         <div className="mt-1 flex flex-wrap gap-2">
                           <Badge variant="outline">کد: {category.code || "—"}</Badge>
+                          <Badge variant="outline">{category.parentName ? `زیرمجموعه: ${category.parentName}` : "دسته اصلی"}</Badge>
                           <Badge variant={category.isActive ? "secondary" : "destructive"}>
                             {category.isActive ? "فعال در حسابداری" : "غیرفعال در حسابداری"}
                           </Badge>
