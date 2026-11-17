@@ -197,6 +197,21 @@ export function OrderDetailsPage() {
         </div>
       </div>
 
+      <section className="mb-6 grid gap-3 rounded-2xl border border-emerald-950/5 bg-white p-5 sm:grid-cols-2">
+        <div>
+          <p className="text-sm text-muted-foreground">وضعیت ارسال</p>
+          <p className="mt-2 inline-flex rounded-full bg-sky-50 px-3 py-1.5 text-sm font-semibold text-sky-800">
+            {order.DeliveryStatusName || "در حال بررسی"}
+          </p>
+        </div>
+        <div>
+          <p className="text-sm text-muted-foreground">وضعیت پرداخت</p>
+          <p className="mt-2 inline-flex rounded-full bg-amber-50 px-3 py-1.5 text-sm font-semibold text-amber-800">
+            {order.PaymentStatusName || "در انتظار بررسی"}
+          </p>
+        </div>
+      </section>
+
       <section className="overflow-hidden rounded-2xl border border-emerald-950/5 bg-white">
         <div className="border-b bg-muted/40 p-5">
           <h2 className="font-bold">اقلام سفارش</h2>
