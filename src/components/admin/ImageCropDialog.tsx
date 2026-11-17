@@ -88,7 +88,8 @@ export function ImageCropDialog({
       canvas.height = Math.round(outputWidth / aspectRatio);
       const context = canvas.getContext("2d");
       if (!context) throw new Error("امکان پردازش تصویر وجود ندارد.");
-      const mimeType = file.type === "image/png" ? "image/png" : file.type === "image/jpeg" ? "image/jpeg" : "image/webp";\n      if (mimeType === "image/jpeg") {
+      const mimeType = file.type === "image/png" ? "image/png" : file.type === "image/jpeg" ? "image/jpeg" : "image/webp";
+      if (mimeType === "image/jpeg") {
         context.fillStyle = "#ffffff";
         context.fillRect(0, 0, canvas.width, canvas.height);
       }
@@ -96,7 +97,6 @@ export function ImageCropDialog({
       image.src = previewUrl;
       await image.decode();
       context.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, canvas.width, canvas.height);
-      const mimeType = file.type === "image/png" ? "image/png" : "image/jpeg";
       const blob = await new Promise<Blob>((resolve, reject) => {
         canvas.toBlob((value) => value ? resolve(value) : reject(new Error("ساخت تصویر برش‌خورده ناموفق بود.")), mimeType, 0.92);
       });
