@@ -107,6 +107,16 @@ function SliderEditor({
         <Badge variant={active ? "default" : "secondary"}>{active ? "فعال" : "غیرفعال"}</Badge>
       </CardHeader>
       <CardContent className="space-y-4">
+        {cropOpen && file && (
+          <ImageCropDialog
+            files={[file]}
+            aspectRatio={16 / 9}
+            outputWidth={1600}
+            title="برش تصویر اسلایدر (۱۶:۹)"
+            onComplete={(files) => { setFile(files[0] ?? null); setCropOpen(false); }}
+            onCancel={() => { setCropOpen(false); setFile(null); }}
+          />
+        )}
         <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
           <div className="space-y-3">
             <div className="aspect-[16/9] overflow-hidden rounded-xl border bg-muted">
@@ -212,7 +222,8 @@ export function AdminSlidersPage() {
   const [buttonText, setButtonText] = useState("");
   const [buttonColor, setButtonColor] = useState("#047857");
   const [targetUrl, setTargetUrl] = useState("");
-  const [newFile, setNewFile] = useState<File | null>(null);\n  const [newCropOpen, setNewCropOpen] = useState(false);
+  const [newFile, setNewFile] = useState<File | null>(null);
+  const [newCropOpen, setNewCropOpen] = useState(false);
 
   const loadSliders = useCallback(async () => {
     setLoading(true);
@@ -287,7 +298,10 @@ export function AdminSlidersPage() {
       <Card>
         <CardHeader><CardTitle className="flex items-center gap-2"><ImagePlus className="size-5" /> افزودن اسلایدر جدید</CardTitle></CardHeader>
         <CardContent>
-          <form onSubmit={(event) => void createSlider(event)} className="space-y-4">\n            {newCropOpen && newFile && (\n              <ImageCropDialog files={[newFile]} aspectRatio={16 / 9} outputWidth={1600} title="برش تصویر اسلایدر (۱۶:۹)" onComplete={(files) => { setNewFile(files[0] ?? null); setNewCropOpen(false); }} onCancel={() => { setNewCropOpen(false); setNewFile(null); }} />\n            )}
+          <form onSubmit={(event) => void createSlider(event)} className="space-y-4">
+            {newCropOpen && newFile && (
+              <ImageCropDialog files={[newFile]} aspectRatio={16 / 9} outputWidth={1600} title="برش تصویر اسلایدر (۱۶:۹)" onComplete={(files) => { setNewFile(files[0] ?? null); setNewCropOpen(false); }} onCancel={() => { setNewCropOpen(false); setNewFile(null); }} />
+            )}
             <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
               <div className="space-y-2">
                 <Label className="block text-sm font-medium" htmlFor="new-slider-image">تصویر اسلایدر (الزامی)</Label>
