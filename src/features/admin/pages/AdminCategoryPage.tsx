@@ -1,13 +1,11 @@
 import { useCallback, useEffect, useState, type FormEvent } from "react";
 import {
-  ArrowDownWideNarrow,
   Apple,
   Baby,
   Bike,
   BookOpen,
   Cake,
   Carrot,
-  Check,
   Cherry,
   ClipboardList,
   Coffee,
@@ -48,7 +46,6 @@ import { Input } from "@/components/ui/input";
 import { useAuthStore } from "@/stores/auth.store";
 import {
   getAdminCategories,
-  setCategoryDisplayOrder,
   setCategoryIcon,
   setCategoryVisibility,
   type AdminCategoriesResult,
@@ -96,15 +93,6 @@ const emptyResult: AdminCategoriesResult = {
   pagination: { page: 1, limit: PAGE_SIZE, total: 0, totalPages: 0 },
 };
 
-function categoryImageUrl(url: string | null) {
-  if (!url) return null;
-  try {
-    return new URL(url, import.meta.env.VITE_API_URL || window.location.origin).toString();
-  } catch {
-    return url;
-  }
-}
-
 export function AdminCategoriesPage() {
   const logout = useAuthStore((state) => state.logout);
   const [result, setResult] = useState(emptyResult);
@@ -112,7 +100,6 @@ export function AdminCategoriesPage() {
   const [search, setSearch] = useState("");
   const [visibility, setVisibility] = useState<CategoryVisibilityFilter>("all");
   const [page, setPage] = useState(1);
-  const [sortDrafts, setSortDrafts] = useState<Record<number, string>>({});
   const [iconPickerCategoryId, setIconPickerCategoryId] = useState<number | null>(null);
   const [iconSearch, setIconSearch] = useState("");
   const [loading, setLoading] = useState(true);
@@ -131,7 +118,6 @@ export function AdminCategoriesPage() {
         limit: PAGE_SIZE,
       });
       setResult(data);
-      setSortDrafts(Object.fromEntries(data.categories.map((category) => [category.id, String(category.sortOrder)])));
     } catch (err) {
       setError(err instanceof Error ? err.message : "دریافت دسته‌بندی‌ها ناموفق بود.");
     } finally {
@@ -160,28 +146,6 @@ export function AdminCategoriesPage() {
       await loadCategories();
     } catch (err) {
       setError(err instanceof Error ? err.message : "تغییر وضعیت نمایش ناموفق بود.");
-    } finally {
-      setBusyAction(null);
-    }
-  }
-
-  async function saveSortOrder(category: AdminCategory) {
-    const rawValue = sortDrafts[category.id] ?? String(category.sortOrder);
-    const sortOrder = Number(rawValue);
-    if (!Number.isInteger(sortOrder) || sortOrder < 0 || sortOrder > 999999) {
-      setError("ترتیب نمایش باید عدد صحیح بین صفر تا ۹۹۹۹۹۹ باشد.");
-      return;
-    }
-
-    setBusyAction(`order-${category.id}`);
-    setError(null);
-    setNotice(null);
-    try {
-      await setCategoryDisplayOrder(category.id, sortOrder);
-      setNotice(`ترتیب نمایش «${category.name}» ذخیره شد.`);
-      await loadCategories();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "ذخیره ترتیب نمایش ناموفق بود.");
     } finally {
       setBusyAction(null);
     }
