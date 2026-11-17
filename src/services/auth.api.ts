@@ -1,21 +1,21 @@
 import { apiClient } from "./api/client";
 
 export interface AuthUser {
-    RowID: number;
-    RowName?: string;
-    RowCode?: string;
-    MobileNumber?: string;
-    MobileForSMS?: string;
-    Mobile?: string;
+  RowID: number;
+  RowName?: string;
+  RowCode?: string;
+  MobileNumber?: string;
+  MobileForSMS?: string;
+  Mobile?: string;
 }
 
 export interface AuthSession {
-    sessionId: string;
-    kind: "customer" | "admin";
-    createdAt?: number;
-    lastActivityAt: number;
-    absoluteExpiresAt: number;
-    idleExpiresAt: number;
+  sessionId: string;
+  kind: "customer" | "admin";
+  createdAt?: number;
+  lastActivityAt: number;
+  absoluteExpiresAt: number;
+  idleExpiresAt: number;
 }
 
 export interface AuthResponse {
@@ -46,40 +46,23 @@ interface MeResponse {
   };
 }
 
-export async function requestCustomerOtp(
-  mobile: string,
-) {
+export async function requestCustomerOtp(mobile: string) {
+  const response = await apiClient.post<RequestOtpResponse>(
+    "/api/auth/customer/request-otp",
+    { mobile },
+  );
 
-    console.log(mobile);
-
-  const response =
-    await apiClient.post<RequestOtpResponse>(
-      "/api/auth/customer/request-otp",
-      {
-        mobile,
-      },
-    );
-
-console.log(response.data)
   return response.data;
 }
 
-export async function verifyCustomerOtp(
-  mobile: string,
-  code: string,
-) {
-  const response =
-    await apiClient.post<VerifyOtpResponse>(
-      "/api/auth/customer/verify-otp",
-      {
-        mobile,
-        code,
-      },
-    );
+export async function verifyCustomerOtp(mobile: string, code: string) {
+  const response = await apiClient.post<VerifyOtpResponse>(
+    "/api/auth/customer/verify-otp",
+    { mobile, code },
+  );
 
   return response.data.data;
 }
-
 
 export async function requestAdminOtp(mobile: string) {
   const response = await apiClient.post<RequestOtpResponse>(
@@ -90,10 +73,7 @@ export async function requestAdminOtp(mobile: string) {
   return response.data;
 }
 
-export async function verifyAdminOtp(
-  mobile: string,
-  code: string,
-) {
+export async function verifyAdminOtp(mobile: string, code: string) {
   const response = await apiClient.post<VerifyOtpResponse>(
     "/api/auth/admin/verify-otp",
     { mobile, code },
@@ -102,19 +82,12 @@ export async function verifyAdminOtp(
   return response.data.data;
 }
 
-
-
 export async function getCurrentUser() {
-  const response =
-    await apiClient.get<MeResponse>(
-      "/api/auth/me",
-    );
+  const response = await apiClient.get<MeResponse>("/api/auth/me");
 
   return response.data.data;
 }
 
 export async function logout() {
-  await apiClient.post(
-    "/api/auth/logout",
-  );
+  await apiClient.post("/api/auth/logout");
 }
