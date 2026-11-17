@@ -100,7 +100,7 @@ export function ImageCropDialog({
       const blob = await new Promise<Blob>((resolve, reject) => {
         canvas.toBlob((value) => value ? resolve(value) : reject(new Error("ساخت تصویر برش‌خورده ناموفق بود.")), mimeType, 0.92);
       });
-      const cropped = new File([blob], file.name.replace(/\\.[^.]+$/, "") + (mimeType === "image/png" ? ".png" : mimeType === "image/webp" ? ".webp" : ".jpg"), {
+      const cropped = new File([blob], file.name.replace(/\.[^.]+$/, "") + (mimeType === "image/png" ? ".png" : mimeType === "image/webp" ? ".webp" : ".jpg"), {
         type: mimeType,
         lastModified: Date.now(),
       });
