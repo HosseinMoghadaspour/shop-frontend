@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Check, ImagePlus, Loader2, RotateCcw, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -29,12 +29,15 @@ export function ImageCropDialog({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [completed, setCompleted] = useState<File[]>([]);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const frameRef = useRef<HTMLDivElement>(null);
   const dragRef = useRef<{ x: number; y: number; startX: number; startY: number } | null>(null);
   const file = files[index]!;
-  const previewUrl = useMemo(() => URL.createObjectURL(file), [file]);
-
-  useEffect(() => () => URL.revokeObjectURL(previewUrl), [previewUrl]);
+  useEffect(() => {
+    const objectUrl = URL.createObjectURL(file);
+    setPreviewUrl(objectUrl);
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [file]);
 
   useEffect(() => {
     const frame = frameRef.current;
@@ -47,6 +50,7 @@ export function ImageCropDialog({
   }, [aspectRatio]);
 
   useEffect(() => {
+    if (!previewUrl) return;
     const image = new Image();
     image.onload = () => setImageSize({ width: image.naturalWidth, height: image.naturalHeight });
     image.onerror = () => setError("خواندن تصویر انتخاب‌شده ممکن نیست.");
@@ -75,7 +79,7 @@ export function ImageCropDialog({
   }
 
   async function cropCurrent() {
-    if (!frameRef.current || !imageSize || !file) return;
+    if (!frameRef.current || !imageSize || !file || !previewUrl) return;
     setBusy(true);
     setError(null);
     try {
@@ -142,7 +146,7 @@ export function ImageCropDialog({
               onPointerUp={() => { dragRef.current = null; }}
               onPointerCancel={() => { dragRef.current = null; }}
             >
-              {imageSize && (
+              {imageSize && previewUrl && (
                 <img
                   src={previewUrl}
                   alt="پیش‌نمایش برش"
