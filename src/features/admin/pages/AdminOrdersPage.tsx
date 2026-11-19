@@ -18,7 +18,7 @@ const money = (value: number | null) => value == null ? "—" : numberFormat.for
 
 const emptyResult: AdminOrdersResult = {
   items: [],
-  statuses: { delivery: [], payment: [] },
+  statuses: { delivery: [], send: [], payment: [] },
   pagination: { page: 1, limit: 20, total: 0, totalPages: 0 },
 };
 
@@ -34,6 +34,7 @@ export function AdminOrdersPage() {
   const [selected, setSelected] = useState<AdminOrderDetail | null>(null);
   const [detailLoading, setDetailLoading] = useState(false);
   const [deliveryDraft, setDeliveryDraft] = useState("");
+  const [sendDraft, setSendDraft] = useState("");
   const [paymentDraft, setPaymentDraft] = useState("");
 
   const loadOrders = useCallback(async () => {
@@ -65,6 +66,7 @@ export function AdminOrdersPage() {
       const detail = await getAdminOrderById(order.id);
       setSelected(detail);
       setDeliveryDraft(detail.deliveryStatusId == null ? "" : String(detail.deliveryStatusId));
+      setSendDraft(detail.sendStatusId == null ? "1" : String(detail.sendStatusId));
       setPaymentDraft(detail.paymentStatusId == null ? "" : String(detail.paymentStatusId));
     } catch (err) {
       setError(err instanceof Error ? err.message : "دریافت جزئیات سفارش ناموفق بود.");
@@ -81,6 +83,7 @@ export function AdminOrdersPage() {
     try {
       await updateAdminOrderStatus(selected.id, {
         ...(deliveryDraft ? { deliveryStatusId: Number(deliveryDraft) } : {}),
+        ...(sendDraft ? { sendStatusId: Number(sendDraft) } : {}),
         ...(paymentDraft ? { paymentStatusId: Number(paymentDraft) } : {}),
       });
       setNotice(`وضعیت سفارش ${numberFormat.format(selected.docNo)} ذخیره شد.`);
@@ -102,7 +105,7 @@ export function AdminOrdersPage() {
             <span className="text-sm font-semibold">فروش و پیگیری</span>
           </div>
           <h1 className="mt-2 text-2xl font-extrabold">مدیریت سفارش‌ها</h1>
-          <p className="mt-2 text-sm text-muted-foreground">بررسی سفارش‌ها و مدیریت وضعیت ارسال و پرداخت.</p>
+          <p className="mt-2 text-sm text-muted-foreground">بررسی سفارش‌ها و مدیریت مرحله پیشرفت سفارش و وضعیت پرداخت.</p>
         </div>
         <Button variant="outline" onClick={() => void loadOrders()} disabled={loading}>
           <RefreshCw className={`ml-2 size-4 ${loading ? "animate-spin" : ""}`} />
@@ -147,7 +150,7 @@ export function AdminOrdersPage() {
                   <div><p className="text-xs text-muted-foreground">مبلغ قابل پرداخت</p><p className="mt-1 font-extrabold">{money(order.payablePrice)} تومان</p></div>
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="rounded-full bg-sky-50 px-3 py-1.5 text-xs font-semibold text-sky-800">{order.deliveryStatusName}</span>
+                  <span className="rounded-full bg-sky-50 px-3 py-1.5 text-xs font-semibold text-sky-800">{order.sendStatusName || "ثبت اولیه"}</span>
                   <span className="rounded-full bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-800">{order.paymentStatusName}</span>
                   <Button variant="outline" size="sm" onClick={() => void openDetails(order)}><Eye className="ml-2 size-4" /> جزئیات</Button>
                 </div>
@@ -213,6 +216,11 @@ export function AdminOrdersPage() {
                       {result.statuses.delivery.map((status) => <option key={status.RowID} value={status.RowID}>{status.RowName}</option>)}
                     </select>
                   </label>
+                  <label className="space-y-2 text-sm font-semibold">مرحله سفارش
+                    <select value={sendDraft} onChange={(event) => setSendDraft(event.target.value)} className="h-11 w-full rounded-xl border bg-white px-3 font-normal">
+                      {result.statuses.send.map((status) => <option key={status.RowID} value={status.RowID}>{status.RowName}</option>)}
+                    </select>
+                  </label>
                   <label className="space-y-2 text-sm font-semibold">وضعیت پرداخت
                     <select value={paymentDraft} onChange={(event) => setPaymentDraft(event.target.value)} className="h-11 w-full rounded-xl border bg-white px-3 font-normal">
                       {result.statuses.payment.map((status) => <option key={status.RowID} value={status.RowID}>{status.RowName}</option>)}
@@ -222,11 +230,11 @@ export function AdminOrdersPage() {
 
                 <div className="mt-5 flex flex-wrap justify-end gap-2">
                   <Button variant="outline" onClick={() => setSelected(null)}>انصراف</Button>
-                  <Button disabled={busy === selected.id || (!deliveryDraft && !paymentDraft)} onClick={() => void saveStatuses()}>
+                  <Button disabled={busy === selected.id || (!deliveryDraft && !paymentDraft && !sendDraft)} onClick={() => void saveStatuses()}>
                     <PackageCheck className="ml-2 size-4" /> {busy === selected.id ? "در حال ذخیره..." : "ذخیره وضعیت‌ها"}
                   </Button>
                 </div>
-                <p className="mt-3 text-xs leading-6 text-amber-700">تغییر وضعیت پرداخت یا ارسال فقط وضعیت ثبت‌شده سفارش را به‌روزرسانی می‌کند و به‌معنای برگشت وجه یا اصلاح موجودی انبار نیست.</p>
+                <p className="mt-3 text-xs leading-6 text-amber-700">تغییر مرحله سفارش فقط مقدار ثبت‌شده در Fix_OrderSendMethod را به‌روزرسانی می‌کند. تغییر وضعیت پرداخت و به‌معنای برگشت وجه یا اصلاح موجودی انبار نیست.</p>
               </>
             )}
           </div>
