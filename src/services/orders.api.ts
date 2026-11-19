@@ -72,6 +72,8 @@ export interface OrderHeader {
   PayablePrice: number | null;
   OrderStatus: boolean | null;
   DeliveryStatusName?: string | null;
+  SendStatusId?: number | null;
+  SendStatusName?: string | null;
   PaymentStatusName?: string | null;
 }
 
@@ -106,6 +108,7 @@ export interface OrdersResponse {
 export interface OrderDetailResponse {
   orderH: OrderHeader | null;
   orderD: OrderDetail[];
+  sendStatuses: Array<{ RowID: number; RowName: string | null }>;
 }
 
 export async function createOrder(

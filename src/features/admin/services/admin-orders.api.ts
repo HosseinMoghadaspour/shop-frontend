@@ -19,6 +19,8 @@ export interface AdminOrder {
   customerMobile: string | null;
   deliveryStatusId: number | null;
   deliveryStatusName: string;
+  sendStatusId: number | null;
+  sendStatusName: string;
   paymentStatusId: number | null;
   paymentStatusName: string;
   paymentMethodName: string;
@@ -55,6 +57,7 @@ export interface AdminOrdersResult {
   items: AdminOrder[];
   statuses: {
     delivery: AdminOrderStatus[];
+    send: Array<{ RowID: number; RowName: string | null }>;
     payment: AdminOrderStatus[];
   };
   pagination: {
@@ -104,7 +107,7 @@ export async function getAdminOrderById(id: number): Promise<AdminOrderDetail> {
 
 export async function updateAdminOrderStatus(
   id: number,
-  data: { deliveryStatusId?: number; paymentStatusId?: number },
+  data: { deliveryStatusId?: number; paymentStatusId?: number; sendStatusId?: number },
 ): Promise<void> {
   try {
     const response = await apiClient.patch<ApiResponse<null>>(`/admin/orders/${id}/status`, data);
