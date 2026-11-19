@@ -108,6 +108,7 @@ export interface OrdersResponse {
 export interface OrderDetailResponse {
   orderH: OrderHeader | null;
   orderD: OrderDetail[];
+  sendStatuses: Array<{ RowID: number; RowName: string | null }>;
 }
 
 export async function createOrder(
