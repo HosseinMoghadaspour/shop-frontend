@@ -210,7 +210,7 @@ export function AdminOrdersPage() {
                   <div><p className="text-xs text-muted-foreground">قابل پرداخت</p><p className="mt-1 text-lg font-extrabold">{money(selected.payablePrice)} تومان</p></div>
                 </div>
 
-                <div className="mt-5 grid gap-4 sm:grid-cols-2">
+                <div className="mt-5 grid gap-4 sm:grid-cols-3">
                   <label className="space-y-2 text-sm font-semibold">وضعیت ارسال
                     <select value={deliveryDraft} onChange={(event) => setDeliveryDraft(event.target.value)} className="h-11 w-full rounded-xl border bg-white px-3 font-normal">
                       {result.statuses.delivery.map((status) => <option key={status.RowID} value={status.RowID}>{status.RowName}</option>)}
@@ -234,7 +234,7 @@ export function AdminOrdersPage() {
                     <PackageCheck className="ml-2 size-4" /> {busy === selected.id ? "در حال ذخیره..." : "ذخیره وضعیت‌ها"}
                   </Button>
                 </div>
-                <p className="mt-3 text-xs leading-6 text-amber-700">تغییر مرحله سفارش فقط مقدار ثبت‌شده در Fix_OrderSendMethod را به‌روزرسانی می‌کند. تغییر وضعیت پرداخت و به‌معنای برگشت وجه یا اصلاح موجودی انبار نیست.</p>
+                <p className="mt-3 text-xs leading-6 text-amber-700">تغییر مرحله سفارش فقط مقدار ثبت‌شده در Fix_OrderSendMethod را به‌روزرسانی می‌کند. تغییر وضعیت پرداخت یا مرحله سفارش به‌معنای برگشت وجه یا اصلاح موجودی انبار نیست.</p>
               </>
             )}
           </div>
