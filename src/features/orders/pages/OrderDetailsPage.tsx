@@ -37,6 +37,7 @@ export function OrderDetailsPage() {
   const [order, setOrder] = useState<OrderHeader | null>(null);
 
   const [items, setItems] = useState<OrderDetail[]>([]);
+  const [sendStatuses, setSendStatuses] = useState<Array<{ RowID: number; RowName: string | null }>>([]);
   const [requests, setRequests] = useState<OrderRequest[]>([]);
   const [requestMessage, setRequestMessage] = useState("");
   const [requestBusy, setRequestBusy] = useState(false);
@@ -112,6 +113,7 @@ export function OrderDetailsPage() {
 
         setOrder(result.orderH);
         setItems(result.orderD);
+        setSendStatuses(result.sendStatuses ?? []);
         const orderRequests = await getOrderRequests(orderId);
         if (mounted) setRequests(orderRequests);
         await loadPaymentInfo(orderId);
@@ -204,6 +206,35 @@ export function OrderDetailsPage() {
           </p>
         </div>
       </div>
+
+      <section className="mb-6 rounded-2xl border border-emerald-950/5 bg-white p-5">
+        <div className="mb-5">
+          <h2 className="font-bold">مسیر سفارش شما</h2>
+          <p className="mt-1 text-sm text-muted-foreground">وضعیت آماده‌سازی و ارسال کالا را از این قسمت پیگیری کنید.</p>
+        </div>
+        <ol className="grid gap-4 sm:grid-cols-4">
+          {sendStatuses.map((status, index) => {
+            const currentId = order.SendStatusId ?? 1;
+            const currentIndex = sendStatuses.findIndex((item) => item.RowID === currentId);
+            const isCompleted = currentIndex >= 0 && index < currentIndex;
+            const isCurrent = status.RowID === currentId;
+            return (
+              <li key={status.RowID} className="relative flex items-center gap-3 sm:flex-col sm:items-center sm:text-center">
+                <span className={`flex size-10 shrink-0 items-center justify-center rounded-full border text-sm font-bold ${isCompleted ? "border-emerald-600 bg-emerald-600 text-white" : isCurrent ? "border-emerald-600 bg-emerald-50 text-emerald-700 ring-4 ring-emerald-100" : "border-slate-200 bg-slate-50 text-slate-400"}`}>
+                  {isCompleted ? "✓" : index + 1}
+                </span>
+                <div>
+                  <p className={`text-sm font-semibold ${isCompleted || isCurrent ? "text-emerald-800" : "text-muted-foreground"}`}>{status.RowName || "مرحله سفارش"}</p>
+                  <p className="mt-1 text-xs text-muted-foreground">{isCompleted ? "تکمیل شده" : isCurrent ? "مرحله فعلی" : "در انتظار"}</p>
+                </div>
+              </li>
+            );
+          })}
+        </ol>
+        {sendStatuses.length === 0 && (
+          <p className="text-sm text-muted-foreground">اطلاعات مراحل سفارش در دسترس نیست.</p>
+        )}
+      </section>
 
       <section className="mb-6 grid gap-3 rounded-2xl border border-emerald-950/5 bg-white p-5 sm:grid-cols-2">
         <div>
