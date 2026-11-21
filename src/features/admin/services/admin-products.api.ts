@@ -19,6 +19,9 @@ export interface AdminProduct {
   discountPrice: number | null;
   isActive: boolean | null;
   isVisible: boolean;
+  isAmazing: boolean;
+  isNewProduct: boolean;
+  isBestSelling: boolean;
   images: AdminProductImage[];
 }
 
@@ -73,6 +76,29 @@ export async function setProductVisibility(
     return response.data.data;
   } catch (error) {
     throw new Error(getApiErrorMessage(error, "تغییر وضعیت نمایش کالا ناموفق بود."));
+  }
+}
+
+export type AdminProductSection = "amazing" | "new" | "bestSelling";
+
+export async function setProductSection(
+  productId: number,
+  section: AdminProductSection,
+  enabled: boolean,
+) {
+  try {
+    const response = await apiClient.patch<
+      ApiResponse<{
+        id: number;
+        isAmazing: boolean;
+        isNewProduct: boolean;
+        isBestSelling: boolean;
+      }>
+    >(`/admin/products/${productId}/sections`, { section, enabled });
+
+    return response.data.data;
+  } catch (error) {
+    throw new Error(getApiErrorMessage(error, "تغییر بخش‌های نمایش کالا ناموفق بود."));
   }
 }
 
