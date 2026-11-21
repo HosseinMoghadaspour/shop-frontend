@@ -19,6 +19,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
   SelectContent,
@@ -34,6 +35,7 @@ import {
   getAdminProducts,
   setDefaultProductImage,
   setProductVisibility,
+  setProductSection,
   uploadProductImages,
   type AdminProduct,
   type AdminProductsResult,
@@ -145,6 +147,34 @@ export function AdminProductsPage() {
       await loadProducts();
     } catch (err) {
       setError(err instanceof Error ? err.message : "تغییر وضعیت ناموفق بود.");
+    } finally {
+      setBusyAction(null);
+    }
+  }
+
+  async function toggleProductSection(
+    product: AdminProduct,
+    section: "amazing" | "new" | "bestSelling",
+    enabled: boolean,
+  ) {
+    const actionKey = `section-${section}-${product.id}`;
+    setBusyAction(actionKey);
+    setError(null);
+    setNotice(null);
+
+    try {
+      await setProductSection(product.id, section, enabled);
+      const sectionLabel = {
+        amazing: "شگفت‌انگیز",
+        new: "جدیدترین",
+        bestSelling: "پرفروش",
+      }[section];
+      setNotice(enabled
+        ? `کالا به بخش ${sectionLabel} اضافه شد.`
+        : `کالا از بخش ${sectionLabel} حذف شد.`);
+      await loadProducts();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "تغییر بخش کالا ناموفق بود.");
     } finally {
       setBusyAction(null);
     }
@@ -446,6 +476,35 @@ export function AdminProductsPage() {
                             شود.
                           </p>
                         )}
+                      </div>
+
+                      <div className="w-full rounded-lg border bg-background p-3">
+                        <p className="mb-3 text-sm font-semibold">قرارگیری کالا در بخش‌های فروشگاه</p>
+                        <div className="flex flex-wrap gap-x-5 gap-y-3">
+                          {([
+                            { key: "amazing", label: "شگفت‌انگیز", checked: product.isAmazing },
+                            { key: "new", label: "جدیدترین", checked: product.isNewProduct },
+                            { key: "bestSelling", label: "پرفروش", checked: product.isBestSelling },
+                          ] as const).map((section) => {
+                            const actionKey = `section-${section.key}-${product.id}`;
+                            const checkboxId = `section-${section.key}-${product.id}`;
+                            return (
+                              <div key={section.key} className="flex items-center gap-2">
+                                <Checkbox
+                                  id={checkboxId}
+                                  checked={section.checked}
+                                  disabled={busyAction === actionKey}
+                                  onCheckedChange={(checked) =>
+                                    void toggleProductSection(product, section.key, checked === true)
+                                  }
+                                />
+                                <Label htmlFor={checkboxId} className="cursor-pointer text-sm">
+                                  {section.label}
+                                </Label>
+                              </div>
+                            );
+                          })}
+                        </div>
                       </div>
 
                       <Button
