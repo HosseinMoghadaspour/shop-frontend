@@ -15,6 +15,7 @@ import {
   getInitialQuantity,
   getMinimumQuantity,
   getQuantityStep,
+  formatQuantityWithUnit,
 } from "@/features/cart/utils/quantity";
 
 interface ProductCardProps {
@@ -333,11 +334,14 @@ export function ProductCard({ product }: ProductCardProps) {
               )}
             </Button>
 
-            <div className="flex flex-1 items-center justify-center gap-1">
-              <span className="text-xs font-bold text-emerald-800 tabular-nums">
-                {quantity.toLocaleString("fa-IR")}
+            <div className="flex min-w-0 flex-1 items-center justify-center px-1">
+              <span className="truncate text-xs font-bold text-emerald-800 tabular-nums">
+                {formatQuantityWithUnit(
+                  quantity,
+                  product.unit?.name,
+                  product.unit?.weightOrAmount,
+                )}
               </span>
-              <span className="text-[10px] text-emerald-700/70">عدد</span>
             </div>
 
             <Button
