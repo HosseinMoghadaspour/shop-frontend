@@ -402,7 +402,7 @@ export function ProductDetailsPage() {
 
                 {isAvailable && (
                   <span className="font-semibold text-slate-700">
-                    {quantity.toLocaleString("fa-IR")}
+                    {product.stock.toLocaleString("fa-IR")}
                   </span>
                 )}
               </div>
