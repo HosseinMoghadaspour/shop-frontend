@@ -29,6 +29,7 @@ import {
   getInitialQuantity,
   getMinimumQuantity,
   getQuantityStep,
+  formatQuantityWithUnit,
 } from "@/features/cart/utils/quantity";
 
 import { useProduct } from "../hooks/useProduct";
@@ -428,7 +429,7 @@ export function ProductDetailsPage() {
                   <Button type="button" variant="ghost" size="icon" aria-label="افزایش تعداد" disabled={isCartUpdating || isCartLoading || cartQuantity + getQuantityStep(product.unit?.weightOrAmount) > (product.maxOrder && product.maxOrder > 0 ? Math.min(product.maxOrder, availableStock) : availableStock)} onClick={() => void handleIncreaseCartQuantity()}>
                     {isCartUpdating ? <LoaderCircle className="size-4 animate-spin" /> : <Plus className="size-5" />}
                   </Button>
-                  <span className="text-sm font-bold text-emerald-800">{cartQuantity.toLocaleString("fa-IR")} در سبد خرید</span>
+                  <span className="text-sm font-bold text-emerald-800">{formatQuantityWithUnit(cartQuantity, product.unit?.name, product.unit?.weightOrAmount)} در سبد خرید</span>
                   <Button type="button" variant="ghost" size="icon" aria-label="کاهش تعداد" disabled={isCartUpdating || isCartLoading} onClick={() => void handleDecreaseCartQuantity()}>
                     <Minus className="size-5" />
                   </Button>
@@ -531,7 +532,7 @@ export function ProductDetailsPage() {
               <Button type="button" variant="ghost" size="icon" aria-label="افزایش تعداد" disabled={isCartUpdating || isCartLoading || cartQuantity + getQuantityStep(product.unit?.weightOrAmount) > (product.maxOrder && product.maxOrder > 0 ? Math.min(product.maxOrder, availableStock) : availableStock)} onClick={() => void handleIncreaseCartQuantity()}>
                 {isCartUpdating ? <LoaderCircle className="size-4 animate-spin" /> : <Plus className="size-4" />}
               </Button>
-              <span className="text-xs font-bold text-emerald-800">{cartQuantity.toLocaleString("fa-IR")}</span>
+              <span className="text-xs font-bold text-emerald-800">{formatQuantityWithUnit(cartQuantity, product.unit?.name, product.unit?.weightOrAmount)}</span>
               <Button type="button" variant="ghost" size="icon" aria-label="کاهش تعداد" disabled={isCartUpdating || isCartLoading} onClick={() => void handleDecreaseCartQuantity()}>
                 <Minus className="size-4" />
               </Button>
