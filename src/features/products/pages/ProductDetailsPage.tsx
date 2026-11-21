@@ -3,6 +3,9 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import {
   ArrowRight,
   ShoppingCart,
+  Minus,
+  Plus,
+  LoaderCircle,
   PackageCheck,
   Truck,
   ShieldCheck,
@@ -19,11 +22,13 @@ import { setPendingCartAction } from "@/features/cart/utils/pending-cart";
 import { formatPrice } from "@/lib/formatter";
 import { getApiAssetUrl } from "@/lib/api-url";
 import { useCartStore } from "@/stores/cart.store";
+import { useSelectedBranchId } from "@/hooks/useSelectedBranchId";
 import { isUnauthorizedError } from "@/services/api/client";
 
 import {
   getInitialQuantity,
   getMinimumQuantity,
+  getQuantityStep,
 } from "@/features/cart/utils/quantity";
 
 import { useProduct } from "../hooks/useProduct";
@@ -38,8 +43,19 @@ export function ProductDetailsPage() {
 
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
+  const branchId = useSelectedBranchId();
+  const cart = useCartStore((state) => state.cart);
+  const fetchCart = useCartStore((state) => state.fetchCart);
   const addItem = useCartStore((state) => state.addItem);
+  const updateItem = useCartStore((state) => state.updateItem);
+  const removeItem = useCartStore((state) => state.removeItem);
+  const isCartLoading = useCartStore((state) => state.isLoading);
   const isCartUpdating = useCartStore((state) => state.isUpdating);
+
+  // Keep the shared cart store hydrated when a product detail page is opened directly.
+  useEffect(() => {
+    void fetchCart();
+  }, [fetchCart, branchId]);
 
   // Set default product image
   useEffect(() => {
@@ -77,14 +93,17 @@ export function ProductDetailsPage() {
   const currentProduct = product;
 
   const images = currentProduct.images;
-  const quantity = currentProduct.stockInfo[0]?.quantity ?? 0;
+  const availableStock = currentProduct.stockInfo[0]?.quantity ?? 0;
+  const cartItem = cart?.items.find(
+    (item) => Number(item.goodId) === Number(currentProduct.id),
+  );
+  const cartQuantity = cartItem?.quantity ?? 0;
 
   async function handleAddToCart() {
-    if (!canPurchase || isCartUpdating) return;
+    if (!canPurchase || isCartUpdating || isCartLoading || cartQuantity > 0) return;
 
     try {
       await addItem(currentProduct.id, initialQuantity);
-      navigate("/cart");
     } catch (error) {
       if (isUnauthorizedError(error)) {
         setPendingCartAction({
@@ -92,14 +111,47 @@ export function ProductDetailsPage() {
           quantity: initialQuantity,
         });
 
-        navigate(`/auth/login?returnTo=${encodeURIComponent("/cart")}`);
+        navigate(`/auth/login?returnTo=${encodeURIComponent(window.location.pathname)}`);
       }
+    }
+  }
+
+  async function handleIncreaseCartQuantity() {
+    const step = getQuantityStep(currentProduct.unit?.weightOrAmount);
+    const maximum = currentProduct.maxOrder && currentProduct.maxOrder > 0
+      ? Math.min(currentProduct.maxOrder, availableStock)
+      : availableStock;
+    const nextQuantity = Number((cartQuantity + step).toFixed(3));
+
+    if (!cartItem || isCartUpdating || isCartLoading || nextQuantity > maximum) return;
+
+    try {
+      await updateItem(currentProduct.id, nextQuantity);
+    } catch {
+      // The shared cart store keeps the error state.
+    }
+  }
+
+  async function handleDecreaseCartQuantity() {
+    if (!cartItem || isCartUpdating || isCartLoading) return;
+
+    const step = getQuantityStep(currentProduct.unit?.weightOrAmount);
+    const nextQuantity = Number((cartQuantity - step).toFixed(3));
+
+    try {
+      if (nextQuantity < minimumQuantity) {
+        await removeItem(currentProduct.id);
+      } else {
+        await updateItem(currentProduct.id, nextQuantity);
+      }
+    } catch {
+      // The shared cart store keeps the error state.
     }
   }
 
   const activeImage = images[activeImageIndex] ?? images[0];
   const hasMultipleImages = images.length > 1;
-  const isAvailable = quantity > 0;
+  const isAvailable = availableStock > 0;
 
   const canPurchase =
     product.isActive && product.isShowInOnlineShop && isAvailable;
@@ -369,23 +421,24 @@ export function ProductDetailsPage() {
               </p>
             )}
 
-            {/* Desktop Add To Cart */}
+            {/* Desktop Cart Controls */}
             <div className="mt-5 hidden sm:block md:mt-6">
-              <Button
-                className="h-12 w-full rounded-xl text-sm font-bold shadow-sm transition-all hover:shadow-md sm:text-base"
-                disabled={!canPurchase || isCartUpdating}
-                onClick={handleAddToCart}
-              >
-                <ShoppingCart className="ml-2 size-5" />
-
-                {isCartUpdating
-                  ? "در حال افزودن..."
-                  : !isAvailable
-                    ? "ناموجود"
-                    : !product.isActive || !product.isShowInOnlineShop
-                      ? "غیرفعال"
-                      : "افزودن به سبد خرید"}
-              </Button>
+              {cartQuantity > 0 ? (
+                <div className="flex h-12 w-full items-center justify-between rounded-xl border border-emerald-200 bg-emerald-50 px-2">
+                  <Button type="button" variant="ghost" size="icon" aria-label="افزایش تعداد" disabled={isCartUpdating || isCartLoading || cartQuantity + getQuantityStep(product.unit?.weightOrAmount) > (product.maxOrder && product.maxOrder > 0 ? Math.min(product.maxOrder, availableStock) : availableStock)} onClick={() => void handleIncreaseCartQuantity()}>
+                    {isCartUpdating ? <LoaderCircle className="size-4 animate-spin" /> : <Plus className="size-5" />}
+                  </Button>
+                  <span className="text-sm font-bold text-emerald-800">{cartQuantity.toLocaleString("fa-IR")} در سبد خرید</span>
+                  <Button type="button" variant="ghost" size="icon" aria-label="کاهش تعداد" disabled={isCartUpdating || isCartLoading} onClick={() => void handleDecreaseCartQuantity()}>
+                    <Minus className="size-5" />
+                  </Button>
+                </div>
+              ) : (
+                <Button className="h-12 w-full rounded-xl text-sm font-bold shadow-sm transition-all hover:shadow-md sm:text-base" disabled={!canPurchase || isCartUpdating || isCartLoading} onClick={handleAddToCart}>
+                  {isCartUpdating || isCartLoading ? <LoaderCircle className="ml-2 size-5 animate-spin" /> : <ShoppingCart className="ml-2 size-5" />}
+                  {isCartUpdating ? "در حال افزودن..." : isCartLoading ? "در حال بررسی سبد..." : !isAvailable ? "ناموجود" : !product.isActive || !product.isShowInOnlineShop ? "غیرفعال" : "افزودن به سبد خرید"}
+                </Button>
+              )}
             </div>
 
             {/* Benefits */}
@@ -472,22 +525,23 @@ export function ProductDetailsPage() {
             <span className="text-[9px] text-muted-foreground">قیمت نهایی</span>
           </div>
 
-          {/* Purchase Button */}
-          <Button
-            onClick={handleAddToCart}
-            disabled={!canPurchase || isCartUpdating}
-            className="h-11 flex-1 max-w-[190px] rounded-xl text-xs font-bold shadow-sm"
-          >
-            <ShoppingCart className="ml-2 size-4" />
-
-            {isCartUpdating
-              ? "در حال افزودن..."
-              : !isAvailable
-                ? "ناموجود"
-                : !product.isActive || !product.isShowInOnlineShop
-                  ? "غیرفعال"
-                  : "افزودن به سبد خرید"}
-          </Button>
+          {/* Mobile Cart Controls */}
+          {cartQuantity > 0 ? (
+            <div className="flex h-11 max-w-[190px] flex-1 items-center justify-between rounded-xl border border-emerald-200 bg-emerald-50 px-1">
+              <Button type="button" variant="ghost" size="icon" aria-label="افزایش تعداد" disabled={isCartUpdating || isCartLoading || cartQuantity + getQuantityStep(product.unit?.weightOrAmount) > (product.maxOrder && product.maxOrder > 0 ? Math.min(product.maxOrder, availableStock) : availableStock)} onClick={() => void handleIncreaseCartQuantity()}>
+                {isCartUpdating ? <LoaderCircle className="size-4 animate-spin" /> : <Plus className="size-4" />}
+              </Button>
+              <span className="text-xs font-bold text-emerald-800">{cartQuantity.toLocaleString("fa-IR")}</span>
+              <Button type="button" variant="ghost" size="icon" aria-label="کاهش تعداد" disabled={isCartUpdating || isCartLoading} onClick={() => void handleDecreaseCartQuantity()}>
+                <Minus className="size-4" />
+              </Button>
+            </div>
+          ) : (
+            <Button onClick={handleAddToCart} disabled={!canPurchase || isCartUpdating || isCartLoading} className="h-11 max-w-[190px] flex-1 rounded-xl text-xs font-bold shadow-sm">
+              {isCartUpdating || isCartLoading ? <LoaderCircle className="ml-2 size-4 animate-spin" /> : <ShoppingCart className="ml-2 size-4" />}
+              {isCartUpdating ? "در حال افزودن..." : isCartLoading ? "در حال بررسی..." : !isAvailable ? "ناموجود" : !product.isActive || !product.isShowInOnlineShop ? "غیرفعال" : "افزودن به سبد خرید"}
+            </Button>
+          )}
         </div>
       </div>
     </section>
