@@ -554,7 +554,7 @@ export function CheckoutPage() {
                         dir="ltr" maxLength={10} />
                     </div>
                   </div>
-                  {!profile?.isComplete && (
+                  {(!profileForm.fullName.trim() || !profile?.mobile) && (
                     <p className="text-xs text-amber-700">تکمیل نام و نام خانوادگی برای ثبت سفارش الزامی است.</p>
                   )}
                 </>
@@ -805,13 +805,14 @@ export function CheckoutPage() {
                     </p>
                   )}
 
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleNewAddress}
-                  >
-                    استفاده از آدرس جدید
-                  </Button>
+                  <div className="flex flex-wrap gap-2">
+                    <Button variant="outline" size="sm" onClick={handleEditSelectedAddress}>
+                      ویرایش این آدرس
+                    </Button>
+                    <Button variant="ghost" size="sm" onClick={handleNewAddress}>
+                      ثبت آدرس دیگر
+                    </Button>
+                  </div>
                 </div>
               </CardContent>
             </Card>
