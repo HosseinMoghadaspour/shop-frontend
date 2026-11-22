@@ -63,7 +63,6 @@ export function CheckoutPage() {
 
   const [receiverType, setReceiverType] = useState<ReceiverType>("self");
   const [profileForm, setProfileForm] = useState<ProfileForm>({ fullName: "", phoneNumber: "", email: "", nationalCode: "" });
-  const [profileSaving, setProfileSaving] = useState(false);
 
   const [form, setForm] = useState<OrderDeliveryAddress>({
     cityId: 0,
@@ -314,6 +313,19 @@ export function CheckoutPage() {
   const handleSubmitOrder = async () => {
     setError(null);
 
+    if (profileLoading) {
+      setError("لطفاً تا دریافت اطلاعات حساب کاربری صبر کنید.");
+      return;
+    }
+    if (!profile?.mobile) {
+      setError("شماره موبایل حساب کاربری معتبر نیست؛ لطفاً دوباره وارد شوید.");
+      return;
+    }
+    if (!profileForm.fullName.trim()) {
+      setError("لطفاً نام و نام خانوادگی خود را در اطلاعات حساب وارد کنید.");
+      return;
+    }
+
     if (!selectedBranchId) {
       setError("برای شهر این آدرس شعبه فعالی انتخاب نشده است.");
       return;
@@ -370,6 +382,12 @@ export function CheckoutPage() {
 
     try {
       setSubmitting(true);
+      await updateMyProfile({
+        ...profileForm,
+        fullName: receiverType === "self" && selectedAddressId === null
+          ? form.deliverToName.trim()
+          : profileForm.fullName.trim(),
+      });
       const storageKey = "checkout:idempotency-key";
 
       let idempotencyKey = sessionStorage.getItem(storageKey);
