@@ -252,6 +252,7 @@ export function CheckoutPage() {
   useEffect(() => {
     if (receiverType !== "self" || !profile || addressesLoading || !addresses) return;
     const mobile = (profile.mobile ?? "").replace(/\D/g, "");
+    if (!mobile) return;
     const ownAddress = addresses.find((address) =>
       (address.recipient.mobile ?? "").replace(/\D/g, "") === mobile,
     );
