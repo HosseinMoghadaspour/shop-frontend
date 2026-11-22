@@ -33,6 +33,7 @@ import {
 } from "@/features/cart/utils/quantity";
 
 import { useProduct } from "../hooks/useProduct";
+import { SimilarProducts } from "../components/SimilarProducts";
 
 export function ProductDetailsPage() {
   const navigate = useNavigate();
@@ -544,6 +545,10 @@ export function ProductDetailsPage() {
           </div>
         )}
       </Card>
+
+      <div className="mx-auto w-full max-w-7xl px-3 sm:px-5 lg:px-6">
+        <SimilarProducts productId={currentProduct.id} />
+      </div>
 
       {/* Mobile Sticky Purchase Bar */}
       <div
