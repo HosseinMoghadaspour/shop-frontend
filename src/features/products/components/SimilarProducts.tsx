@@ -7,14 +7,16 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { formatPrice } from "@/lib/formatter";
 import { getApiAssetUrl } from "@/lib/api-url";
 import { getSimilarProducts } from "@/services/products.api";
+import { useSelectedBranchId } from "@/hooks/useSelectedBranchId";
 
 interface SimilarProductsProps {
   productId: number;
 }
 
 export function SimilarProducts({ productId }: SimilarProductsProps) {
+  const branchId = useSelectedBranchId();
   const { data: products = [], isLoading } = useQuery({
-    queryKey: ["similar-products", productId],
+    queryKey: ["similar-products", productId, branchId],
     queryFn: () => getSimilarProducts(productId, 10),
     enabled: Number.isSafeInteger(productId) && productId > 0,
     staleTime: 5 * 60 * 1000,
