@@ -20,6 +20,7 @@ import AddressSelector from "../components/AddressSelector";
 import { useAddresses } from "@/features/addresses/hooks/useAddresses";
 import LocationSelector from "../components/LocationSelector";
 import { useCart } from "@/features/cart/hooks/useCart";
+import { getMyProfile, updateMyProfile, type CustomerProfile } from "@/services/profile.api";
 import { createOrder } from "@/services/orders.api";
 import type { OrderDeliveryAddress } from "@/services/orders.api";
 import { getPaymentMethods } from "@/services/payment.api";
@@ -31,6 +32,9 @@ import {
   setSelectedBranchId,
 } from "@/lib/store-branch";
 import type { PaymentMethod } from "@/services/payment.api";
+
+type ReceiverType = "self" | "other";
+type ProfileForm = { fullName: string; phoneNumber: string; email: string; nationalCode: string };
 
 interface CartItem {
   goodId: number | string;
@@ -46,6 +50,7 @@ export function CheckoutPage() {
 
   const { data: cart, isLoading: cartLoading } = useCart();
   const { data: addresses, isLoading: addressesLoading } = useAddresses();
+  const { data: profile, isLoading: profileLoading } = useQuery({ queryKey: ["my-profile"], queryFn: getMyProfile, staleTime: 5 * 60 * 1000 });
 
   const [selectedAddressId, setSelectedAddressIdState] = useState<number | null>(getSelectedAddressId() ?? null);
   const [selectedBranchId, setSelectedBranchIdState] = useState<number | undefined>(getSelectedBranchId());
@@ -55,6 +60,10 @@ export function CheckoutPage() {
     number | null
   >(null);
   const [paymentMethodsLoading, setPaymentMethodsLoading] = useState(true);
+
+  const [receiverType, setReceiverType] = useState<ReceiverType>("self");
+  const [profileForm, setProfileForm] = useState<ProfileForm>({ fullName: "", phoneNumber: "", email: "", nationalCode: "" });
+  const [profileSaving, setProfileSaving] = useState(false);
 
   const [form, setForm] = useState<OrderDeliveryAddress>({
     cityId: 0,
@@ -68,6 +77,16 @@ export function CheckoutPage() {
 
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!profile) return;
+    setProfileForm({
+      fullName: profile.fullName || "",
+      phoneNumber: profile.phoneNumber || "",
+      email: profile.email || "",
+      nationalCode: profile.nationalCode || "",
+    });
+  }, [profile]);
 
   useEffect(() => {
     let cancelled = false;
