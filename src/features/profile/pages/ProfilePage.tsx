@@ -92,11 +92,6 @@ export function ProfilePage() {
     };
   }, []);
 
-  const userName = user?.RowName?.trim() || "کاربر";
-
-  const mobile =
-    user?.MobileNumber || user?.MobileForSMS || user?.Mobile || "-";
-
   return (
     <main className="container mx-auto max-w-5xl px-4 py-8 sm:py-12">
       <div className="mb-6">
