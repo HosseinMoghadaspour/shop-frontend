@@ -124,6 +124,14 @@ export function CheckoutPage() {
     );
   }, [addresses, selectedAddressId]);
 
+  const hasProfileChanges = Boolean(
+    profile &&
+    (
+      profileForm.fullName.trim() !== profile.fullName.trim() ||
+      profileForm.phoneNumber.trim() !== profile.phoneNumber.trim()
+    ),
+  );
+
   const selectableAddresses = useMemo(() => {
     if (receiverType !== "self" || !addresses) return [];
     const mobile = (profile?.mobile ?? "").replace(/\D/g, "");
@@ -352,15 +360,8 @@ export function CheckoutPage() {
       return;
     }
 
-    const profileHasChanged = Boolean(
-      profile &&
-      (
-        profileForm.fullName.trim() !== profile.fullName.trim() ||
-        profileForm.phoneNumber.trim() !== profile.phoneNumber.trim()
-      ),
-    );
     const orderAddressId =
-      receiverType === "self" && selectedAddressId !== null && profileHasChanged
+      receiverType === "self" && selectedAddressId !== null && hasProfileChanges
         ? null
         : selectedAddressId;
     const deliveryForm =
@@ -798,11 +799,11 @@ export function CheckoutPage() {
                 <div className="space-y-3">
                   <div>
                     <p className="font-medium">
-                      {selectedAddress.recipient.name}
+                      {receiverType === "self" && hasProfileChanges ? profileForm.fullName : selectedAddress.recipient.name}
                     </p>
 
                     <p className="text-sm text-muted-foreground">
-                      {selectedAddress.recipient.mobile}
+                      {receiverType === "self" && hasProfileChanges ? profile?.mobile : selectedAddress.recipient.mobile}
                     </p>
                   </div>
 
