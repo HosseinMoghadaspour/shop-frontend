@@ -153,6 +153,12 @@ export function getNewProducts(limit = 12): Promise<Product[]> {
   return getProductList("/products/new", limit);
 }
 
+export function getSimilarProducts(productId: number, limit = 10): Promise<Product[]> {
+  return apiClient.get<ProductListApiResponse>(`/products/${productId}/similar`, {
+    params: { limit, branchId: getSelectedBranchId() },
+  }).then((response) => response.data.data);
+}
+
 export function getBestSellingProducts(limit = 12): Promise<Product[]> {
   return getProductList("/products/best-selling", limit);
 }
