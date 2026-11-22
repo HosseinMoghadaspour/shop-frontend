@@ -384,9 +384,7 @@ export function CheckoutPage() {
       setSubmitting(true);
       await updateMyProfile({
         ...profileForm,
-        fullName: receiverType === "self" && selectedAddressId === null
-          ? form.deliverToName.trim()
-          : profileForm.fullName.trim(),
+        fullName: profileForm.fullName.trim(),
       });
       const storageKey = "checkout:idempotency-key";
 
@@ -633,14 +631,14 @@ export function CheckoutPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <MapPin className="h-5 w-5" />
-                  آدرس جدید
+                  {receiverType === "self" ? "آدرس تحویل خودم" : "آدرس گیرنده جدید"}
                 </CardTitle>
               </CardHeader>
 
               <CardContent className="space-y-5">
                 {/* Selected address status */}
                 <div className="rounded-lg border bg-muted/40 p-3 text-sm">
-                  <p className="font-medium">آدرس جدید برای این سفارش</p>
+                  <p className="font-medium">{receiverType === "self" ? "آدرس جدید برای خودم" : "ثبت آدرس برای گیرنده دیگر"}</p>
 
                   <p className="mt-1 text-muted-foreground">
                     اطلاعات زیر را کامل کنید.
