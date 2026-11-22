@@ -125,6 +125,14 @@ export function CheckoutPage() {
     );
   }, [addresses, selectedAddressId]);
 
+  const selectableAddresses = useMemo(() => {
+    if (receiverType !== "self" || !addresses) return [];
+    const mobile = (profile?.mobile ?? "").replace(/\\D/g, "");
+    return addresses.filter((address) =>
+      mobile && (address.recipient.mobile ?? "").replace(/\\D/g, "") === mobile,
+    );
+  }, [receiverType, addresses, profile?.mobile]);
+
   const branchCityId =
     selectedAddress?.cityId ??
     (selectedAddressId === null && form.cityId > 0 ? form.cityId : undefined);
@@ -267,7 +275,7 @@ export function CheckoutPage() {
         deliverToPhoneNumber: profileForm.phoneNumber,
       }));
     }
-  }, [receiverType, profile, profileForm.fullName, profileForm.phoneNumber, addresses, addressesLoading]);
+  }, [receiverType, profile, profileForm.fullName, profileForm.phoneNumber, addresses, addressesLoading, selectedAddressId]);
 
   const handleChange = (
     field: keyof OrderDeliveryAddress,
@@ -488,14 +496,84 @@ export function CheckoutPage() {
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Main */}
         <div className="space-y-6 lg:col-span-2">
+          <Card>
+            <CardHeader>
+              <CardTitle>اطلاعات حساب کاربری</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {profileLoading ? (
+                <p className="text-sm text-muted-foreground">در حال دریافت اطلاعات حساب...</p>
+              ) : (
+                <>
+                  <p className="text-sm text-muted-foreground">
+                    برای ثبت سفارش، نام و اطلاعات تماس خود را تکمیل یا اصلاح کنید.
+                  </p>
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label htmlFor="profileFullName">نام و نام خانوادگی</Label>
+                      <Input id="profileFullName" value={profileForm.fullName}
+                        onChange={(event) => setProfileForm((current) => ({ ...current, fullName: event.target.value }))}
+                        placeholder="نام و نام خانوادگی" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>شماره موبایل تأییدشده</Label>
+                      <Input value={profile?.mobile ?? ""} readOnly dir="ltr" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="profilePhone">تلفن ثابت (اختیاری)</Label>
+                      <Input id="profilePhone" value={profileForm.phoneNumber}
+                        onChange={(event) => setProfileForm((current) => ({ ...current, phoneNumber: event.target.value }))}
+                        dir="ltr" placeholder="021..." />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="profileEmail">ایمیل (اختیاری)</Label>
+                      <Input id="profileEmail" type="email" value={profileForm.email}
+                        onChange={(event) => setProfileForm((current) => ({ ...current, email: event.target.value }))}
+                        dir="ltr" placeholder="name@example.com" />
+                    </div>
+                    <div className="space-y-2 sm:col-span-2">
+                      <Label htmlFor="profileNationalCode">کد ملی (اختیاری)</Label>
+                      <Input id="profileNationalCode" value={profileForm.nationalCode}
+                        onChange={(event) => setProfileForm((current) => ({ ...current, nationalCode: event.target.value }))}
+                        dir="ltr" maxLength={10} />
+                    </div>
+                  </div>
+                  {!profile?.isComplete && (
+                    <p className="text-xs text-amber-700">تکمیل نام و نام خانوادگی برای ثبت سفارش الزامی است.</p>
+                  )}
+                </>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>چه کسی سفارش را تحویل می‌گیرد؟</CardTitle>
+            </CardHeader>
+            <CardContent className="grid gap-3 sm:grid-cols-2">
+              <button type="button" onClick={() => handleReceiverTypeChange("self")}
+                className={`rounded-xl border p-4 text-right transition ${receiverType === "self" ? "border-primary bg-primary/5" : "hover:bg-muted/50"}`}>
+                <span className="block font-semibold">خودم تحویل می‌گیرم</span>
+                <span className="mt-1 block text-xs text-muted-foreground">اطلاعات حساب و آدرس‌های خودم</span>
+              </button>
+              <button type="button" onClick={() => handleReceiverTypeChange("other")}
+                className={`rounded-xl border p-4 text-right transition ${receiverType === "other" ? "border-primary bg-primary/5" : "hover:bg-muted/50"}`}>
+                <span className="block font-semibold">شخص دیگری تحویل می‌گیرد</span>
+                <span className="mt-1 block text-xs text-muted-foreground">ثبت نام، موبایل و آدرس گیرنده جدید</span>
+              </button>
+            </CardContent>
+          </Card>
+
           {/* Address selector */}
-          <AddressSelector
-            selectedAddressId={selectedAddressId}
-            addresses={addresses}
-            isLoading={addressesLoading}
-            onSelect={handleSelectAddress}
-            onNewAddress={handleNewAddress}
-          />
+          {receiverType === "self" && (
+            <AddressSelector
+              selectedAddressId={selectedAddressId}
+              addresses={selectableAddresses}
+              isLoading={addressesLoading}
+              onSelect={handleSelectAddress}
+              onNewAddress={handleNewAddress}
+            />
+          )}
 
           <Card>
             <CardHeader>
