@@ -289,9 +289,9 @@ export function CheckoutPage() {
     } else {
       setForm((current) => ({
         ...current,
-        deliverToName: profileForm.fullName,
+        deliverToName: profile.fullName,
         deliverToMobileNumber: profile.mobile ?? "",
-        deliverToPhoneNumber: profileForm.phoneNumber,
+        deliverToPhoneNumber: profile.phoneNumber,
       }));
     }
   }, [forceNewAddress, receiverType, profile, addresses, addressesLoading, selectedAddressId]);
