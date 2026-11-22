@@ -126,9 +126,9 @@ export function CheckoutPage() {
 
   const selectableAddresses = useMemo(() => {
     if (receiverType !== "self" || !addresses) return [];
-    const mobile = (profile?.mobile ?? "").replace(/\\D/g, "");
+    const mobile = (profile?.mobile ?? "").replace(/\D/g, "");
     return addresses.filter((address) =>
-      mobile && (address.recipient.mobile ?? "").replace(/\\D/g, "") === mobile,
+      mobile && (address.recipient.mobile ?? "").replace(/\D/g, "") === mobile,
     );
   }, [receiverType, addresses, profile?.mobile]);
 
@@ -251,13 +251,13 @@ export function CheckoutPage() {
 
   useEffect(() => {
     if (receiverType !== "self" || !profile || addressesLoading || !addresses) return;
-    const mobile = (profile.mobile ?? "").replace(/\\D/g, "");
+    const mobile = (profile.mobile ?? "").replace(/\D/g, "");
     const ownAddress = addresses.find((address) =>
-      (address.recipient.mobile ?? "").replace(/\\D/g, "") === mobile,
+      (address.recipient.mobile ?? "").replace(/\D/g, "") === mobile,
     );
     if (selectedAddressId !== null) {
       const selected = addresses.find((address) => address.id === selectedAddressId);
-      if (selected && (selected.recipient.mobile ?? "").replace(/\\D/g, "") !== mobile) {
+      if (selected && (selected.recipient.mobile ?? "").replace(/\D/g, "") !== mobile) {
         setSelectedAddressIdState(null);
         setSelectedAddressId(null);
       } else {
