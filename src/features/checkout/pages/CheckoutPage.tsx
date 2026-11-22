@@ -62,6 +62,7 @@ export function CheckoutPage() {
   const [paymentMethodsLoading, setPaymentMethodsLoading] = useState(true);
 
   const [receiverType, setReceiverType] = useState<ReceiverType>("self");
+  const [forceNewAddress, setForceNewAddress] = useState(false);
   const [profileForm, setProfileForm] = useState<ProfileForm>({ fullName: "", phoneNumber: "", email: "", nationalCode: "" });
 
   const [form, setForm] = useState<OrderDeliveryAddress>({
@@ -85,6 +86,12 @@ export function CheckoutPage() {
       email: profile.email || "",
       nationalCode: profile.nationalCode || "",
     });
+    setForm((current) => ({
+      ...current,
+      deliverToName: current.deliverToName || profile.fullName || "",
+      deliverToMobileNumber: current.deliverToMobileNumber || profile.mobile || "",
+      deliverToPhoneNumber: current.deliverToPhoneNumber || profile.phoneNumber || "",
+    }));
   }, [profile]);
 
   useEffect(() => {
@@ -186,6 +193,7 @@ export function CheckoutPage() {
     address: NonNullable<typeof addresses>[number],
   ) => {
     setSelectedAddressIdState(address.id);
+    setForceNewAddress(false);
     setSelectedAddressId(address.id);
     setSelectedBranchIdState(undefined);
     setSelectedBranchId(null);
@@ -205,6 +213,7 @@ export function CheckoutPage() {
   };
 
   const handleNewAddress = () => {
+    setForceNewAddress(true);
     setSelectedAddressIdState(null);
     setSelectedAddressId(null);
     setSelectedBranchIdState(undefined);
@@ -223,6 +232,7 @@ export function CheckoutPage() {
   };
 
   const handleReceiverTypeChange = (nextType: ReceiverType) => {
+    setForceNewAddress(false);
     setReceiverType(nextType);
     setSelectedAddressIdState(null);
     setSelectedAddressId(null);
@@ -242,6 +252,7 @@ export function CheckoutPage() {
   };
 
   const handleEditSelectedAddress = () => {
+    setForceNewAddress(true);
     if (!selectedAddress) return;
     setProvinceId(selectedAddress.province?.id ?? null);
     setForm({
@@ -258,7 +269,7 @@ export function CheckoutPage() {
   };
 
   useEffect(() => {
-    if (receiverType !== "self" || !profile || addressesLoading || !addresses) return;
+    if (forceNewAddress || receiverType !== "self" || !profile || addressesLoading || !addresses) return;
     const mobile = (profile.mobile ?? "").replace(/\D/g, "");
     if (!mobile) return;
     const ownAddress = addresses.find((address) =>
@@ -283,7 +294,7 @@ export function CheckoutPage() {
         deliverToPhoneNumber: profileForm.phoneNumber,
       }));
     }
-  }, [receiverType, profile, profileForm.fullName, profileForm.phoneNumber, addresses, addressesLoading, selectedAddressId]);
+  }, [forceNewAddress, receiverType, profile, addresses, addressesLoading, selectedAddressId]);
 
   const handleChange = (
     field: keyof OrderDeliveryAddress,
