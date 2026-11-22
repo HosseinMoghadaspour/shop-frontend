@@ -352,7 +352,28 @@ export function CheckoutPage() {
       return;
     }
 
-    if (selectedAddressId === null) {
+    const profileHasChanged = Boolean(
+      profile &&
+      (
+        profileForm.fullName.trim() !== profile.fullName.trim() ||
+        profileForm.phoneNumber.trim() !== profile.phoneNumber.trim()
+      ),
+    );
+    const orderAddressId =
+      receiverType === "self" && selectedAddressId !== null && profileHasChanged
+        ? null
+        : selectedAddressId;
+    const deliveryForm =
+      receiverType === "self" && orderAddressId === null && selectedAddressId !== null
+        ? {
+            ...form,
+            deliverToName: profileForm.fullName.trim(),
+            deliverToMobileNumber: profile.mobile ?? form.deliverToMobileNumber,
+            deliverToPhoneNumber: profileForm.phoneNumber.trim(),
+          }
+        : form;
+
+    if (orderAddressId === null) {
       if (!Number.isInteger(provinceId) || Number(provinceId) <= 0) {
         setError("لطفاً استان را انتخاب کنید.");
         return;
@@ -363,22 +384,22 @@ export function CheckoutPage() {
         return;
       }
 
-      if (!form.deliverToName.trim()) {
+      if (!deliveryForm.deliverToName.trim()) {
         setError("نام تحویل‌گیرنده را وارد کنید.");
         return;
       }
 
-      if (!form.deliverToMobileNumber.trim()) {
+      if (!deliveryForm.deliverToMobileNumber.trim()) {
         setError("شماره موبایل تحویل‌گیرنده را وارد کنید.");
         return;
       }
 
-      if (!form.Adrs.trim()) {
+      if (!deliveryForm.Adrs.trim()) {
         setError("آدرس را وارد کنید.");
         return;
       }
 
-      if (!form.PostalCode?.trim()) {
+      if (!deliveryForm.PostalCode?.trim()) {
         setError("کد پستی را وارد کنید.");
         return;
       }
@@ -404,19 +425,19 @@ export function CheckoutPage() {
           branchId: selectedBranchId,
           paymentMethodId: selectedPaymentMethodId,
           deliveryAddress:
-            selectedAddressId !== null
+            orderAddressId !== null
               ? {
-                  addressId: selectedAddressId,
+                  addressId: orderAddressId,
                 }
               : {
-                  cityId: form.cityId,
-                  deliverToName: form.deliverToName.trim(),
-                  deliverToMobileNumber: form.deliverToMobileNumber.trim(),
+                  cityId: deliveryForm.cityId,
+                  deliverToName: deliveryForm.deliverToName.trim(),
+                  deliverToMobileNumber: deliveryForm.deliverToMobileNumber.trim(),
                   deliverToPhoneNumber:
-                    form.deliverToPhoneNumber?.trim() || undefined,
-                  Adrs: form.Adrs.trim(),
-                  PostalCode: form.PostalCode?.trim() || undefined,
-                  RowDesc: form.RowDesc?.trim() || undefined,
+                    deliveryForm.deliverToPhoneNumber?.trim() || undefined,
+                  Adrs: deliveryForm.Adrs.trim(),
+                  PostalCode: deliveryForm.PostalCode?.trim() || undefined,
+                  RowDesc: deliveryForm.RowDesc?.trim() || undefined,
                 },
         },
         idempotencyKey,
