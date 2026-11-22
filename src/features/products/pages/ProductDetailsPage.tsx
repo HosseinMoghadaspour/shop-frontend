@@ -42,6 +42,8 @@ export function ProductDetailsPage() {
 
   const { data: product, isLoading, isError } = useProduct(productId);
 
+  console.log(product);
+
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
   const branchId = useSelectedBranchId();
@@ -101,7 +103,8 @@ export function ProductDetailsPage() {
   const cartQuantity = cartItem?.quantity ?? 0;
 
   async function handleAddToCart() {
-    if (!canPurchase || isCartUpdating || isCartLoading || cartQuantity > 0) return;
+    if (!canPurchase || isCartUpdating || isCartLoading || cartQuantity > 0)
+      return;
 
     try {
       await addItem(currentProduct.id, initialQuantity);
@@ -112,19 +115,23 @@ export function ProductDetailsPage() {
           quantity: initialQuantity,
         });
 
-        navigate(`/auth/login?returnTo=${encodeURIComponent(window.location.pathname)}`);
+        navigate(
+          `/auth/login?returnTo=${encodeURIComponent(window.location.pathname)}`,
+        );
       }
     }
   }
 
   async function handleIncreaseCartQuantity() {
     const step = getQuantityStep(currentProduct.unit?.weightOrAmount);
-    const maximum = currentProduct.maxOrder && currentProduct.maxOrder > 0
-      ? Math.min(currentProduct.maxOrder, availableStock)
-      : availableStock;
+    const maximum =
+      currentProduct.maxOrder && currentProduct.maxOrder > 0
+        ? Math.min(currentProduct.maxOrder, availableStock)
+        : availableStock;
     const nextQuantity = Number((cartQuantity + step).toFixed(3));
 
-    if (!cartItem || isCartUpdating || isCartLoading || nextQuantity > maximum) return;
+    if (!cartItem || isCartUpdating || isCartLoading || nextQuantity > maximum)
+      return;
 
     try {
       await updateItem(currentProduct.id, nextQuantity);
@@ -426,18 +433,65 @@ export function ProductDetailsPage() {
             <div className="mt-5 hidden sm:block md:mt-6">
               {cartQuantity > 0 ? (
                 <div className="flex h-12 w-full items-center justify-between rounded-xl border border-emerald-200 bg-emerald-50 px-2">
-                  <Button type="button" variant="ghost" size="icon" aria-label="افزایش تعداد" disabled={isCartUpdating || isCartLoading || cartQuantity + getQuantityStep(product.unit?.weightOrAmount) > (product.maxOrder && product.maxOrder > 0 ? Math.min(product.maxOrder, availableStock) : availableStock)} onClick={() => void handleIncreaseCartQuantity()}>
-                    {isCartUpdating ? <LoaderCircle className="size-4 animate-spin" /> : <Plus className="size-5" />}
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    aria-label="افزایش تعداد"
+                    disabled={
+                      isCartUpdating ||
+                      isCartLoading ||
+                      cartQuantity +
+                        getQuantityStep(product.unit?.weightOrAmount) >
+                        (product.maxOrder && product.maxOrder > 0
+                          ? Math.min(product.maxOrder, availableStock)
+                          : availableStock)
+                    }
+                    onClick={() => void handleIncreaseCartQuantity()}
+                  >
+                    {isCartUpdating ? (
+                      <LoaderCircle className="size-4 animate-spin" />
+                    ) : (
+                      <Plus className="size-5" />
+                    )}
                   </Button>
-                  <span className="text-sm font-bold text-emerald-800">{formatQuantityWithUnit(cartQuantity, product.unit?.name, product.unit?.weightOrAmount)} در سبد خرید</span>
-                  <Button type="button" variant="ghost" size="icon" aria-label="کاهش تعداد" disabled={isCartUpdating || isCartLoading} onClick={() => void handleDecreaseCartQuantity()}>
+                  <span className="text-sm font-bold text-emerald-800">
+                    {formatQuantityWithUnit(
+                      cartQuantity,
+                      product.stockInfo[0].smallestUnit,
+                    )}
+                  </span>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    aria-label="کاهش تعداد"
+                    disabled={isCartUpdating || isCartLoading}
+                    onClick={() => void handleDecreaseCartQuantity()}
+                  >
                     <Minus className="size-5" />
                   </Button>
                 </div>
               ) : (
-                <Button className="h-12 w-full rounded-xl text-sm font-bold shadow-sm transition-all hover:shadow-md sm:text-base" disabled={!canPurchase || isCartUpdating || isCartLoading} onClick={handleAddToCart}>
-                  {isCartUpdating || isCartLoading ? <LoaderCircle className="ml-2 size-5 animate-spin" /> : <ShoppingCart className="ml-2 size-5" />}
-                  {isCartUpdating ? "در حال افزودن..." : isCartLoading ? "در حال بررسی سبد..." : !isAvailable ? "ناموجود" : !product.isActive || !product.isShowInOnlineShop ? "غیرفعال" : "افزودن به سبد خرید"}
+                <Button
+                  className="h-12 w-full rounded-xl text-sm font-bold shadow-sm transition-all hover:shadow-md sm:text-base"
+                  disabled={!canPurchase || isCartUpdating || isCartLoading}
+                  onClick={handleAddToCart}
+                >
+                  {isCartUpdating || isCartLoading ? (
+                    <LoaderCircle className="ml-2 size-5 animate-spin" />
+                  ) : (
+                    <ShoppingCart className="ml-2 size-5" />
+                  )}
+                  {isCartUpdating
+                    ? "در حال افزودن..."
+                    : isCartLoading
+                      ? "در حال بررسی سبد..."
+                      : !isAvailable
+                        ? "ناموجود"
+                        : !product.isActive || !product.isShowInOnlineShop
+                          ? "غیرفعال"
+                          : "افزودن به سبد خرید"}
                 </Button>
               )}
             </div>
@@ -529,18 +583,61 @@ export function ProductDetailsPage() {
           {/* Mobile Cart Controls */}
           {cartQuantity > 0 ? (
             <div className="flex h-11 max-w-[190px] flex-1 items-center justify-between rounded-xl border border-emerald-200 bg-emerald-50 px-1">
-              <Button type="button" variant="ghost" size="icon" aria-label="افزایش تعداد" disabled={isCartUpdating || isCartLoading || cartQuantity + getQuantityStep(product.unit?.weightOrAmount) > (product.maxOrder && product.maxOrder > 0 ? Math.min(product.maxOrder, availableStock) : availableStock)} onClick={() => void handleIncreaseCartQuantity()}>
-                {isCartUpdating ? <LoaderCircle className="size-4 animate-spin" /> : <Plus className="size-4" />}
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                aria-label="افزایش تعداد"
+                disabled={
+                  isCartUpdating ||
+                  isCartLoading ||
+                  cartQuantity + getQuantityStep(product.unit?.weightOrAmount) >
+                    (product.maxOrder && product.maxOrder > 0
+                      ? Math.min(product.maxOrder, availableStock)
+                      : availableStock)
+                }
+                onClick={() => void handleIncreaseCartQuantity()}
+              >
+                {isCartUpdating ? (
+                  <LoaderCircle className="size-4 animate-spin" />
+                ) : (
+                  <Plus className="size-4" />
+                )}
               </Button>
-              <span className="text-xs font-bold text-emerald-800">{formatQuantityWithUnit(cartQuantity, product.unit?.name, product.unit?.weightOrAmount)}</span>
-              <Button type="button" variant="ghost" size="icon" aria-label="کاهش تعداد" disabled={isCartUpdating || isCartLoading} onClick={() => void handleDecreaseCartQuantity()}>
+              <span className="text-xs font-bold text-emerald-800">
+                {formatQuantityWithUnit(cartQuantity, product.unit?.name)}
+              </span>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                aria-label="کاهش تعداد"
+                disabled={isCartUpdating || isCartLoading}
+                onClick={() => void handleDecreaseCartQuantity()}
+              >
                 <Minus className="size-4" />
               </Button>
             </div>
           ) : (
-            <Button onClick={handleAddToCart} disabled={!canPurchase || isCartUpdating || isCartLoading} className="h-11 max-w-[190px] flex-1 rounded-xl text-xs font-bold shadow-sm">
-              {isCartUpdating || isCartLoading ? <LoaderCircle className="ml-2 size-4 animate-spin" /> : <ShoppingCart className="ml-2 size-4" />}
-              {isCartUpdating ? "در حال افزودن..." : isCartLoading ? "در حال بررسی..." : !isAvailable ? "ناموجود" : !product.isActive || !product.isShowInOnlineShop ? "غیرفعال" : "افزودن به سبد خرید"}
+            <Button
+              onClick={handleAddToCart}
+              disabled={!canPurchase || isCartUpdating || isCartLoading}
+              className="h-11 max-w-[190px] flex-1 rounded-xl text-xs font-bold shadow-sm"
+            >
+              {isCartUpdating || isCartLoading ? (
+                <LoaderCircle className="ml-2 size-4 animate-spin" />
+              ) : (
+                <ShoppingCart className="ml-2 size-4" />
+              )}
+              {isCartUpdating
+                ? "در حال افزودن..."
+                : isCartLoading
+                  ? "در حال بررسی..."
+                  : !isAvailable
+                    ? "ناموجود"
+                    : !product.isActive || !product.isShowInOnlineShop
+                      ? "غیرفعال"
+                      : "افزودن به سبد خرید"}
             </Button>
           )}
         </div>

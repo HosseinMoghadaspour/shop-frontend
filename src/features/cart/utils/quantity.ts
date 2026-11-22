@@ -30,13 +30,11 @@ export function getInitialQuantity(
 export function formatQuantityWithUnit(
   quantity: number,
   unitName: string | null | undefined,
-  weightOrAmount: number | null | undefined,
 ): string {
   const formattedQuantity = quantity.toLocaleString("fa-IR", {
     maximumFractionDigits: 3,
   });
   const normalizedUnitName = unitName?.trim();
-  const fallbackUnitName = weightOrAmount === 2 ? "عدد" : "واحد";
 
-  return `${formattedQuantity} ${normalizedUnitName || fallbackUnitName}`;
+  return `${formattedQuantity} ${normalizedUnitName}`;
 }
