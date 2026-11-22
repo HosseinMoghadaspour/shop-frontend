@@ -11,6 +11,7 @@ import {
   ShieldCheck,
   ChevronLeft,
   ChevronRight,
+  Sparkles,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -33,7 +34,9 @@ import {
 } from "@/features/cart/utils/quantity";
 
 import { useProduct } from "../hooks/useProduct";
-import { SimilarProducts } from "../components/SimilarProducts";
+import { ProductSection } from "../components/ProductSection";
+import { useQuery } from "@tanstack/react-query";
+import { getSimilarProducts } from "@/services/products.api";
 
 export function ProductDetailsPage() {
   const navigate = useNavigate();
@@ -184,6 +187,11 @@ export function ProductDetailsPage() {
       current === images.length - 1 ? 0 : current + 1,
     );
   }
+
+  const simillarQuery = useQuery({
+    queryKey: ["products", "homepage-recommended", branchId],
+    queryFn: () => getSimilarProducts(productId, 10),
+  });
 
   return (
     <section
@@ -546,8 +554,18 @@ export function ProductDetailsPage() {
         )}
       </Card>
 
-      <div className="mx-auto w-full max-w-7xl px-3 sm:px-5 lg:px-6">
-        <SimilarProducts productId={currentProduct.id} />
+      <div className="mt-10 w-full max-w-7xl px-3 sm:px-5 lg:px-6">
+        <ProductSection
+          eyebrow="پیشنهاد ویژه برای شما"
+          title="محصولات مشابه"
+          products={simillarQuery.data}
+          isLoading={simillarQuery.isLoading}
+          isError={simillarQuery.isError}
+          onRetry={() => void simillarQuery.refetch()}
+          theme="sug"
+          icon={Sparkles}
+          description={null}
+        />
       </div>
 
       {/* Mobile Sticky Purchase Bar */}
