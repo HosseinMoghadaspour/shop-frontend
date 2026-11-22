@@ -196,17 +196,78 @@ export function CheckoutPage() {
     setSelectedBranchId(null);
     setProvinceId(null);
     setError(null);
-
     setForm({
       cityId: 0,
-      deliverToName: "",
-      deliverToMobileNumber: "",
-      deliverToPhoneNumber: "",
+      deliverToName: receiverType === "self" ? profileForm.fullName : "",
+      deliverToMobileNumber: receiverType === "self" ? profile?.mobile ?? "" : "",
+      deliverToPhoneNumber: receiverType === "self" ? profileForm.phoneNumber : "",
       Adrs: "",
       PostalCode: "",
       RowDesc: "",
     });
   };
+
+  const handleReceiverTypeChange = (nextType: ReceiverType) => {
+    setReceiverType(nextType);
+    setSelectedAddressIdState(null);
+    setSelectedAddressId(null);
+    setSelectedBranchIdState(undefined);
+    setSelectedBranchId(null);
+    setProvinceId(null);
+    setError(null);
+    setForm({
+      cityId: 0,
+      deliverToName: nextType === "self" ? profileForm.fullName : "",
+      deliverToMobileNumber: nextType === "self" ? profile?.mobile ?? "" : "",
+      deliverToPhoneNumber: nextType === "self" ? profileForm.phoneNumber : "",
+      Adrs: "",
+      PostalCode: "",
+      RowDesc: "",
+    });
+  };
+
+  const handleEditSelectedAddress = () => {
+    if (!selectedAddress) return;
+    setProvinceId(selectedAddress.province?.id ?? null);
+    setForm({
+      cityId: selectedAddress.cityId ?? 0,
+      deliverToName: selectedAddress.recipient.name ?? "",
+      deliverToMobileNumber: selectedAddress.recipient.mobile ?? "",
+      deliverToPhoneNumber: selectedAddress.recipient.phone ?? "",
+      Adrs: selectedAddress.address ?? "",
+      PostalCode: selectedAddress.postalCode ?? "",
+      RowDesc: "",
+    });
+    setSelectedAddressIdState(null);
+    setSelectedAddressId(null);
+  };
+
+  useEffect(() => {
+    if (receiverType !== "self" || !profile || addressesLoading || !addresses) return;
+    const mobile = (profile.mobile ?? "").replace(/\\D/g, "");
+    const ownAddress = addresses.find((address) =>
+      (address.recipient.mobile ?? "").replace(/\\D/g, "") === mobile,
+    );
+    if (selectedAddressId !== null) {
+      const selected = addresses.find((address) => address.id === selectedAddressId);
+      if (selected && (selected.recipient.mobile ?? "").replace(/\\D/g, "") !== mobile) {
+        setSelectedAddressIdState(null);
+        setSelectedAddressId(null);
+      } else {
+        return;
+      }
+    }
+    if (ownAddress) {
+      handleSelectAddress(ownAddress);
+    } else {
+      setForm((current) => ({
+        ...current,
+        deliverToName: profileForm.fullName,
+        deliverToMobileNumber: profile.mobile ?? "",
+        deliverToPhoneNumber: profileForm.phoneNumber,
+      }));
+    }
+  }, [receiverType, profile, profileForm.fullName, profileForm.phoneNumber, addresses, addressesLoading]);
 
   const handleChange = (
     field: keyof OrderDeliveryAddress,
