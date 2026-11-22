@@ -479,7 +479,12 @@ export function AdminProductsPage() {
                       </div>
 
                       <div className="w-full rounded-lg border bg-background p-3">
-                        <p className="mb-3 text-sm font-semibold">قرارگیری کالا در بخش‌های فروشگاه</p>
+                        <div className="mb-3 space-y-1">
+                          <p className="text-sm font-semibold">قرارگیری کالا در بخش‌های فروشگاه</p>
+                          <p className="text-xs leading-5 text-muted-foreground">
+                            جدیدترین‌ها بر اساس تاریخ ثبت و پرفروش‌ها بر اساس تعداد سفارش به‌صورت خودکار مرتب می‌شوند؛ با انتخاب این گزینه‌ها می‌توانید کالا را به‌صورت دستی نیز به هر بخش اضافه کنید.
+                          </p>
+                        </div>
                         <div className="flex flex-wrap gap-x-5 gap-y-3">
                           {([
                             { key: "amazing", label: "شگفت‌انگیز", checked: product.isAmazing },
