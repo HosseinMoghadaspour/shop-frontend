@@ -297,7 +297,8 @@ export function CheckoutPage() {
 
   const handleProvinceChange = (value: number | null) => {
     setProvinceId(value);
-
+    setSelectedBranchIdState(undefined);
+    setSelectedBranchId(null);
     setForm((prev) => ({
       ...prev,
       cityId: 0,
@@ -305,6 +306,8 @@ export function CheckoutPage() {
   };
 
   const handleCityChange = (value: number | null) => {
+    setSelectedBranchIdState(undefined);
+    setSelectedBranchId(null);
     setForm((prev) => ({
       ...prev,
       cityId: value ?? 0,
