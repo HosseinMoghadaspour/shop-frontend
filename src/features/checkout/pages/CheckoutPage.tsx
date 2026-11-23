@@ -20,7 +20,7 @@ import AddressSelector from "../components/AddressSelector";
 import { useAddresses } from "@/features/addresses/hooks/useAddresses";
 import LocationSelector from "../components/LocationSelector";
 import { useCart } from "@/features/cart/hooks/useCart";
-import { getMyProfile, updateMyProfile, type CustomerProfile } from "@/services/profile.api";
+import { getMyProfile, updateMyProfile } from "@/services/profile.api";
 import { createOrder } from "@/services/orders.api";
 import type { OrderDeliveryAddress } from "@/services/orders.api";
 import { getPaymentMethods } from "@/services/payment.api";
