@@ -8,6 +8,7 @@ import {
   getAdminOrderById,
   getAdminOrders,
   updateAdminOrderStatus,
+  setAdminShippingQuote,
   type AdminOrder,
   type AdminOrderDetail,
   type AdminOrdersResult,
@@ -36,6 +37,9 @@ export function AdminOrdersPage() {
   const [deliveryDraft, setDeliveryDraft] = useState("");
   const [sendDraft, setSendDraft] = useState("");
   const [paymentDraft, setPaymentDraft] = useState("");
+  const [shippingDraft, setShippingDraft] = useState("");
+  const [shippingNoteDraft, setShippingNoteDraft] = useState("");
+  const [shippingBusy, setShippingBusy] = useState(false);
 
   const loadOrders = useCallback(async () => {
     setLoading(true);
@@ -68,6 +72,8 @@ export function AdminOrdersPage() {
       setDeliveryDraft(detail.deliveryStatusId == null ? "" : String(detail.deliveryStatusId));
       setSendDraft(detail.sendStatusId == null ? "1" : String(detail.sendStatusId));
       setPaymentDraft(detail.paymentStatusId == null ? "" : String(detail.paymentStatusId));
+      setShippingDraft(detail.shippingCost == null ? "" : String(detail.shippingCost));
+      setShippingNoteDraft(detail.workflow?.adminNote ?? "");
     } catch (err) {
       setError(err instanceof Error ? err.message : "دریافت جزئیات سفارش ناموفق بود.");
     } finally {
@@ -210,6 +216,43 @@ export function AdminOrdersPage() {
                   <div><p className="text-xs text-muted-foreground">قابل پرداخت</p><p className="mt-1 text-lg font-extrabold">{money(selected.payablePrice)} تومان</p></div>
                 </div>
 
+                {selected.workflow?.status === 1 && (
+                  <div className="mt-5 space-y-3 rounded-xl border border-amber-200 bg-amber-50 p-4">
+                    <div>
+                      <h3 className="font-bold text-amber-900">تعیین هزینه ارسال</h3>
+                      <p className="mt-1 text-xs leading-6 text-amber-800">پس از ثبت هزینه، مبلغ نهایی برای تأیید مشتری ارسال می‌شود.</p>
+                    </div>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      <label className="space-y-1 text-sm font-semibold">هزینه ارسال (تومان)
+                        <Input type="number" min="0" value={shippingDraft} onChange={(event) => setShippingDraft(event.target.value)} placeholder="مثلاً ۱۵۰۰۰۰" />
+                      </label>
+                      <label className="space-y-1 text-sm font-semibold">توضیح برای مشتری
+                        <Input value={shippingNoteDraft} onChange={(event) => setShippingNoteDraft(event.target.value)} maxLength={500} placeholder="اختیاری" />
+                      </label>
+                    </div>
+                    <Button disabled={shippingBusy || shippingDraft.trim() === "" || !Number.isFinite(Number(shippingDraft)) || Number(shippingDraft) < 0} onClick={async () => {
+                      try {
+                        setShippingBusy(true);
+                        await setAdminShippingQuote(selected.id, { shippingCost: Number(shippingDraft), adminNote: shippingNoteDraft });
+                        setNotice("هزینه ارسال ثبت و برای تأیید مشتری ارسال شد.");
+                        await openDetails(selected);
+                        await loadOrders();
+                      } catch (error) {
+                        setError(error instanceof Error ? error.message : "ثبت هزینه ارسال ناموفق بود.");
+                      } finally {
+                        setShippingBusy(false);
+                      }
+                    }}>{shippingBusy ? "در حال ثبت..." : "ثبت هزینه ارسال"}</Button>
+                  </div>
+                )}
+                {selected.workflow && selected.workflow.status !== 1 && (
+                  <div className="mt-5 rounded-xl border bg-slate-50 p-4 text-sm">
+                    <p className="font-bold">وضعیت گردش سفارش: {selected.workflow.status === 2 ? "در انتظار تأیید مشتری" : selected.workflow.status === 3 ? "در انتظار پرداخت" : selected.workflow.status === 4 ? "پرداخت تأیید شده" : selected.workflow.status === 5 ? "رد مبلغ توسط مشتری" : "لغو شده"}</p>
+                    {selected.workflow.shippingCost != null && <p className="mt-2">هزینه ارسال: {money(selected.workflow.shippingCost)} تومان</p>}
+                    {selected.workflow.adminNote && <p className="mt-1 text-muted-foreground">توضیح: {selected.workflow.adminNote}</p>}
+                  </div>
+                )}
+
                 <div className="mt-5 grid gap-4 sm:grid-cols-3">
                   <label className="space-y-2 text-sm font-semibold">وضعیت ارسال
                     <select value={deliveryDraft} onChange={(event) => setDeliveryDraft(event.target.value)} className="h-11 w-full rounded-xl border bg-white px-3 font-normal">
@@ -223,7 +266,7 @@ export function AdminOrdersPage() {
                   </label>
                   <label className="space-y-2 text-sm font-semibold">وضعیت پرداخت
                     <select value={paymentDraft} onChange={(event) => setPaymentDraft(event.target.value)} className="h-11 w-full rounded-xl border bg-white px-3 font-normal">
-                      {result.statuses.payment.map((status) => <option key={status.RowID} value={status.RowID}>{status.RowName}</option>)}
+                      {result.statuses.payment.filter((status) => status.RowID !== 3).map((status) => <option key={status.RowID} value={status.RowID}>{status.RowName}</option>)}
                     </select>
                   </label>
                 </div>
