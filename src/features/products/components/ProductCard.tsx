@@ -339,7 +339,6 @@ export function ProductCard({ product }: ProductCardProps) {
                 {formatQuantityWithUnit(
                   quantity,
                   product.unit?.name,
-                  product.unit?.weightOrAmount,
                 )}
               </span>
             </div>
