@@ -12,6 +12,7 @@ import {
   getOrderById,
   getOrderRequests,
   createOrderRequest,
+  confirmOrderTotal,
   type OrderRequest,
   type OrderDetail,
   type OrderHeader,
@@ -116,7 +117,9 @@ export function OrderDetailsPage() {
         setSendStatuses(result.sendStatuses ?? []);
         const orderRequests = await getOrderRequests(orderId);
         if (mounted) setRequests(orderRequests);
-        await loadPaymentInfo(orderId);
+        if (result.orderH.WorkflowStatusId === 3) {
+          await loadPaymentInfo(orderId);
+        }
       } catch (error) {
         if (!mounted) return;
 
@@ -250,6 +253,57 @@ export function OrderDetailsPage() {
           </p>
         </div>
       </section>
+
+      {order.WorkflowStatusId === 1 && (
+        <section className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 p-5">
+          <h2 className="font-bold text-amber-900">در انتظار تعیین هزینه ارسال</h2>
+          <p className="mt-2 text-sm leading-6 text-amber-800">سفارش ثبت شده است. پس از بررسی مدیر و تعیین هزینه ارسال، مبلغ نهایی برای تأیید شما نمایش داده می‌شود.</p>
+        </section>
+      )}
+      {order.WorkflowStatusId === 2 && (
+        <section className="mb-6 space-y-4 rounded-2xl border border-emerald-200 bg-white p-5">
+          <div>
+            <h2 className="font-bold">تأیید مبلغ نهایی سفارش</h2>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">هزینه ارسال توسط فروشگاه مشخص شده است. لطفاً مبلغ نهایی را بررسی و تأیید کنید.</p>
+          </div>
+          <div className="rounded-xl bg-emerald-50 p-4">
+            <p className="text-sm text-emerald-800">هزینه ارسال</p>
+            <p className="mt-1 text-lg font-bold text-emerald-950">{formatPrice(order.ShippingQuote?.shippingCost ?? order.ShippingCost)} تومان</p>
+            {order.ShippingQuote?.adminNote && <p className="mt-2 text-sm text-emerald-900">{order.ShippingQuote.adminNote}</p>}
+            {order.ShippingQuote?.expiresAt && <p className="mt-2 text-xs text-emerald-800">مهلت تأیید: {new Date(order.ShippingQuote.expiresAt).toLocaleString("fa-IR")}</p>}
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Button onClick={async () => {
+              try {
+                await confirmOrderTotal(order.RowID, true);
+                toast.success("مبلغ نهایی تأیید شد.");
+                const refreshed = await getOrderById(order.RowID);
+                if (refreshed.orderH) {
+                  setOrder(refreshed.orderH);
+                  await loadPaymentInfo(order.RowID);
+                }
+              } catch (error) {
+                toast.error(error instanceof Error ? error.message : "تأیید مبلغ ناموفق بود.");
+              }
+            }}>تأیید مبلغ و ادامه پرداخت</Button>
+            <Button variant="outline" onClick={async () => {
+              try {
+                await confirmOrderTotal(order.RowID, false);
+                setOrder((current) => current ? { ...current, WorkflowStatusId: 5 } : current);
+                toast.success("مبلغ نهایی رد شد.");
+              } catch (error) {
+                toast.error(error instanceof Error ? error.message : "ثبت پاسخ ناموفق بود.");
+              }
+            }}>رد مبلغ نهایی</Button>
+          </div>
+        </section>
+      )}
+      {order.WorkflowStatusId === 5 && (
+        <section className="mb-6 rounded-2xl border border-red-200 bg-red-50 p-5 text-sm text-red-800">مبلغ نهایی این سفارش توسط شما رد شده است. برای پیگیری با پشتیبانی تماس بگیرید.</section>
+      )}
+      {order.WorkflowStatusId === 4 && (
+        <section className="mb-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-5 text-sm text-emerald-800">پرداخت سفارش تأیید و سند انبار آن صادر شده است.</section>
+      )}
 
       <section className="mb-6 rounded-2xl border border-emerald-950/5 bg-white p-5">
         <div className="mb-4">
