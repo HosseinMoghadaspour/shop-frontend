@@ -25,6 +25,14 @@ export interface AdminOrder {
   paymentStatusName: string;
   paymentMethodName: string;
   orderStatus: boolean | null;
+  shippingCost?: number | null;
+  workflow?: {
+    status: number;
+    shippingCost: number | null;
+    adminNote: string | null;
+    quoteExpiresAt: string | null;
+    customerAcceptedAt?: string | null;
+  } | null;
 }
 
 export interface AdminOrderDetail extends AdminOrder {
@@ -114,5 +122,20 @@ export async function updateAdminOrderStatus(
     if (!response.data.success) throw new Error(response.data.message || "به‌روزرسانی وضعیت ناموفق بود.");
   } catch (error) {
     throw new Error(getApiErrorMessage(error, "به‌روزرسانی وضعیت سفارش ناموفق بود."));
+  }
+}
+
+export async function setAdminShippingQuote(
+  id: number,
+  data: { shippingCost: number; adminNote?: string; expiresAt?: string },
+): Promise<void> {
+  try {
+    const response = await apiClient.patch<ApiResponse<unknown>>(
+      `/admin/orders/${id}/shipping-quote`,
+      data,
+    );
+    if (!response.data.success) throw new Error(response.data.message || "ثبت هزینه ارسال ناموفق بود.");
+  } catch (error) {
+    throw new Error(getApiErrorMessage(error, "ثبت هزینه ارسال ناموفق بود."));
   }
 }
