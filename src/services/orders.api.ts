@@ -39,7 +39,7 @@ export interface OrderItemResponse {
 }
 
 export interface CreateOrderResponse {
-  whDocHId: number;
+  whDocHId: number | null;
   whDocD: number;
   orderHId: number;
   orderD: number;
@@ -70,6 +70,13 @@ export interface OrderHeader {
   TaxPercent: number | null;
   TaxPrice: number | null;
   PayablePrice: number | null;
+  ShippingCost: number | null;
+  WorkflowStatusId: number | null;
+  ShippingQuote: {
+    shippingCost: number | null;
+    adminNote: string | null;
+    expiresAt: string | null;
+  } | null;
   OrderStatus: boolean | null;
   DeliveryStatusName?: string | null;
   SendStatusId?: number | null;
@@ -181,4 +188,14 @@ export async function createOrderRequest(
     throw new Error(response.data.message || "ثبت درخواست ناموفق بود.");
   }
   return response.data.data;
+}
+
+export async function confirmOrderTotal(orderId: number, accepted: boolean): Promise<void> {
+  const response = await apiClient.post<ApiResponse<unknown>>(
+    `/orders/${orderId}/confirm-total`,
+    { accepted },
+  );
+  if (!response.data.success) {
+    throw new Error(response.data.message || "ثبت پاسخ مبلغ نهایی ناموفق بود.");
+  }
 }
