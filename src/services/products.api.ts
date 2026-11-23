@@ -1,15 +1,22 @@
 import { apiClient } from "./api/client";
 import { getSelectedBranchId } from "@/lib/store-branch";
 
+export interface ProductPriceType {
+  id: number;
+  name: string;
+  salePrice: number;
+  consumerPrice: number | null;
+}
+
 export interface ProductPricing {
   salePrice: number;
-  consumerPrice: number;
+  consumerPrice: number | null;
   discountPrice: number | null;
   finalPrice: number;
   hasDiscount: boolean;
   discountPercent: number | null;
   branchId: number | null;
-  priceType: string | null;
+  priceType: ProductPriceType | null;
 }
 
 export interface ProductImage {
