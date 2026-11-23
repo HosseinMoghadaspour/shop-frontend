@@ -73,6 +73,12 @@ export function ProductDetailsPage() {
     setActiveImageIndex(defaultIndex >= 0 ? defaultIndex : 0);
   }, [product?.id, product?.images]);
 
+  const simillarQuery = useQuery({
+    queryKey: ["products", "homepage-recommended", branchId, productId],
+    queryFn: () => getSimilarProducts(productId, 10),
+    enabled: Number.isSafeInteger(productId) && productId > 0 && !isLoading && !!product,
+  });
+
   if (isLoading) {
     return <ProductDetailsSkeleton />;
   }
@@ -188,10 +194,7 @@ export function ProductDetailsPage() {
     );
   }
 
-  const simillarQuery = useQuery({
-    queryKey: ["products", "homepage-recommended", branchId],
-    queryFn: () => getSimilarProducts(productId, 10),
-  });
+
 
   return (
     <section
