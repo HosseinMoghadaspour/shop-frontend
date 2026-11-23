@@ -36,7 +36,6 @@ export function AdminOrdersPage() {
   const [detailLoading, setDetailLoading] = useState(false);
   const [deliveryDraft, setDeliveryDraft] = useState("");
   const [sendDraft, setSendDraft] = useState("");
-  const [paymentDraft, setPaymentDraft] = useState("");
   const [shippingDraft, setShippingDraft] = useState("");
   const [shippingNoteDraft, setShippingNoteDraft] = useState("");
   const [shippingBusy, setShippingBusy] = useState(false);
@@ -71,7 +70,6 @@ export function AdminOrdersPage() {
       setSelected(detail);
       setDeliveryDraft(detail.deliveryStatusId == null ? "" : String(detail.deliveryStatusId));
       setSendDraft(detail.sendStatusId == null ? "1" : String(detail.sendStatusId));
-      setPaymentDraft(detail.paymentStatusId == null ? "" : String(detail.paymentStatusId));
       setShippingDraft(detail.shippingCost == null ? "" : String(detail.shippingCost));
       setShippingNoteDraft(detail.workflow?.adminNote ?? "");
     } catch (err) {
@@ -90,7 +88,6 @@ export function AdminOrdersPage() {
       await updateAdminOrderStatus(selected.id, {
         ...(deliveryDraft ? { deliveryStatusId: Number(deliveryDraft) } : {}),
         ...(sendDraft ? { sendStatusId: Number(sendDraft) } : {}),
-        ...(paymentDraft ? { paymentStatusId: Number(paymentDraft) } : {}),
       });
       setNotice(`وضعیت سفارش ${numberFormat.format(selected.docNo)} ذخیره شد.`);
       await openDetails(selected);
@@ -264,16 +261,15 @@ export function AdminOrdersPage() {
                       {result.statuses.send.map((status) => <option key={status.RowID} value={status.RowID}>{status.RowName}</option>)}
                     </select>
                   </label>
-                  <label className="space-y-2 text-sm font-semibold">وضعیت پرداخت
-                    <select value={paymentDraft} onChange={(event) => setPaymentDraft(event.target.value)} className="h-11 w-full rounded-xl border bg-white px-3 font-normal">
-                      {result.statuses.payment.filter((status) => status.RowID !== 3).map((status) => <option key={status.RowID} value={status.RowID}>{status.RowName}</option>)}
-                    </select>
-                  </label>
+                  <div className="space-y-2 text-sm font-semibold">
+                    وضعیت پرداخت
+                    <div className="flex h-11 items-center rounded-xl border bg-slate-50 px-3 font-normal">{selected.paymentStatusName}</div>
+                  </div>
                 </div>
 
                 <div className="mt-5 flex flex-wrap justify-end gap-2">
                   <Button variant="outline" onClick={() => setSelected(null)}>انصراف</Button>
-                  <Button disabled={busy === selected.id || (!deliveryDraft && !paymentDraft && !sendDraft)} onClick={() => void saveStatuses()}>
+                  <Button disabled={busy === selected.id || (!deliveryDraft && !sendDraft)} onClick={() => void saveStatuses()}>
                     <PackageCheck className="ml-2 size-4" /> {busy === selected.id ? "در حال ذخیره..." : "ذخیره وضعیت‌ها"}
                   </Button>
                 </div>
