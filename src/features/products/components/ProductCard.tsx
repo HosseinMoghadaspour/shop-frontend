@@ -338,7 +338,7 @@ export function ProductCard({ product }: ProductCardProps) {
               <span className="truncate text-xs font-bold text-blue-800 tabular-nums">
                 {formatQuantityWithUnit(
                   quantity,
-                  product.unit?.name,
+                  product.stockInfo[0].smallestUnit,
                 )}
               </span>
             </div>
