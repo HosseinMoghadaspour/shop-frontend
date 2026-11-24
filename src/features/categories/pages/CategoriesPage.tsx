@@ -138,7 +138,7 @@ export function CategoriesPage() {
   );
 
   return (
-    <section dir="rtl" className="mx-auto max-w-7xl px-4 py-7 sm:py-10">
+    <section dir="rtl" className="mx-auto w-full max-w-[1440px] px-3 py-7 sm:px-5 sm:py-10 lg:px-8">
       <div className="relative mb-7 overflow-hidden rounded-[2rem] bg-gradient-to-l from-blue-950 via-blue-900 to-blue-800 px-5 py-7 text-white shadow-lg shadow-blue-950/10 sm:px-8 sm:py-9">
         <div className="relative z-10 max-w-2xl">
           <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold text-blue-50">
