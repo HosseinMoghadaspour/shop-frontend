@@ -31,7 +31,8 @@ import { AdminBranchesPage } from "@/features/admin/pages/AdminBranchesPage";
 import { AdminOrdersPage } from "@/features/admin/pages/AdminOrdersPage";
 import { AdminOrderRequestsPage } from "@/features/admin/pages/AdminOrderRequestsPage";
 import { DeliveryAddressPage } from "@/features/addresses/pages/DeliveryAddressPage";
-
+import ContactUs from "@/features/about-us/contact-us";
+("@/features/about-us/contact-us");
 function NotFoundPage() {
   return (
     <section className="mx-auto flex min-h-[65vh] max-w-xl items-center px-4 py-12">
@@ -77,6 +78,7 @@ export const router = createBrowserRouter([
           { path: "/orders", element: <OrdersPage /> },
           { path: "/orders/:id", element: <OrderDetailsPage /> },
           { path: "/profile", element: <ProfilePage /> },
+          { path: "/contact-us", element: <ContactUs /> },
         ],
       },
       { path: "/admin/login", element: <AdminLoginPage /> },
@@ -92,7 +94,10 @@ export const router = createBrowserRouter([
           { path: "/admin", element: <AdminDashboardPage /> },
           { path: "/admin/products", element: <AdminProductsPage /> },
           { path: "/admin/orders", element: <AdminOrdersPage /> },
-          { path: "/admin/order-requests", element: <AdminOrderRequestsPage /> },
+          {
+            path: "/admin/order-requests",
+            element: <AdminOrderRequestsPage />,
+          },
           { path: "/admin/categories", element: <AdminCategoriesPage /> },
           { path: "/admin/sliders", element: <AdminSlidersPage /> },
           { path: "/admin/footer", element: <AdminFooterPage /> },

@@ -18,7 +18,7 @@ export function ProductGrid({
           overflow-x-auto overscroll-x-contain pb-3
           [scrollbar-color:#cbd5e1_transparent]
           [scrollbar-width:thin]
-          sm:gap-0
+        
         "
       >
         {products.map((product) => (
