@@ -241,7 +241,7 @@ export function StoreBranchSelector() {
 
   if (addressesQuery.isPending || addressesQuery.isLoading) {
     return (
-      <div className="flex items-center gap-2 text-xs text-emerald-900">
+      <div className="flex items-center gap-2 text-xs text-blue-900">
         <LoaderCircle className="size-4 animate-spin" />
         در حال بررسی آدرس شما...
       </div>
@@ -281,12 +281,12 @@ export function StoreBranchSelector() {
     >
       {/* انتخاب آدرس */}
       <div className="flex min-w-0 items-center gap-2">
-        <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-white/70 text-emerald-800">
+        <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-white/70 text-blue-800">
           <MapPin className="size-5" />
         </div>
 
         <div className="flex min-w-0 flex-col">
-          <span className="text-[10px] text-emerald-950/60">
+          <span className="text-[10px] text-blue-950/60">
             ارسال به
           </span>
 
@@ -296,7 +296,7 @@ export function StoreBranchSelector() {
             onChange={(event) =>
               handleAddressChange(event.target.value)
             }
-            className="max-w-[155px] cursor-pointer truncate border-0 bg-transparent text-xs font-bold text-emerald-950 outline-none sm:max-w-[190px]"
+            className="max-w-[155px] cursor-pointer truncate border-0 bg-transparent text-xs font-bold text-blue-950 outline-none sm:max-w-[190px]"
           >
             {(addressesQuery.data ?? []).map((address) => (
               <option key={address.id} value={address.id}>
@@ -308,21 +308,21 @@ export function StoreBranchSelector() {
         </div>
       </div>
 
-      <div className="hidden h-8 w-px bg-emerald-900/15 sm:block" />
+      <div className="hidden h-8 w-px bg-blue-900/15 sm:block" />
 
       {/* انتخاب شعبه */}
       <div className="flex min-w-0 items-center gap-2">
-        <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-white/70 text-emerald-800">
+        <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-white/70 text-blue-800">
           <MapPinned className="size-5" />
         </div>
 
         <div className="flex min-w-0 flex-col">
-          <span className="text-[10px] text-emerald-950/60">
+          <span className="text-[10px] text-blue-950/60">
             شعبه خرید
           </span>
 
           {branchesQuery.isLoading ? (
-            <span className="flex items-center gap-1 text-xs font-medium text-emerald-800">
+            <span className="flex items-center gap-1 text-xs font-medium text-blue-800">
               <LoaderCircle className="size-3 animate-spin" />
               دریافت شعب...
             </span>
@@ -345,7 +345,7 @@ export function StoreBranchSelector() {
               onChange={(event) =>
                 handleBranchChange(event.target.value)
               }
-              className="max-w-[150px] cursor-pointer truncate border-0 bg-transparent text-xs font-bold text-emerald-950 outline-none sm:max-w-[180px]"
+              className="max-w-[150px] cursor-pointer truncate border-0 bg-transparent text-xs font-bold text-blue-950 outline-none sm:max-w-[180px]"
             >
               {!selectedBranch && (
                 <option value="" disabled>
@@ -367,7 +367,7 @@ export function StoreBranchSelector() {
         </div>
 
         {selectedBranch && (
-          <CheckCircle2 className="size-4 shrink-0 text-emerald-700" />
+          <CheckCircle2 className="size-4 shrink-0 text-blue-700" />
         )}
       </div>
 
