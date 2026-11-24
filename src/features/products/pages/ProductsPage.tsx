@@ -58,8 +58,8 @@ export function ProductsPage() {
   }
 
   return (
-    <section className="mx-auto max-w-7xl px-4 py-8 sm:py-12">
-      <div className="mb-8 rounded-3xl border border-blue-950/5 bg-white p-5 shadow-sm sm:p-8">
+    <section className="mx-auto w-full max-w-[1440px] px-3 py-7 sm:px-5 sm:py-10 lg:px-8">
+      <div className="mb-7 rounded-2xl border border-slate-100 bg-white p-5 shadow-[0_12px_40px_rgba(20,32,68,0.04)] sm:p-8">
         <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
           <div>
             <h1 className="mt-1 text-2xl font-extrabold sm:text-3xl">
