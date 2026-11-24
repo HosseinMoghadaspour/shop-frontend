@@ -65,12 +65,12 @@ export function ProductSection({
     },
     sug: {
       wrapper:
-        "relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-teal-500/10 via-emerald-500/5 to-cyan-500/10 border border-teal-200/60 p-5 sm:p-8 shadow-xl shadow-teal-950/5 backdrop-blur-md",
+        "relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-blue-500/10 via-blue-500/5 to-cyan-500/10 border border-blue-200/60 p-5 sm:p-8 shadow-xl shadow-blue-950/5 backdrop-blur-md",
       eyebrow:
-        "text-teal-800 bg-teal-100/80 px-3 py-1 rounded-full shadow-inner",
+        "text-blue-800 bg-blue-100/80 px-3 py-1 rounded-full shadow-inner",
       description: "text-slate-700",
-      link: "text-teal-800 bg-teal-200/80 sm:bg-teal-100/60 hover:bg-teal-200/80 px-3.5 py-1.5 rounded-xl shadow-sm",
-      iconColor: "text-teal-600 bg-teal-100",
+      link: "text-blue-800 bg-blue-200/80 sm:bg-blue-100/60 hover:bg-blue-200/80 px-3.5 py-1.5 rounded-xl shadow-sm",
+      iconColor: "text-blue-600 bg-blue-100",
     },
   }[theme];
 
