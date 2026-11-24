@@ -141,7 +141,7 @@ export function CartItem({
   // ----------------------------------------
 
   return (
-    <Card className="border border-emerald-950/5">
+    <Card className="border border-blue-950/5">
       <CardContent className="p-4">
         <div className="flex gap-4">
           {/* Image */}
