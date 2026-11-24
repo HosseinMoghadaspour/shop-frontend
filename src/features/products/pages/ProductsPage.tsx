@@ -59,7 +59,7 @@ export function ProductsPage() {
 
   return (
     <section className="mx-auto max-w-7xl px-4 py-8 sm:py-12">
-      <div className="mb-8 rounded-3xl border border-emerald-950/5 bg-white p-5 shadow-sm sm:p-8">
+      <div className="mb-8 rounded-3xl border border-blue-950/5 bg-white p-5 shadow-sm sm:p-8">
         <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
           <div>
             <h1 className="mt-1 text-2xl font-extrabold sm:text-3xl">
