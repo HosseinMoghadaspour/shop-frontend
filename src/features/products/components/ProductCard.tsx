@@ -179,7 +179,7 @@ export function ProductCard({ product }: ProductCardProps) {
                 absolute inset-0 m-auto
                 sm:h-[100%] sm:w-[90%]
                 h-[100%] w-[85%]
-                object-cover object-center
+                object-contain object-center
 
                 transition-transform duration-300
                 group-hover:scale-105
