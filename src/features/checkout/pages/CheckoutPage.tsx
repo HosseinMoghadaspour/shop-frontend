@@ -958,7 +958,7 @@ export function CheckoutPage() {
 
         {/* Summary */}
         <div>
-          <Card className="border border-emerald-950/5 lg:sticky lg:top-24">
+          <Card className="border border-blue-950/5 lg:sticky lg:top-24">
             <CardHeader>
               <CardTitle>خلاصه سفارش</CardTitle>
             </CardHeader>
