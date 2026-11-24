@@ -72,7 +72,7 @@ export function Header() {
   const userName = user?.RowName?.trim() || "حساب کاربری";
 
   const mobileNavItems = [
-      { to: "/discounts", label: "شگفت‌انگیز", icon: Flame, end: true },
+      { to: "/products", label: "محصولات", icon: ShoppingBag, end: true },
       { to: "/categories", label: "دسته‌ها", icon: LayoutGrid },
       { to: "/", label: "خانه", icon: Home, featured: true },
     { to: "/cart", label: "سبد خرید", icon: ShoppingBag, badge: cartQuantity },
@@ -239,8 +239,8 @@ export function Header() {
               { to: "/", label: "صفحه اصلی", end: true },
               { to: "/products", label: "محصولات" },
               { to: "/categories", label: "دسته‌بندی‌ها" },
-              { to: "/discounts", label: "تخفیف‌ها" },
-              { to: "/contact", label: "تماس با ما" },
+              { to: "/products", label: "تخفیف‌ها" },
+              { to: "/#contact", label: "تماس با ما" },
             ].map((item) => (
               <NavLink
                 key={item.to}
