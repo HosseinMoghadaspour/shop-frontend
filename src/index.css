@@ -18,7 +18,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background: #f8faf9;
+  background: #f5f7ff;
 }
 
 @theme inline {
@@ -65,24 +65,24 @@ body {
 }
 
 :root {
-  --background: oklch(0.985 0.006 160);
-  --foreground: oklch(0.23 0.025 165);
+  --background: #f5f7ff;
+  --foreground: #172554;
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.23 0.025 165);
+  --card-foreground: #172554;
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.23 0.025 165);
-  --primary: oklch(0.48 0.12 164);
-  --primary-foreground: oklch(0.99 0 0);
-  --secondary: oklch(0.94 0.025 160);
-  --secondary-foreground: oklch(0.32 0.08 164);
-  --muted: oklch(0.96 0.01 160);
-  --muted-foreground: oklch(0.52 0.025 165);
-  --accent: oklch(0.94 0.025 160);
-  --accent-foreground: oklch(0.32 0.08 164);
+  --popover-foreground: #172554;
+  --primary: #0033ff;
+  --primary-foreground: #ffffff;
+  --secondary: #eaf0ff;
+  --secondary-foreground: #0026cc;
+  --muted: #f0f4ff;
+  --muted-foreground: #64748b;
+  --accent: #eaf0ff;
+  --accent-foreground: #0026cc;
   --destructive: oklch(0.58 0.22 25);
-  --border: oklch(0.91 0.015 160);
-  --input: oklch(0.91 0.015 160);
-  --ring: oklch(0.62 0.12 164);
+  --border: #dbe5ff;
+  --input: #dbe5ff;
+  --ring: #0033ff;
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
@@ -153,7 +153,7 @@ body {
 
 [data-slot="card"] {
   border-radius: 1rem;
-  box-shadow: 0 8px 30px rgb(17 54 43 / 4%);
+  box-shadow: 0 8px 30px rgb(0 51 255 / 4%);
 }
 
 [data-slot="button"] {
@@ -174,7 +174,7 @@ select {
 
 ::selection {
   color: white;
-  background: #18785e;
+  background: #0033ff;
 }
 
 @keyframes adina-loader-orbit {
