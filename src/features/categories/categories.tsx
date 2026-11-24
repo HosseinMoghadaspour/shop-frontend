@@ -162,10 +162,10 @@ export function Category() {
                 className={[
                   "flex sm:h-[100px] h-[80px] flex-col items-center justify-center",
                   "gap-1.5 rounded-lg border px-2 py-2",
-                  "border-emerald-600 sm:bg-gradient-to-b sm:from-white sm:to-slate-50 bg-gradient-to-b from-emerald-200 to-emerald-200",
+                  "border-blue-600 sm:bg-gradient-to-b sm:from-white sm:to-slate-50 bg-gradient-to-b from-blue-200 to-blue-200",
                   "text-[#215E21] shadow-sm transition-all duration-300",
-                  "hover:border-emerald-300",
-                  "hover:from-emerald-500 hover:to-emerald-700",
+                  "hover:border-blue-300",
+                  "hover:from-blue-500 hover:to-blue-700",
                   "hover:text-white hover:shadow-md",
                 ].join(" ")}
               >
@@ -189,7 +189,7 @@ export function Category() {
                 <Link
                   to={`/products?categoryId=${category.id}`}
                   aria-label={`مشاهده کالاهای دسته‌بندی ${category.name}`}
-                  className="block rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
+                  className="block rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2"
                 >
                   {card}
                 </Link>
