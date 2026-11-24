@@ -142,13 +142,13 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <Card
       className="
-    group flex h-[300px] w-full max-w-[190px] min-w-0 flex-col
-    overflow-hidden rounded-2xl border-0 bg-white
+    group flex h-[330px] w-full min-w-0 flex-col
+    overflow-hidden rounded-2xl border border-slate-100 bg-white
     shadow-[0_3px_18px_rgba(15,23,42,0.06)]
     ring-1 ring-slate-900/[0.035]
     transition-shadow duration-300
     hover:shadow-[0_14px_32px_rgba(15,23,42,0.12)]
-    sm:h-[330px]
+    sm:h-[360px]
   "
     >
       {/* تصویر محصول */}
@@ -161,10 +161,10 @@ export function ProductCard({ product }: ProductCardProps) {
       >
         <div
           className="
-            relative flex h-[112px] w-full
+            relative flex h-[160px] w-full
             items-center justify-center overflow-hidden
             bg-gradient-to-br from-slate-50 via-white to-blue-50/70
-            sm:h-[125px]
+            sm:h-[190px]
           "
         >
           {defaultImage ? (
@@ -178,7 +178,7 @@ export function ProductCard({ product }: ProductCardProps) {
               className="
                 absolute inset-0 m-auto
                 sm:h-[100%] sm:w-[90%]
-                h-[100%] w-[70%]
+                h-[100%] w-[85%]
                 object-cover object-center
 
                 transition-transform duration-300
@@ -228,14 +228,14 @@ export function ProductCard({ product }: ProductCardProps) {
       <CardContent
         className="
           flex min-h-0 flex-1 flex-col
-          px-2.5 pb-1.5 pt-2
+          px-3 pb-2 pt-3
         "
       >
         <Link to={`/products/${product.id}`} className="min-w-0">
           <h2
             className="
               line-clamp-2 min-h-[36px]
-              text-[11px] font-bold leading-[18px]
+              text-xs font-bold leading-6
               text-slate-800
               transition-colors
               group-hover:text-blue-700
