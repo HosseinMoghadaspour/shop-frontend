@@ -64,7 +64,7 @@ export function HomePage() {
     <div className="pb-16 min-h-screen">
       <section className="mx-auto max-w-7xl px-4 pb-6 pt-4 sm:pb-10 sm:pt-6">
         {/* اسلایدر اصلی */}
-        <div className="relative isolate overflow-hidden rounded-[2rem] bg-gradient-to-br from-emerald-950 via-emerald-900 to-teal-900 text-white shadow-2xl shadow-emerald-950/20 ring-1 ring-white/10 sm:rounded-[2.5rem]">
+        <div className="relative isolate overflow-hidden rounded-[2rem] bg-gradient-to-br from-blue-950 via-blue-900 to-blue-900 text-white shadow-2xl shadow-blue-950/20 ring-1 ring-white/10 sm:rounded-[2.5rem]">
           <Slider />
         </div>
 
@@ -74,7 +74,7 @@ export function HomePage() {
         </div>
 
         {/* باکس‌های اعتماد و مزایای خرید */}
-        <div className="grid grid-cols-1 gap-3.5 rounded-[2.5rem] bg-gradient-to-r from-emerald-100/70 via-teal-100/70 to-cyan-100/70 p-4 sm:grid-cols-3 sm:gap-5 sm:p-6 shadow-lg shadow-emerald-900/5 ring-1 ring-emerald-900/10 backdrop-blur-md">
+        <div className="grid grid-cols-1 gap-3.5 rounded-[2.5rem] bg-gradient-to-r from-blue-100/70 via-blue-100/70 to-cyan-100/70 p-4 sm:grid-cols-3 sm:gap-5 sm:p-6 shadow-lg shadow-blue-900/5 ring-1 ring-blue-900/10 backdrop-blur-md">
           {[
             {
               icon: Truck,
@@ -94,9 +94,9 @@ export function HomePage() {
           ].map(({ icon: Icon, title, description }) => (
             <div
               key={title}
-              className="flex items-center gap-4 rounded-3xl bg-white/90 p-4 sm:p-5 shadow-sm shadow-emerald-900/5 ring-1 ring-emerald-900/5 transition-all duration-300 hover:scale-[1.02] hover:bg-white hover:shadow-md"
+              className="flex items-center gap-4 rounded-3xl bg-white/90 p-4 sm:p-5 shadow-sm shadow-blue-900/5 ring-1 ring-blue-900/5 transition-all duration-300 hover:scale-[1.02] hover:bg-white hover:shadow-md"
             >
-              <span className="flex size-12 sm:size-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-600/30">
+              <span className="flex size-12 sm:size-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-md shadow-blue-600/30">
                 <Icon className="size-6" />
               </span>
               <div>
