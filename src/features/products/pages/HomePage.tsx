@@ -61,10 +61,10 @@ export function HomePage() {
   }
 
   return (
-    <div className="pb-16 min-h-screen">
-      <section className="mx-auto max-w-7xl px-4 pb-6 pt-4 sm:pb-10 sm:pt-6">
+    <div className="min-h-screen pb-10">
+      <section className="mx-auto w-full max-w-[1440px] px-3 pb-8 pt-3 sm:px-5 sm:pb-12 sm:pt-6 lg:px-8">
         {/* اسلایدر اصلی */}
-        <div className="relative isolate overflow-hidden rounded-[2rem] bg-gradient-to-br from-blue-950 via-blue-900 to-blue-900 text-white shadow-2xl shadow-blue-950/20 ring-1 ring-white/10 sm:rounded-[2.5rem]">
+        <div className="relative isolate overflow-hidden rounded-[1.5rem] bg-gradient-to-br from-[#001b83] via-[#0033ff] to-[#4168ff] text-white shadow-2xl shadow-blue-950/20 ring-1 ring-white/10 sm:rounded-[2.5rem]">
           <Slider />
         </div>
 
@@ -74,7 +74,7 @@ export function HomePage() {
         </div>
 
         {/* باکس‌های اعتماد و مزایای خرید */}
-        <div className="grid grid-cols-1 gap-3.5 rounded-[2.5rem] bg-gradient-to-r from-blue-100/70 via-blue-100/70 to-cyan-100/70 p-4 sm:grid-cols-3 sm:gap-5 sm:p-6 shadow-lg shadow-blue-900/5 ring-1 ring-blue-900/10 backdrop-blur-md">
+        <div className="grid grid-cols-1 gap-3.5 rounded-[1.5rem] border border-blue-100 bg-[#edf2ff] p-4 sm:grid-cols-3 sm:gap-5 sm:p-6 shadow-lg shadow-blue-900/5 ring-1 ring-blue-900/10 backdrop-blur-md">
           {[
             {
               icon: Truck,
@@ -113,7 +113,7 @@ export function HomePage() {
       </section>
 
       {/* بخش‌های محصولات با طراحی کارت‌های جذاب و شیشه‌ای */}
-      <div className="mx-auto max-w-7xl space-y-12 px-4 sm:space-y-16">
+      <div className="mx-auto w-full max-w-[1440px] space-y-10 px-3 sm:space-y-14 sm:px-5 lg:px-8">
         <ProductSection
           eyebrow="تخفیف‌های ویژه روز"
           title="پیشنهاد شگفت‌انگیز"
