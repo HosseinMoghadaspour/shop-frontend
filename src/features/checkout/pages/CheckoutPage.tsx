@@ -498,7 +498,7 @@ export function CheckoutPage() {
 
   if (!cart || !cart.items || cart.items.length === 0) {
     return (
-      <div className="container mx-auto max-w-7xl px-4 py-10">
+      <div className="mx-auto w-full max-w-[1440px] px-3 py-8 sm:px-5 lg:px-8">
         <Card>
           <CardContent className="flex min-h-[300px] flex-col items-center justify-center gap-4">
             <ShoppingBag className="h-12 w-12 text-muted-foreground" />
@@ -519,7 +519,7 @@ export function CheckoutPage() {
   }
 
   return (
-    <div className="container mx-auto max-w-7xl px-4 py-8 sm:py-12" dir="rtl">
+    <div className="mx-auto w-full max-w-[1440px] px-3 py-7 sm:px-5 sm:py-10 lg:px-8" dir="rtl">
       {/* Header */}
       <div className="mb-6 flex items-center gap-3">
         <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
