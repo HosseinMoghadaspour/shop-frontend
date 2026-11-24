@@ -79,23 +79,23 @@ function CategoryTile({ category }: { category: CategoryItem }) {
   return (
     <Link
       to={destination}
-      className="group flex min-w-0 items-center gap-3 rounded-2xl border border-emerald-950/5 bg-white p-3 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-emerald-200 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
+      className="group flex min-w-0 items-center gap-3 rounded-2xl border border-blue-950/5 bg-white p-3 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
       aria-label={hasChildren
         ? `مشاهده زیرمجموعه‌های ${category.name}`
         : `مشاهده محصولات دسته‌بندی ${category.name}`}
     >
-      <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700 transition group-hover:bg-emerald-700 group-hover:text-white">
+      <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-700 transition group-hover:bg-blue-700 group-hover:text-white">
         <Icon className="size-6" strokeWidth={1.8} />
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block truncate text-sm font-bold text-slate-800 group-hover:text-emerald-800">
+        <span className="block truncate text-sm font-bold text-slate-800 group-hover:text-blue-800">
           {category.name}
         </span>
         <span className="mt-1 block text-[11px] text-slate-400">
           {hasChildren ? `${category.children.length.toLocaleString("fa-IR")} زیر‌دسته` : "مشاهده محصولات"}
         </span>
       </span>
-      <ChevronLeft className="size-4 shrink-0 text-slate-300 transition group-hover:-translate-x-0.5 group-hover:text-emerald-700" />
+      <ChevronLeft className="size-4 shrink-0 text-slate-300 transition group-hover:-translate-x-0.5 group-hover:text-blue-700" />
     </Link>
   );
 }
@@ -139,36 +139,36 @@ export function CategoriesPage() {
 
   return (
     <section dir="rtl" className="mx-auto max-w-7xl px-4 py-7 sm:py-10">
-      <div className="relative mb-7 overflow-hidden rounded-[2rem] bg-gradient-to-l from-emerald-950 via-emerald-900 to-teal-800 px-5 py-7 text-white shadow-lg shadow-emerald-950/10 sm:px-8 sm:py-9">
+      <div className="relative mb-7 overflow-hidden rounded-[2rem] bg-gradient-to-l from-blue-950 via-blue-900 to-blue-800 px-5 py-7 text-white shadow-lg shadow-blue-950/10 sm:px-8 sm:py-9">
         <div className="relative z-10 max-w-2xl">
-          <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold text-emerald-50">
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold text-blue-50">
             <FolderOpen className="size-3.5" />
             راهنمای خرید
           </span>
           <h1 className="mt-4 text-2xl font-black sm:text-3xl">
             {selectedCategory?.name ?? "دسته‌بندی محصولات"}
           </h1>
-          <p className="mt-2 text-sm leading-7 text-emerald-50/80">
+          <p className="mt-2 text-sm leading-7 text-blue-50/80">
             {selectedCategory
               ? "زیر‌دسته موردنظرت را انتخاب کن تا به محصولات همان گروه برسی."
               : "دسته موردنظرت را انتخاب کن و مرحله‌به‌مرحله به محصولات مرتبط برس."}
           </p>
         </div>
         <div className="pointer-events-none absolute -left-8 -top-16 size-56 rounded-full border-[35px] border-white/5" />
-        <div className="pointer-events-none absolute -bottom-24 left-36 size-64 rounded-full bg-emerald-400/10 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-24 left-36 size-64 rounded-full bg-blue-400/10 blur-3xl" />
       </div>
 
       <nav aria-label="مسیر دسته‌بندی" className="mb-5 flex flex-wrap items-center gap-2 text-sm text-slate-500">
-        <Link to="/categories" className="inline-flex items-center gap-1.5 transition hover:text-emerald-700">
+        <Link to="/categories" className="inline-flex items-center gap-1.5 transition hover:text-blue-700">
           <Home className="size-4" /> همه دسته‌ها
         </Link>
         {selectedPath?.map((category) => (
           <span key={category.id} className="inline-flex items-center gap-2">
             <ChevronLeft className="size-4 text-slate-300" />
             {category.id === selectedId ? (
-              <span className="font-bold text-emerald-800">{category.name}</span>
+              <span className="font-bold text-blue-800">{category.name}</span>
             ) : (
-              <Link className="transition hover:text-emerald-700" to={`/categories?categoryId=${category.id}`}>
+              <Link className="transition hover:text-blue-700" to={`/categories?categoryId=${category.id}`}>
                 {category.name}
               </Link>
             )}
@@ -227,7 +227,7 @@ export function CategoriesPage() {
         <div className="rounded-2xl border border-dashed bg-white px-5 py-12 text-center">
           <FolderOpen className="mx-auto size-9 text-slate-300" />
           <p className="mt-3 font-semibold text-slate-700">این دسته‌بندی پیدا نشد یا در فروشگاه فعال نیست.</p>
-          <Link to="/categories" className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-emerald-700 hover:text-emerald-900">
+          <Link to="/categories" className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-blue-700 hover:text-blue-900">
             <ArrowRight className="size-4" /> بازگشت به دسته‌های اصلی
           </Link>
         </div>
@@ -249,7 +249,7 @@ export function CategoriesPage() {
           <div className="rounded-2xl border border-dashed bg-white px-5 py-12 text-center">
             <Search className="mx-auto size-8 text-slate-300" />
             <p className="mt-3 font-semibold text-slate-700">دسته‌بندی‌ای با این نام پیدا نشد.</p>
-            <Button variant="link" className="mt-1 text-emerald-700" onClick={() => setSearch("")}>
+            <Button variant="link" className="mt-1 text-blue-700" onClick={() => setSearch("")}>
               پاک کردن جست‌وجو
             </Button>
           </div>
@@ -261,11 +261,11 @@ export function CategoriesPage() {
           ))}
         </div>
       ) : selectedCategory ? (
-        <div className="rounded-2xl border border-emerald-100 bg-white p-8 text-center shadow-sm">
-          <Package className="mx-auto size-9 text-emerald-600" />
+        <div className="rounded-2xl border border-blue-100 bg-white p-8 text-center shadow-sm">
+          <Package className="mx-auto size-9 text-blue-600" />
           <p className="mt-3 font-bold text-slate-800">این دسته‌بندی زیر‌دسته‌ای ندارد.</p>
           <p className="mt-1 text-sm text-slate-500">برای مشاهده کالاهای این گروه وارد صفحه محصولات شو.</p>
-          <Link to={`/products?categoryId=${selectedCategory.id}`} className="mt-5 inline-flex h-10 items-center justify-center rounded-xl bg-emerald-700 px-5 text-sm font-bold text-white transition hover:bg-emerald-800">
+          <Link to={`/products?categoryId=${selectedCategory.id}`} className="mt-5 inline-flex h-10 items-center justify-center rounded-xl bg-blue-700 px-5 text-sm font-bold text-white transition hover:bg-blue-800">
             مشاهده محصولات
           </Link>
         </div>
