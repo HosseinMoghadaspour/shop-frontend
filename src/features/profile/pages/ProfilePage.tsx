@@ -103,7 +103,7 @@ export function ProfilePage() {
         </p>
       </div>
       <div className="grid gap-6 lg:grid-cols-3">
-        <Card className="border border-emerald-950/5">
+        <Card className="border border-blue-950/5">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <UserRound className="h-5 w-5" />
@@ -141,7 +141,7 @@ export function ProfilePage() {
                 dir="ltr" maxLength={10} />
             </div>
             {profileError && <p className="text-sm text-destructive">{profileError}</p>}
-            {profileMessage && <p className="text-sm text-emerald-700">{profileMessage}</p>}
+            {profileMessage && <p className="text-sm text-blue-700">{profileMessage}</p>}
             <Button className="w-full" onClick={() => void handleSaveProfile()} disabled={isSavingProfile || !profileForm.fullName.trim()}>
               {isSavingProfile ? "در حال ذخیره..." : "ذخیره اطلاعات حساب"}
             </Button>
@@ -155,7 +155,7 @@ export function ProfilePage() {
             </Link>
           </CardContent>
         </Card>
-        <Card className="border border-emerald-950/5 lg:col-span-2">
+        <Card className="border border-blue-950/5 lg:col-span-2">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <MapPin className="h-5 w-5" />
@@ -208,7 +208,7 @@ export function ProfilePage() {
                       {address.isActive && (
                         <Badge
                           variant="secondary"
-                          className="bg-emerald-50 text-emerald-700 hover:bg-emerald-50"
+                          className="bg-blue-50 text-blue-700 hover:bg-blue-50"
                         >
                           فعال
                         </Badge>
