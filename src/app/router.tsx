@@ -35,7 +35,7 @@ import { DeliveryAddressPage } from "@/features/addresses/pages/DeliveryAddressP
 function NotFoundPage() {
   return (
     <section className="mx-auto flex min-h-[65vh] max-w-xl items-center px-4 py-12">
-      <div className="w-full rounded-3xl border border-emerald-950/5 bg-white px-6 py-12 text-center shadow-xl shadow-emerald-950/5 sm:px-12">
+      <div className="w-full rounded-3xl border border-blue-950/5 bg-white px-6 py-12 text-center shadow-xl shadow-blue-950/5 sm:px-12">
         <span className="mx-auto flex size-20 items-center justify-center rounded-3xl bg-primary/8 text-primary">
           <SearchX className="size-10" />
         </span>
