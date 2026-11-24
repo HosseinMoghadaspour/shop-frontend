@@ -74,8 +74,8 @@ export function DeliveryAddressPage() {
   }
 
   return (
-    <section dir="rtl" className="mx-auto max-w-3xl px-4 py-8 sm:py-12">
-      <Card className="overflow-hidden rounded-3xl border-blue-900/10 shadow-sm">
+    <section dir="rtl" className="mx-auto w-full max-w-4xl px-3 py-7 sm:px-5 sm:py-10 lg:px-8">
+      <Card className="overflow-hidden rounded-2xl border-slate-100 shadow-[0_16px_48px_rgba(20,32,68,0.06)]">
         <CardHeader className="bg-blue-50/70">
           <CardTitle className="flex items-center gap-2 text-xl">
             <MapPin className="size-5 text-blue-700" />
