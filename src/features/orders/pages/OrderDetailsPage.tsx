@@ -168,8 +168,8 @@ export function OrderDetailsPage() {
   }
 
   return (
-    <main className="container mx-auto max-w-4xl px-4 py-8 sm:py-12">
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-blue-950/5 bg-white p-5 sm:p-6">
+    <main className="mx-auto w-full max-w-5xl px-3 py-7 sm:px-5 sm:py-10 lg:px-8">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-slate-100 bg-white p-5 shadow-[0_12px_36px_rgba(20,32,68,0.04)] sm:p-6">
         <div>
           <p className="text-sm text-muted-foreground">سفارش شماره</p>
 

@@ -93,7 +93,7 @@ export function ProfilePage() {
   }, []);
 
   return (
-    <main className="container mx-auto max-w-5xl px-4 py-8 sm:py-12">
+    <main className="mx-auto w-full max-w-[1440px] px-3 py-7 sm:px-5 sm:py-10 lg:px-8">
       <div className="mb-6">
         <h1 className="mt-1 text-2xl font-extrabold sm:text-3xl">
           حساب کاربری
@@ -103,7 +103,7 @@ export function ProfilePage() {
         </p>
       </div>
       <div className="grid gap-6 lg:grid-cols-3">
-        <Card className="border border-blue-950/5">
+        <Card className="border border-slate-100 shadow-[0_12px_36px_rgba(20,32,68,0.04)]">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <UserRound className="h-5 w-5" />

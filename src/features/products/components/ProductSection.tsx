@@ -76,7 +76,9 @@ export function ProductSection({
 
   return (
     <section className={sectionTheme.wrapper}>
-      <div className={`mb-6 ${theme === "amazing" && "-mt-3"} flex flex-col sm:flex-row sm:items-end justify-between gap-4`}>
+      <div
+        className={`mb-6 ${theme === "amazing" && "-mt-3"} flex flex-col sm:flex-row sm:items-end justify-between gap-4`}
+      >
         <div className="min-w-0 flex items-start gap-3.5">
           {SectionIcon && (
             <span

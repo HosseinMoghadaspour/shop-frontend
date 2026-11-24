@@ -46,7 +46,6 @@ export function ProductDetailsPage() {
 
   const { data: product, isLoading, isError } = useProduct(productId);
 
-  console.log(product);
 
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
@@ -199,7 +198,7 @@ export function ProductDetailsPage() {
   return (
     <section
       dir="rtl"
-      className="mx-auto w-full max-w-7xl px-3 pb-28 pt-4 sm:px-5 sm:py-7 lg:px-6 lg:py-10"
+      className="mx-auto w-full max-w-[1440px] px-3 pb-28 pt-4 sm:px-5 sm:py-8 lg:px-8 lg:py-10"
     >
       {/* Breadcrumb */}
       <div className="mb-4 flex items-center justify-between sm:mb-5">
@@ -213,7 +212,7 @@ export function ProductDetailsPage() {
       </div>
 
       {/* Main Product Card */}
-      <Card className="overflow-hidden rounded-2xl border border-blue-950/5 shadow-sm sm:rounded-3xl">
+      <Card className="overflow-hidden rounded-2xl border border-slate-100 shadow-[0_16px_48px_rgba(20,32,68,0.06)] sm:rounded-3xl">
         <div className="grid gap-5 p-3 sm:gap-7 sm:p-6 md:grid-cols-2 md:gap-8 md:p-8 lg:gap-10">
           {/* Product Gallery */}
           <div className="min-w-0">
