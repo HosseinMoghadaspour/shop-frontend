@@ -57,7 +57,7 @@ export function OrdersPage() {
 
   if (isLoading) {
     return (
-      <main className="container mx-auto px-4 py-8 sm:py-12">
+      <main className="mx-auto w-full max-w-[1440px] px-3 py-7 sm:px-5 sm:py-10 lg:px-8">
         <h1 className="mb-6 text-2xl font-extrabold">سفارش‌های من</h1>
 
         <div className="rounded-xl border p-6 text-center">
@@ -111,7 +111,7 @@ export function OrdersPage() {
           return (
             <div
               key={order.RowID}
-              className="rounded-2xl border border-blue-950/5 bg-white p-5 shadow-sm"
+              className="rounded-2xl border border-slate-100 bg-white p-5 shadow-[0_12px_36px_rgba(20,32,68,0.04)]"
             >
               <div className="mb-4 flex flex-col gap-3 border-b pb-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
