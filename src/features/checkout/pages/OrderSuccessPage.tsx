@@ -16,10 +16,10 @@ export function OrderSuccessPage() {
 
   return (
     <section className="mx-auto flex min-h-[70vh] max-w-xl items-center px-4 py-12">
-      <Card className="w-full border border-emerald-950/5 shadow-xl shadow-emerald-950/5">
+      <Card className="w-full border border-blue-950/5 shadow-xl shadow-blue-950/5">
         <CardHeader className="items-center px-6 pt-9 text-center">
-          <span className="mb-4 flex size-20 items-center justify-center rounded-full bg-emerald-50">
-            <CheckCircle2 className="size-12 text-emerald-600" />
+          <span className="mb-4 flex size-20 items-center justify-center rounded-full bg-blue-50">
+            <CheckCircle2 className="size-12 text-blue-600" />
           </span>
 
           <CardTitle className="text-2xl">
