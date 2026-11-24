@@ -163,7 +163,7 @@ export function ProductCard({ product }: ProductCardProps) {
           className="
             relative flex h-[112px] w-full
             items-center justify-center overflow-hidden
-            bg-gradient-to-br from-slate-50 via-white to-emerald-50/70
+            bg-gradient-to-br from-slate-50 via-white to-blue-50/70
             sm:h-[125px]
           "
         >
@@ -238,7 +238,7 @@ export function ProductCard({ product }: ProductCardProps) {
               text-[11px] font-bold leading-[18px]
               text-slate-800
               transition-colors
-              group-hover:text-emerald-700
+              group-hover:text-blue-700
               sm:text-xs
             "
           >
@@ -263,7 +263,7 @@ export function ProductCard({ product }: ProductCardProps) {
           <p
             className="
               text-left text-xs font-extrabold
-              leading-5 text-emerald-700
+              leading-5 text-blue-700
               sm:text-sm
             "
           >
@@ -304,8 +304,8 @@ export function ProductCard({ product }: ProductCardProps) {
             className="
         flex h-10 w-full items-center
         justify-between overflow-hidden
-        rounded-xl border border-emerald-200
-        bg-emerald-50/80
+        rounded-xl border border-blue-200
+        bg-blue-50/80
         shadow-sm
       "
           >
@@ -316,10 +316,10 @@ export function ProductCard({ product }: ProductCardProps) {
               aria-label={`افزایش تعداد ${name}`}
               className="
           size-9 shrink-0 rounded-lg
-          text-emerald-700
-          hover:bg-emerald-100
-          bg-emerald-100
-          sm:bg-emerald-50/80
+          text-blue-700
+          hover:bg-blue-100
+          bg-blue-100
+          sm:bg-blue-50/80
           active:scale-90 transition
         "
               disabled={
@@ -335,7 +335,7 @@ export function ProductCard({ product }: ProductCardProps) {
             </Button>
 
             <div className="flex min-w-0 flex-1 items-center justify-center px-1">
-              <span className="truncate text-xs font-bold text-emerald-800 tabular-nums">
+              <span className="truncate text-xs font-bold text-blue-800 tabular-nums">
                 {formatQuantityWithUnit(
                   quantity,
                   product.unit?.name,
@@ -350,10 +350,10 @@ export function ProductCard({ product }: ProductCardProps) {
               aria-label={`کاهش تعداد ${name}`}
               className="
           size-9 shrink-0 rounded-lg
-          text-emerald-700
+          text-blue-700
           hover:bg-red-100
           bg-red-100
-          sm:bg-emerald-50/80
+          sm:bg-blue-50/80
           active:scale-90 transition
         "
               disabled={isBusy || isCartUpdating || isCartLoading}
@@ -368,12 +368,12 @@ export function ProductCard({ product }: ProductCardProps) {
             className="
         group relative h-10 w-full
         overflow-hidden rounded-xl
-        bg-emerald-700
+        bg-blue-700
         text-xs font-bold text-white
-        shadow-sm shadow-emerald-900/10
+        shadow-sm shadow-blue-900/10
         transition-all duration-200
-        hover:bg-emerald-800
-        hover:shadow-md hover:shadow-emerald-900/15
+        hover:bg-blue-800
+        hover:shadow-md hover:shadow-blue-900/15
         active:scale-[0.98]
         disabled:opacity-60
       "
