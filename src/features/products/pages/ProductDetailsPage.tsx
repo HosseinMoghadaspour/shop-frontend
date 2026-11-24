@@ -213,7 +213,7 @@ export function ProductDetailsPage() {
       </div>
 
       {/* Main Product Card */}
-      <Card className="overflow-hidden rounded-2xl border border-emerald-950/5 shadow-sm sm:rounded-3xl">
+      <Card className="overflow-hidden rounded-2xl border border-blue-950/5 shadow-sm sm:rounded-3xl">
         <div className="grid gap-5 p-3 sm:gap-7 sm:p-6 md:grid-cols-2 md:gap-8 md:p-8 lg:gap-10">
           {/* Product Gallery */}
           <div className="min-w-0">
@@ -343,7 +343,7 @@ export function ProductDetailsPage() {
                 {isAvailable ? (
                   <Badge
                     variant="secondary"
-                    className="rounded-full bg-emerald-50 px-2 py-1 text-[10px] text-emerald-700 hover:bg-emerald-50 sm:text-xs"
+                    className="rounded-full bg-blue-50 px-2 py-1 text-[10px] text-blue-700 hover:bg-blue-50 sm:text-xs"
                   >
                     <PackageCheck className="ml-1 size-3.5" />
                     موجود در انبار
@@ -412,7 +412,7 @@ export function ProductDetailsPage() {
               <div className="flex items-center gap-2 -mt-8">
                 <span
                   className={`size-2 rounded-full ${
-                    isAvailable ? "bg-emerald-500" : "bg-red-500"
+                    isAvailable ? "bg-blue-500" : "bg-red-500"
                   }`}
                 />
 
@@ -444,7 +444,7 @@ export function ProductDetailsPage() {
             {/* Desktop Cart Controls */}
             <div className="mt-5 hidden sm:block md:mt-6">
               {cartQuantity > 0 ? (
-                <div className="flex h-12 w-full items-center justify-between rounded-xl border border-emerald-200 bg-emerald-50 px-2">
+                <div className="flex h-12 w-full items-center justify-between rounded-xl border border-blue-200 bg-blue-50 px-2">
                   <Button
                     type="button"
                     variant="ghost"
@@ -467,7 +467,7 @@ export function ProductDetailsPage() {
                       <Plus className="size-5" />
                     )}
                   </Button>
-                  <span className="text-sm font-bold text-emerald-800">
+                  <span className="text-sm font-bold text-blue-800">
                     {formatQuantityWithUnit(
                       cartQuantity,
                       product.stockInfo[0].smallestUnit,
@@ -511,7 +511,7 @@ export function ProductDetailsPage() {
             {/* Benefits */}
             <div className="mt-5 grid grid-cols-3 gap-2 border-t pt-4 sm:mt-6 sm:gap-3 sm:pt-5">
               <div className="flex flex-col items-center gap-2 text-center sm:flex-row sm:justify-center">
-                <span className="flex size-9 items-center justify-center rounded-full bg-emerald-50 text-emerald-700">
+                <span className="flex size-9 items-center justify-center rounded-full bg-blue-50 text-blue-700">
                   <Truck className="size-5" />
                 </span>
 
@@ -521,7 +521,7 @@ export function ProductDetailsPage() {
               </div>
 
               <div className="flex flex-col items-center gap-2 text-center sm:flex-row sm:justify-center">
-                <span className="flex size-9 items-center justify-center rounded-full bg-emerald-50 text-emerald-700">
+                <span className="flex size-9 items-center justify-center rounded-full bg-blue-50 text-blue-700">
                   <ShieldCheck className="size-5" />
                 </span>
 
@@ -531,7 +531,7 @@ export function ProductDetailsPage() {
               </div>
 
               <div className="flex flex-col items-center gap-2 text-center sm:flex-row sm:justify-center">
-                <span className="flex size-9 items-center justify-center rounded-full bg-emerald-50 text-emerald-700">
+                <span className="flex size-9 items-center justify-center rounded-full bg-blue-50 text-blue-700">
                   <PackageCheck className="size-5" />
                 </span>
 
@@ -608,7 +608,7 @@ export function ProductDetailsPage() {
 
           {/* Mobile Cart Controls */}
           {cartQuantity > 0 ? (
-            <div className="flex h-11 max-w-[190px] flex-1 items-center justify-between rounded-xl border border-emerald-200 bg-emerald-50 px-1">
+            <div className="flex h-11 max-w-[190px] flex-1 items-center justify-between rounded-xl border border-blue-200 bg-blue-50 px-1">
               <Button
                 type="button"
                 variant="ghost"
@@ -630,7 +630,7 @@ export function ProductDetailsPage() {
                   <Plus className="size-4" />
                 )}
               </Button>
-              <span className="text-xs font-bold text-emerald-800">
+              <span className="text-xs font-bold text-blue-800">
                 {formatQuantityWithUnit(cartQuantity, product.unit?.name)}
               </span>
               <Button
