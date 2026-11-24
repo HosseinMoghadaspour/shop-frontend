@@ -41,10 +41,10 @@ export function ProductGrid({
   return (
     <div
       className="
-        grid grid-cols-2 items-stretch gap-2.5
-        sm:grid-cols-3 sm:gap-2
+        grid grid-cols-2 items-stretch gap-3
+        sm:grid-cols-3 sm:gap-4
         lg:grid-cols-4
-        xl:grid-cols-5
+        xl:grid-cols-5 2xl:grid-cols-6
       "
     >
       {products.map((product) => (
