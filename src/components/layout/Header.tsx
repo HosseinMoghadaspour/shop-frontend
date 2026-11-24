@@ -8,7 +8,6 @@ import {
   ChevronDown,
   Home,
   LayoutGrid,
-  Flame,
   ShoppingBag,
 } from "lucide-react";
 
