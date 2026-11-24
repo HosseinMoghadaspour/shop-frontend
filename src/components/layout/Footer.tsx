@@ -22,7 +22,7 @@ export function Footer() {
 
   if (footerQuery.isLoading) {
     return (
-      <footer className="mt-16 h-64 animate-pulse bg-[#AEDBC9]" />
+      <footer className="mt-16 h-64 animate-pulse bg-[#EAF0FF]" />
     );
   }
 
@@ -88,7 +88,7 @@ export function Footer() {
     : null;
 
   return (
-    <footer className="mt-16 border-t border-emerald-950/10 bg-[#AEDBC9]">
+    <footer className="mt-16 border-t border-blue-950/10 bg-[#EAF0FF]">
       <div className="mx-auto max-w-7xl px-4 py-12">
 
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1.3fr]">
@@ -118,18 +118,18 @@ export function Footer() {
               {footer.SiteName}
             </Link>
 
-            <p className="max-w-sm whitespace-pre-line text-sm leading-8 text-emerald-950/70">
+            <p className="max-w-sm whitespace-pre-line text-sm leading-8 text-blue-950/70">
               {footer.AboutText}
             </p>
           </div>
 
           {/* دسترسی سریع */}
           <div>
-            <h2 className="mb-5 font-bold text-emerald-950">
+            <h2 className="mb-5 font-bold text-blue-950">
               دسترسی سریع
             </h2>
 
-            <div className="flex flex-col gap-4 text-sm text-emerald-950/70">
+            <div className="flex flex-col gap-4 text-sm text-blue-950/70">
               <Link to="/" className="transition hover:text-primary">
                 صفحه اصلی
               </Link>
@@ -172,11 +172,11 @@ export function Footer() {
 
           {/* ارتباط با ما */}
           <div>
-            <h2 className="mb-5 font-bold text-emerald-950">
+            <h2 className="mb-5 font-bold text-blue-950">
               ارتباط با ما
             </h2>
 
-            <div className="flex flex-col gap-4 text-sm text-emerald-950/70">
+            <div className="flex flex-col gap-4 text-sm text-blue-950/70">
 
               {footer.Phone1 && (
                 <a
@@ -213,7 +213,7 @@ export function Footer() {
 
             {socialLinks.length > 0 && (
               <div className="mt-6">
-                <h3 className="mb-3 text-sm font-bold text-emerald-950">
+                <h3 className="mb-3 text-sm font-bold text-blue-950">
                   ما را دنبال کنید
                 </h3>
 
@@ -229,7 +229,7 @@ export function Footer() {
                         rel="noopener noreferrer"
                         title={item.title}
                         aria-label={item.title}
-                        className="flex size-10 items-center justify-center rounded-xl bg-white/70 text-emerald-900 transition hover:bg-primary hover:text-white"
+                        className="flex size-10 items-center justify-center rounded-xl bg-white/70 text-blue-900 transition hover:bg-primary hover:text-white"
                       >
                         <Icon className="size-5" />
                       </a>
@@ -242,7 +242,7 @@ export function Footer() {
 
           {/* نمادهای اعتماد */}
           <div>
-            <h2 className="mb-5 font-bold text-emerald-950">
+            <h2 className="mb-5 font-bold text-blue-950">
               نمادهای اعتماد
             </h2>
 
@@ -293,7 +293,7 @@ export function Footer() {
         </div>
 
         {/* کپی رایت */}
-        <div className="mt-10 gap-3 border-t border-emerald-950/10 pt-6 text-center text-xs sm:flex-row sm:items-center ">
+        <div className="mt-10 gap-3 border-t border-blue-950/10 pt-6 text-center text-xs sm:flex-row sm:items-center ">
           <span>
             {footer.Copyright}
           </span>
