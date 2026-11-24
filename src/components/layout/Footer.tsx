@@ -88,8 +88,8 @@ export function Footer() {
     : null;
 
   return (
-    <footer className="mt-16 border-t border-blue-950/10 bg-[#EAF0FF]">
-      <div className="mx-auto max-w-7xl px-4 py-12">
+    <footer className="mt-12 border-t border-slate-200 bg-white">
+      <div className="mx-auto max-w-[1440px] px-4 py-12 sm:px-6 lg:px-8">
 
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1.3fr]">
 
