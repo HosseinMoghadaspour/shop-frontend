@@ -169,7 +169,7 @@ export function OrderDetailsPage() {
 
   return (
     <main className="container mx-auto max-w-4xl px-4 py-8 sm:py-12">
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-emerald-950/5 bg-white p-5 sm:p-6">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-blue-950/5 bg-white p-5 sm:p-6">
         <div>
           <p className="text-sm text-muted-foreground">سفارش شماره</p>
 
@@ -186,7 +186,7 @@ export function OrderDetailsPage() {
         </Link>
       </div>
 
-      <div className="mb-6 grid gap-4 rounded-2xl border border-emerald-950/5 bg-white p-5 sm:grid-cols-3">
+      <div className="mb-6 grid gap-4 rounded-2xl border border-blue-950/5 bg-white p-5 sm:grid-cols-3">
         <div>
           <p className="text-sm text-muted-foreground">تاریخ سفارش</p>
 
@@ -210,7 +210,7 @@ export function OrderDetailsPage() {
         </div>
       </div>
 
-      <section className="mb-6 rounded-2xl border border-emerald-950/5 bg-white p-5">
+      <section className="mb-6 rounded-2xl border border-blue-950/5 bg-white p-5">
         <div className="mb-5">
           <h2 className="font-bold">مسیر سفارش شما</h2>
           <p className="mt-1 text-sm text-muted-foreground">وضعیت آماده‌سازی و ارسال کالا را از این قسمت پیگیری کنید.</p>
@@ -223,11 +223,11 @@ export function OrderDetailsPage() {
             const isCurrent = status.RowID === currentId;
             return (
               <li key={status.RowID} className="relative flex items-center gap-3 sm:flex-col sm:items-center sm:text-center">
-                <span className={`flex size-10 shrink-0 items-center justify-center rounded-full border text-sm font-bold ${isCompleted ? "border-emerald-600 bg-emerald-600 text-white" : isCurrent ? "border-emerald-600 bg-emerald-50 text-emerald-700 ring-4 ring-emerald-100" : "border-slate-200 bg-slate-50 text-slate-400"}`}>
+                <span className={`flex size-10 shrink-0 items-center justify-center rounded-full border text-sm font-bold ${isCompleted ? "border-blue-600 bg-blue-600 text-white" : isCurrent ? "border-blue-600 bg-blue-50 text-blue-700 ring-4 ring-blue-100" : "border-slate-200 bg-slate-50 text-slate-400"}`}>
                   {isCompleted ? "✓" : index + 1}
                 </span>
                 <div>
-                  <p className={`text-sm font-semibold ${isCompleted || isCurrent ? "text-emerald-800" : "text-muted-foreground"}`}>{status.RowName || "مرحله سفارش"}</p>
+                  <p className={`text-sm font-semibold ${isCompleted || isCurrent ? "text-blue-800" : "text-muted-foreground"}`}>{status.RowName || "مرحله سفارش"}</p>
                   <p className="mt-1 text-xs text-muted-foreground">{isCompleted ? "تکمیل شده" : isCurrent ? "مرحله فعلی" : "در انتظار"}</p>
                 </div>
               </li>
@@ -239,7 +239,7 @@ export function OrderDetailsPage() {
         )}
       </section>
 
-      <section className="mb-6 grid gap-3 rounded-2xl border border-emerald-950/5 bg-white p-5 sm:grid-cols-2">
+      <section className="mb-6 grid gap-3 rounded-2xl border border-blue-950/5 bg-white p-5 sm:grid-cols-2">
         <div>
           <p className="text-sm text-muted-foreground">وضعیت ارسال</p>
           <p className="mt-2 inline-flex rounded-full bg-sky-50 px-3 py-1.5 text-sm font-semibold text-sky-800">
@@ -261,16 +261,16 @@ export function OrderDetailsPage() {
         </section>
       )}
       {order.WorkflowStatusId === 2 && (
-        <section className="mb-6 space-y-4 rounded-2xl border border-emerald-200 bg-white p-5">
+        <section className="mb-6 space-y-4 rounded-2xl border border-blue-200 bg-white p-5">
           <div>
             <h2 className="font-bold">تأیید مبلغ نهایی سفارش</h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">هزینه ارسال توسط فروشگاه مشخص شده است. لطفاً مبلغ نهایی را بررسی و تأیید کنید.</p>
           </div>
-          <div className="rounded-xl bg-emerald-50 p-4">
-            <p className="text-sm text-emerald-800">هزینه ارسال</p>
-            <p className="mt-1 text-lg font-bold text-emerald-950">{formatPrice(order.ShippingQuote?.shippingCost ?? order.ShippingCost)} تومان</p>
-            {order.ShippingQuote?.adminNote && <p className="mt-2 text-sm text-emerald-900">{order.ShippingQuote.adminNote}</p>}
-            {order.ShippingQuote?.expiresAt && <p className="mt-2 text-xs text-emerald-800">مهلت تأیید: {new Date(order.ShippingQuote.expiresAt).toLocaleString("fa-IR")}</p>}
+          <div className="rounded-xl bg-blue-50 p-4">
+            <p className="text-sm text-blue-800">هزینه ارسال</p>
+            <p className="mt-1 text-lg font-bold text-blue-950">{formatPrice(order.ShippingQuote?.shippingCost ?? order.ShippingCost)} تومان</p>
+            {order.ShippingQuote?.adminNote && <p className="mt-2 text-sm text-blue-900">{order.ShippingQuote.adminNote}</p>}
+            {order.ShippingQuote?.expiresAt && <p className="mt-2 text-xs text-blue-800">مهلت تأیید: {new Date(order.ShippingQuote.expiresAt).toLocaleString("fa-IR")}</p>}
           </div>
           <div className="flex flex-wrap gap-2">
             <Button onClick={async () => {
@@ -302,10 +302,10 @@ export function OrderDetailsPage() {
         <section className="mb-6 rounded-2xl border border-red-200 bg-red-50 p-5 text-sm text-red-800">مبلغ نهایی این سفارش توسط شما رد شده است. برای پیگیری با پشتیبانی تماس بگیرید.</section>
       )}
       {order.WorkflowStatusId === 4 && (
-        <section className="mb-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-5 text-sm text-emerald-800">پرداخت سفارش تأیید و سند انبار آن صادر شده است.</section>
+        <section className="mb-6 rounded-2xl border border-blue-200 bg-blue-50 p-5 text-sm text-blue-800">پرداخت سفارش تأیید و سند انبار آن صادر شده است.</section>
       )}
 
-      <section className="mb-6 rounded-2xl border border-emerald-950/5 bg-white p-5">
+      <section className="mb-6 rounded-2xl border border-blue-950/5 bg-white p-5">
         <div className="mb-4">
           <h2 className="font-bold">پشتیبانی و درخواست لغو</h2>
           <p className="mt-1 text-xs leading-6 text-muted-foreground">
@@ -377,9 +377,9 @@ export function OrderDetailsPage() {
                 </div>
                 {request.message && <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-slate-600">{request.message}</p>}
                 {request.adminResponse && (
-                  <div className="mt-3 rounded-lg border border-emerald-100 bg-emerald-50 p-3">
-                    <p className="text-xs font-bold text-emerald-800">پاسخ پشتیبانی</p>
-                    <p className="mt-1 whitespace-pre-wrap text-sm leading-6 text-emerald-900">{request.adminResponse}</p>
+                  <div className="mt-3 rounded-lg border border-blue-100 bg-blue-50 p-3">
+                    <p className="text-xs font-bold text-blue-800">پاسخ پشتیبانی</p>
+                    <p className="mt-1 whitespace-pre-wrap text-sm leading-6 text-blue-900">{request.adminResponse}</p>
                   </div>
                 )}
                 <p className="mt-2 text-[11px] text-muted-foreground">
@@ -391,7 +391,7 @@ export function OrderDetailsPage() {
         )}
       </section>
 
-      <section className="overflow-hidden rounded-2xl border border-emerald-950/5 bg-white">
+      <section className="overflow-hidden rounded-2xl border border-blue-950/5 bg-white">
         <div className="border-b bg-muted/40 p-5">
           <h2 className="font-bold">اقلام سفارش</h2>
         </div>
@@ -431,7 +431,7 @@ export function OrderDetailsPage() {
         </Table>
       </section>
 
-      <section className="mt-6 rounded-2xl border border-emerald-950/5 bg-white p-5">
+      <section className="mt-6 rounded-2xl border border-blue-950/5 bg-white p-5">
         <h2 className="mb-4 font-bold">خلاصه مالی</h2>
 
         <div className="space-y-3 text-sm">
@@ -485,7 +485,7 @@ export function OrderDetailsPage() {
               </p>
             </div>
 
-            <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700">
+            <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700">
               {paymentInfo.paymentStatusName}
             </span>
           </div>
@@ -584,7 +584,7 @@ export function OrderDetailsPage() {
           )}
 
           {paymentInfo.paymentMethodType === "PAY_IN_PLACE" && (
-            <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800">
+            <div className="rounded-xl border border-blue-200 bg-blue-50 p-4 text-sm text-blue-800">
               پرداخت سفارش شما هنگام تحویل کالا انجام خواهد شد.
             </div>
           )}
