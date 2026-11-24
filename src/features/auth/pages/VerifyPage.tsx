@@ -114,7 +114,7 @@ export function VerifyPage() {
 
   return (
     <section className="mx-auto flex min-h-[70vh] max-w-md items-center px-4 py-12">
-      <Card className="w-full border border-emerald-950/5 shadow-xl shadow-emerald-950/5">
+      <Card className="w-full border border-blue-950/5 shadow-xl shadow-blue-950/5">
         <CardHeader className="px-6 pt-7">
           <CardTitle className="text-xl font-extrabold">تأیید شماره موبایل</CardTitle>
           <p className="text-sm leading-6 text-muted-foreground">یک قدم تا ورود امن به حساب کاربری</p>
