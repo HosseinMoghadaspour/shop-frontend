@@ -111,7 +111,7 @@ export function OrdersPage() {
           return (
             <div
               key={order.RowID}
-              className="rounded-2xl border border-emerald-950/5 bg-white p-5 shadow-sm"
+              className="rounded-2xl border border-blue-950/5 bg-white p-5 shadow-sm"
             >
               <div className="mb-4 flex flex-col gap-3 border-b pb-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
