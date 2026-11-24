@@ -87,7 +87,7 @@ export function Header() {
     <>
       <header
         dir="rtl"
-        className="sticky top-0 z-40 border-b border-blue-900/10 bg-[#EAF0FF]/95 shadow-sm backdrop-blur-xl"
+        className="sticky top-0 z-40 border-b border-slate-200/80 bg-white/95 shadow-[0_4px_24px_rgba(20,32,68,0.04)] backdrop-blur-xl"
       >
         <div className="mx-auto w-full max-w-[1280px] px-3 sm:px-6 lg:px-8">
           <div className="flex min-h-[66px] items-center justify-between gap-3 sm:min-h-[76px] sm:gap-4 lg:gap-8">
@@ -224,7 +224,7 @@ export function Header() {
 
 
           {/* انتخاب آدرس و شعبه برای مشتری و ادمین */}
-          <div className="border-t border-blue-900/10 py-2">
+          <div className="border-t border-slate-100 py-2">
             <div className="mx-auto flex w-full max-w-[1280px] justify-center px-2 sm:px-4">
               <StoreBranchSelector />
             </div>
@@ -267,7 +267,7 @@ export function Header() {
       <nav
         dir="rtl"
         aria-label="ناوبری اصلی موبایل"
-        className="fixed inset-x-0 bottom-0 z-50 border-t border-blue-900/10 bg-[#EAF0FF]/55 pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_30px_rgba(15,60,45,0.09)] backdrop-blur-xl md:hidden"
+        className="fixed inset-x-0 bottom-0 z-50 border-t border-blue-900/10 bg-white/95 pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_30px_rgba(20,32,68,0.08)] backdrop-blur-xl md:hidden"
       >
         <div className="mx-auto grid h-[68px] max-w-lg grid-cols-5 items-center px-2">
           {mobileNavItems.map(({ to, label, icon: Icon, end, featured, badge }) => (
