@@ -75,10 +75,10 @@ export function DeliveryAddressPage() {
 
   return (
     <section dir="rtl" className="mx-auto max-w-3xl px-4 py-8 sm:py-12">
-      <Card className="overflow-hidden rounded-3xl border-emerald-900/10 shadow-sm">
-        <CardHeader className="bg-emerald-50/70">
+      <Card className="overflow-hidden rounded-3xl border-blue-900/10 shadow-sm">
+        <CardHeader className="bg-blue-50/70">
           <CardTitle className="flex items-center gap-2 text-xl">
-            <MapPin className="size-5 text-emerald-700" />
+            <MapPin className="size-5 text-blue-700" />
             ثبت آدرس تحویل
           </CardTitle>
           <p className="text-sm text-muted-foreground">
@@ -121,14 +121,14 @@ export function DeliveryAddressPage() {
                 <Input dir="ltr" value={longitude} onChange={(e) => setLongitude(e.target.value)} placeholder="Longitude" />
               </div>
             </div>
-            <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-dashed border-emerald-700/30 p-4">
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-dashed border-blue-700/30 p-4">
               <div>
                 <p className="text-sm font-semibold">موقعیت مکانی آدرس</p>
                 <p className="mt-1 text-xs text-muted-foreground">
                   موقعیت را از GPS دریافت کنید یا مختصات را در فیلدهای بالا وارد کنید.
                 </p>
                 {latitude.trim() && longitude.trim() && (
-                  <p className="mt-1 text-xs text-emerald-700">مختصات ثبت شده است.</p>
+                  <p className="mt-1 text-xs text-blue-700">مختصات ثبت شده است.</p>
                 )}
               </div>
               <Button
