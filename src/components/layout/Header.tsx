@@ -87,7 +87,7 @@ export function Header() {
     <>
       <header
         dir="rtl"
-        className="sticky top-0 z-40 border-b border-emerald-900/10 bg-[#AEDBC9]/95 shadow-sm backdrop-blur-xl"
+        className="sticky top-0 z-40 border-b border-blue-900/10 bg-[#EAF0FF]/95 shadow-sm backdrop-blur-xl"
       >
         <div className="mx-auto w-full max-w-[1280px] px-3 sm:px-6 lg:px-8">
           <div className="flex min-h-[66px] items-center justify-between gap-3 sm:min-h-[76px] sm:gap-4 lg:gap-8">
@@ -111,13 +111,13 @@ export function Header() {
             <form
               onSubmit={handleSearch}
               role="search"
-              className="hidden h-11 min-w-0 max-w-[680px] flex-1 items-center rounded-full border border-slate-200 bg-white px-3 transition focus-within:border-emerald-600 focus-within:ring-4 focus-within:ring-emerald-600/10 md:flex"
+              className="hidden h-11 min-w-0 max-w-[680px] flex-1 items-center rounded-full border border-slate-200 bg-white px-3 transition focus-within:border-blue-600 focus-within:ring-4 focus-within:ring-blue-600/10 md:flex"
             >
               <Button
                 variant="ghost"
                 type="button"
                 onClick={() => navigate("/categories")}
-                className="flex shrink-0 items-center gap-1.5 border-l border-slate-200 pl-3 text-xs text-slate-500 transition hover:text-emerald-700"
+                className="flex shrink-0 items-center gap-1.5 border-l border-slate-200 pl-3 text-xs text-slate-500 transition hover:text-blue-700"
               >
                 همه دسته‌ها
                 <ChevronDown className="size-3.5" />
@@ -134,7 +134,7 @@ export function Header() {
                 variant="ghost"
                 type="submit"
                 aria-label="جستجو"
-                className="flex size-8 shrink-0 items-center justify-center rounded-full text-emerald-700 transition hover:bg-emerald-50"
+                className="flex size-8 shrink-0 items-center justify-center rounded-full text-blue-700 transition hover:bg-blue-50"
               >
                 <Search className="size-5" />
               </Button>
@@ -149,7 +149,7 @@ export function Header() {
                   {authKind === "admin" && (
                     <Link
                       to="/admin"
-                      className="rounded-xl px-3 py-2 text-sm font-semibold text-emerald-800 transition hover:bg-white/60"
+                      className="rounded-xl px-3 py-2 text-sm font-semibold text-blue-800 transition hover:bg-white/60"
                     >
                       پنل مدیریت
                     </Link>
@@ -157,7 +157,7 @@ export function Header() {
                   <Link
                     to="/profile"
                     title={userName}
-                    className="flex items-center gap-2 rounded-xl px-2 py-2 text-sm text-slate-700 transition hover:bg-white/60 hover:text-emerald-800"
+                    className="flex items-center gap-2 rounded-xl px-2 py-2 text-sm text-slate-700 transition hover:bg-white/60 hover:text-blue-800"
                   >
                     <UserRound className="size-5" />
                     <span className="max-w-28 truncate">{userName}</span>
@@ -175,7 +175,7 @@ export function Header() {
               ) : (
                 <Link
                   to="/auth/login"
-                  className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm text-slate-700 transition hover:bg-white/60 hover:text-emerald-800"
+                  className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm text-slate-700 transition hover:bg-white/60 hover:text-blue-800"
                 >
                   <UserRound className="size-5" />
                   ورود / ثبت‌نام
@@ -185,11 +185,11 @@ export function Header() {
               <Link
                 to="/cart"
                 aria-label={`سبد خرید، ${cartQuantity} محصول`}
-                className="relative flex size-10 items-center justify-center rounded-xl text-slate-700 transition hover:bg-white/60 hover:text-emerald-800"
+                className="relative flex size-10 items-center justify-center rounded-xl text-slate-700 transition hover:bg-white/60 hover:text-blue-800"
               >
                 <ShoppingCart className="size-[22px]" />
                 {cartQuantity > 0 && (
-                  <span className="absolute -right-1 -top-1 flex min-h-5 min-w-5 items-center justify-center rounded-full bg-emerald-700 px-1 text-[10px] font-bold text-white ring-2 ring-[#AEDBC9]">
+                  <span className="absolute -right-1 -top-1 flex min-h-5 min-w-5 items-center justify-center rounded-full bg-blue-700 px-1 text-[10px] font-bold text-white ring-2 ring-[#EAF0FF]">
                     {cartQuantity > 99 ? "99+" : cartQuantity.toLocaleString("fa-IR")}
                   </span>
                 )}
@@ -201,9 +201,9 @@ export function Header() {
           <form
             onSubmit={handleSearch}
             role="search"
-            className="mb-3 flex h-10 items-center rounded-full border border-emerald-900/10 bg-white/80 px-3 shadow-sm md:hidden"
+            className="mb-3 flex h-10 items-center rounded-full border border-blue-900/10 bg-white/80 px-3 shadow-sm md:hidden"
           >
-            <Search className="size-4 shrink-0 text-emerald-700" />
+            <Search className="size-4 shrink-0 text-blue-700" />
             <Input
               type="search"
               value={search}
@@ -215,7 +215,7 @@ export function Header() {
             <Button
               variant="ghost"
               type="submit"
-              className="h-8 rounded-full px-3 text-xs font-bold text-emerald-700 hover:bg-emerald-50 border-"
+              className="h-8 rounded-full px-3 text-xs font-bold text-blue-700 hover:bg-blue-50 border-"
             >
               جستجو
             </Button>
@@ -224,7 +224,7 @@ export function Header() {
 
 
           {/* انتخاب آدرس و شعبه برای مشتری و ادمین */}
-          <div className="border-t border-emerald-900/10 py-2">
+          <div className="border-t border-blue-900/10 py-2">
             <div className="mx-auto flex w-full max-w-[1280px] justify-center px-2 sm:px-4">
               <StoreBranchSelector />
             </div>
@@ -251,8 +251,8 @@ export function Header() {
                     "relative flex items-center px-4 text-[13px] font-medium transition-colors",
                     "after:absolute after:inset-x-4 after:top-7 after:h-0.5 after:rounded-full after:transition-colors",
                     isActive
-                      ? "text-emerald-800 after:bg-emerald-600"
-                      : "text-slate-700 after:bg-transparent hover:text-emerald-700",
+                      ? "text-blue-800 after:bg-blue-600"
+                      : "text-slate-700 after:bg-transparent hover:text-blue-700",
                   ].join(" ")
                 }
               >
@@ -267,7 +267,7 @@ export function Header() {
       <nav
         dir="rtl"
         aria-label="ناوبری اصلی موبایل"
-        className="fixed inset-x-0 bottom-0 z-50 border-t border-emerald-900/10 bg-[#AEDBC9]/55 pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_30px_rgba(15,60,45,0.09)] backdrop-blur-xl md:hidden"
+        className="fixed inset-x-0 bottom-0 z-50 border-t border-blue-900/10 bg-[#EAF0FF]/55 pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_30px_rgba(15,60,45,0.09)] backdrop-blur-xl md:hidden"
       >
         <div className="mx-auto grid h-[68px] max-w-lg grid-cols-5 items-center px-2">
           {mobileNavItems.map(({ to, label, icon: Icon, end, featured, badge }) => (
@@ -278,20 +278,20 @@ export function Header() {
               className={({ isActive }) =>
                 [
                   "group relative flex h-full flex-col items-center justify-center gap-1 text-[10px] font-medium transition-colors",
-                  isActive ? "text-emerald-800" : "text-slate-500 hover:text-emerald-700",
+                  isActive ? "text-blue-800" : "text-slate-500 hover:text-blue-700",
                 ].join(" ")
               }
             >
               {({ isActive }) => (
                 <>
                   {isActive && (
-                    <span className="absolute top-0 h-0.5 w-8 rounded-full bg-emerald-600" />
+                    <span className="absolute top-0 h-0.5 w-8 rounded-full bg-blue-600" />
                   )}
                   <span
                     className={[
                       "relative flex items-center justify-center transition-all duration-200",
                       isActive
-                        && "mb-1 -mt-7 size-12 rounded-2xl border-4 border-white bg-emerald-700 text-white shadow-lg text-emerald-700"
+                        && "mb-1 -mt-7 size-12 rounded-2xl border-4 border-white bg-blue-700 text-white shadow-lg text-blue-700"
 
                     ].join(" ")}
                   >
