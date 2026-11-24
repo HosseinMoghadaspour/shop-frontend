@@ -69,10 +69,10 @@ export function AdminLayout() {
       )}
 
       <aside
-        className={`fixed inset-y-0 right-0 z-50 flex w-[270px] flex-col border-l border-emerald-950/10 bg-white transition-transform duration-200 lg:translate-x-0 ${mobileOpen ? "translate-x-0" : "translate-x-full lg:translate-x-0"}`}
+        className={`fixed inset-y-0 right-0 z-50 flex w-[270px] flex-col border-l border-blue-950/10 bg-white transition-transform duration-200 lg:translate-x-0 ${mobileOpen ? "translate-x-0" : "translate-x-full lg:translate-x-0"}`}
       >
         <div className="flex h-[88px] items-center gap-3 border-b border-slate-100 px-6">
-          <div className="flex size-12 items-center justify-center rounded-2xl bg-emerald-800 text-white shadow-lg shadow-emerald-900/15">
+          <div className="flex size-12 items-center justify-center rounded-2xl bg-blue-800 text-white shadow-lg shadow-blue-900/15">
             <img
               src="/adinaLogo.png"
               alt="آدینا"
@@ -101,7 +101,7 @@ export function AdminLayout() {
           <Link
             to="/"
             onClick={() => setMobileOpen(false)}
-            className="mb-4 flex items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-3.5 py-3 text-sm font-bold text-emerald-900 transition hover:bg-emerald-100"
+            className="mb-4 flex items-center gap-3 rounded-xl border border-blue-200 bg-blue-50 px-3.5 py-3 text-sm font-bold text-blue-900 transition hover:bg-blue-100"
           >
             <Store className="size-[18px] shrink-0" />
             <span>مشاهده فروشگاه و خرید</span>
@@ -115,7 +115,7 @@ export function AdminLayout() {
                 end={end}
                 onClick={() => setMobileOpen(false)}
                 className={({ isActive }) =>
-                  `group flex items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-semibold transition ${isActive ? "bg-emerald-800 text-white shadow-md shadow-emerald-900/10" : "text-slate-600 hover:bg-emerald-50 hover:text-emerald-900"}`
+                  `group flex items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-semibold transition ${isActive ? "bg-blue-800 text-white shadow-md shadow-blue-900/10" : "text-slate-600 hover:bg-blue-50 hover:text-blue-900"}`
                 }
               >
                 <Icon className="size-[18px] shrink-0" />
