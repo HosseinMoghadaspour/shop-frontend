@@ -93,11 +93,11 @@ export function LoginPage() {
   }
 
   return (
-    <section className="mx-auto flex min-h-[70vh] max-w-md items-center px-4 py-12">
-      <Card className="w-full border border-blue-950/5 shadow-xl shadow-blue-950/5">
+    <section className="mx-auto flex min-h-[70vh] max-w-md items-center px-4 py-14">
+      <Card className="w-full border border-slate-100 shadow-[0_24px_70px_rgba(20,32,68,0.10)]">
         <CardHeader className="px-6 pt-7 text-center  ">
-          <span className="mb-2 flex size-12 items-center justify-center rounded-2xl bg-primary/8 text-primary">
-           <img src="/adinaLogo.png"/>
+          <span className="mb-2 flex size-12 items-center justify-center rounded-2xl bg-blue-50 p-2 text-primary">
+           <img src="/adinaLogo.png" alt="آدینامارکت" className="h-full w-full object-contain" />
           </span>
           <CardTitle className="text-xl font-extrabold">به آدینامارکت خوش آمدید</CardTitle>
           <p className="text-sm leading-6 text-muted-foreground">
@@ -120,7 +120,7 @@ export function LoginPage() {
                 type="tel"
                 inputMode="numeric"
                 dir="ltr"
-                className="h-12 rounded-xl bg-muted/50"
+                className="h-12 rounded-xl border-slate-200 bg-slate-50/80"
                 placeholder="09121234567"
                 value={mobile}
                 onChange={(event) =>
