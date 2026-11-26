@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import LocationSelector from "@/features/checkout/components/LocationSelector";
 import { createMyAddress } from "@/services/addresses.api";
-import { setSelectedAddressId } from "@/lib/store-branch";
+import { setSelectedAddressId, setSelectedBranchId } from "@/lib/store-branch";
 
 export function DeliveryAddressPage() {
   const navigate = useNavigate();
@@ -64,7 +64,11 @@ export function DeliveryAddressPage() {
         longitude: lng,
       });
       setSelectedAddressId(id);
+      setSelectedBranchId(null);
       await queryClient.invalidateQueries({ queryKey: ["addresses"] });
+      await queryClient.invalidateQueries({ queryKey: ["store-branches"] });
+      await queryClient.invalidateQueries({ queryKey: ["products"] });
+      await queryClient.invalidateQueries({ queryKey: ["product"] });
       navigate("/");
     } catch (err) {
       setError(err instanceof Error ? err.message : "ثبت آدرس انجام نشد.");
@@ -90,8 +94,8 @@ export function DeliveryAddressPage() {
             <LocationSelector
               provinceId={provinceId}
               cityId={cityId}
-              onProvinceChange={(id) => { setProvinceId(id); setCityId(null); }}
-              onCityChange={setCityId}
+              onProvinceChange={(id) => { setProvinceId(id); setCityId(null); setLatitude(""); setLongitude(""); }}
+              onCityChange={(id) => { setCityId(id); setLatitude(""); setLongitude(""); }}
             />
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
