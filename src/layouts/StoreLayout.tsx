@@ -5,14 +5,13 @@ import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useAuthStore } from "@/stores/auth.store";
 import { getMyAddresses } from "@/services/addresses.api";
-import { useSelectedBranchId } from "@/hooks/useSelectedBranchId";
+import { StoreBranchSelector } from "@/layouts/StoreBranchSelector";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export function StoreLayout() {
   const navigate = useNavigate();
   const location = useLocation();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  const branchId = useSelectedBranchId();
   const addressesQuery = useQuery({
     queryKey: ["addresses"],
     queryFn: getMyAddresses,
@@ -46,6 +45,7 @@ export function StoreLayout() {
   return (
     <div className="flex min-h-screen flex-col bg-background pb-[calc(5.25rem+env(safe-area-inset-bottom))] text-foreground md:pb-0">
       <Header />
+      {isAuthenticated && location.pathname !== "/delivery-address" && <div className="mx-auto w-full max-w-[1100px] px-3 pt-3 sm:px-5 lg:px-8"><StoreBranchSelector /></div>}
       <main className="mx-auto w-full max-w-[1100px] flex-1 px-3 py-5 sm:px-5 sm:py-7 lg:px-8 lg:py-9">
         {isAuthenticated &&
         location.pathname !== "/delivery-address" &&
@@ -73,17 +73,6 @@ export function StoreLayout() {
           >
             بررسی آدرس‌های حساب کاربری با خطا مواجه شد. لطفاً صفحه را دوباره
             بارگذاری کنید.
-          </div>
-        ) : isAuthenticated &&
-          location.pathname !== "/delivery-address" &&
-          addressesQuery.data?.length &&
-          !branchId ? (
-          <div
-            dir="rtl"
-            className="rounded-2xl border border-amber-200 bg-amber-50 p-8 text-center text-sm text-amber-900"
-          >
-            برای مشاهده کالاها ابتدا از نوار بالای صفحه یک شعبه فعال انتخاب
-            کنید.
           </div>
         ) : (
           <Outlet />
