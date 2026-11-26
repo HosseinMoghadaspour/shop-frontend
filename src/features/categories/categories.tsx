@@ -162,10 +162,10 @@ export function Category() {
                 className={[
                   "flex sm:h-[100px] h-[80px] flex-col items-center justify-center",
                   "gap-1.5 rounded-lg border px-2 py-2",
-                  "border-blue-600 sm:bg-gradient-to-b sm:from-white sm:to-slate-50 bg-gradient-to-b from-blue-200 to-blue-200",
-                  "text-[#215E21] shadow-sm transition-all duration-300",
+                  "border-blue-600 sm:bg-gradient-to-b sm:to-slate-50 bg-gradient-to-b from-blue-500 to-blue-700",
+                  "text-[#ffff] sm:text-[#3936e7] shadow-sm transition-all duration-300",
                   "hover:border-blue-300",
-                  "hover:from-blue-500 hover:to-blue-700",
+                  "hover:from-blue-500 hover:to-blue-700 ",
                   "hover:text-white hover:shadow-md",
                 ].join(" ")}
               >

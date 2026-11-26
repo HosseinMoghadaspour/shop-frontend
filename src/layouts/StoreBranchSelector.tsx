@@ -7,9 +7,24 @@ import {
   LoaderCircle,
   RefreshCw,
   CheckCircle2,
+  ChevronDown,
+  Truck,
 } from "lucide-react";
 
+import { Card, CardContent } from "@/components/ui/card";
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+import { Badge } from "@/components/ui/badge";
+
 import { Button } from "@/components/ui/button";
+
 import { useAuthStore } from "@/stores/auth.store";
 import { useCartStore } from "@/stores/cart.store";
 
@@ -82,11 +97,7 @@ export function StoreBranchSelector() {
 
   // بررسی وجود آدرس و انتخاب آدرس پیش‌فرض
   useEffect(() => {
-    if (
-      !isInitialized ||
-      !isAuthenticated ||
-      !addressesQuery.isSuccess
-    ) {
+    if (!isInitialized || !isAuthenticated || !addressesQuery.isSuccess) {
       return;
     }
 
@@ -132,9 +143,7 @@ export function StoreBranchSelector() {
   // آدرس انتخاب شده
   const selectedAddress = useMemo(() => {
     return (
-      addressesQuery.data?.find(
-        (address) => address.id === addressId,
-      ) ?? null
+      addressesQuery.data?.find((address) => address.id === addressId) ?? null
     );
   }, [addressesQuery.data, addressId]);
 
@@ -152,8 +161,7 @@ export function StoreBranchSelector() {
     queryFn: () =>
       getBranchesByCity(
         cityId!,
-        selectedAddress?.latitude != null &&
-          selectedAddress.longitude != null
+        selectedAddress?.latitude != null && selectedAddress.longitude != null
           ? {
               latitude: selectedAddress.latitude,
               longitude: selectedAddress.longitude,
@@ -179,13 +187,11 @@ export function StoreBranchSelector() {
     if (!selectedBranchExists) {
       const preferredBranch =
         branchesQuery.data.defaultBranchId ??
-        (
-          selectedAddress?.latitude != null &&
-          selectedAddress.longitude != null &&
-          branches[0]?.distanceKm != null
-            ? branches[0].id
-            : null
-        );
+        (selectedAddress?.latitude != null &&
+        selectedAddress.longitude != null &&
+        branches[0]?.distanceKm != null
+          ? branches[0].id
+          : null);
 
       setSelectedBranchId(preferredBranch);
 
@@ -201,7 +207,9 @@ export function StoreBranchSelector() {
   ]);
 
   // انتخاب آدرس جدید
-  function handleAddressChange(value: string) {
+  function handleAddressChange(value: string | null) {
+    if (!value) return;
+
     const nextAddressId = Number(value);
 
     if (!Number.isSafeInteger(nextAddressId) || nextAddressId <= 0) {
@@ -212,14 +220,14 @@ export function StoreBranchSelector() {
 
     setSelectedAddressId(nextAddressId);
 
-    // شعبه قبلی برای شهر جدید معتبر نیست
     setSelectedBranchId(null);
 
     refreshBranchData();
   }
 
-  // انتخاب شعبه جدید
-  function handleBranchChange(value: string) {
+  function handleBranchChange(value: string | null) {
+    if (!value) return;
+
     const nextBranchId = Number(value);
 
     if (!Number.isSafeInteger(nextBranchId) || nextBranchId <= 0) {
@@ -241,26 +249,39 @@ export function StoreBranchSelector() {
 
   if (addressesQuery.isPending || addressesQuery.isLoading) {
     return (
-      <div className="flex items-center gap-2 text-xs text-blue-900">
-        <LoaderCircle className="size-4 animate-spin" />
-        در حال بررسی آدرس شما...
-      </div>
+      <Card dir="rtl" className="border-border/60 shadow-sm">
+        <CardContent className="flex items-center gap-3 p-4">
+          <div className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+            <LoaderCircle className="size-5 animate-spin" />
+          </div>
+
+          <div className="space-y-1">
+            <p className="text-sm font-medium">در حال بررسی آدرس شما</p>
+            <p className="text-xs text-muted-foreground">
+              لطفاً کمی صبر کنید...
+            </p>
+          </div>
+        </CardContent>
+      </Card>
     );
   }
 
   if (addressesQuery.isError) {
     return (
-      <div className="flex items-center gap-2 text-xs text-red-600">
-        دریافت آدرس‌ها ناموفق بود.
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => void addressesQuery.refetch()}
-        >
-          <RefreshCw className="size-3.5" />
-          تلاش مجدد
-        </Button>
-      </div>
+      <Card dir="rtl" className="border-destructive/20 shadow-sm">
+        <CardContent className="flex items-center justify-between gap-3 p-4">
+          <p className="text-sm text-destructive">دریافت آدرس‌ها ناموفق بود.</p>
+
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => void addressesQuery.refetch()}
+          >
+            <RefreshCw className="size-4" />
+            تلاش مجدد
+          </Button>
+        </CardContent>
+      </Card>
     );
   }
 
@@ -270,108 +291,162 @@ export function StoreBranchSelector() {
 
   const branches = branchesQuery.data?.data ?? [];
 
-  const selectedBranch = branches.find(
-    (branch) => branch.id === branchId,
-  );
+  const selectedBranch = branches.find((branch) => branch.id === branchId);
 
   return (
-    <div
+    <Card
       dir="rtl"
-      className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:gap-3"
+      className="overflow-hidden border-border/60 bg-background shadow-sm transition-shadow duration-300 hover:shadow-md"
     >
-      {/* انتخاب آدرس */}
-      <div className="flex min-w-0 items-center gap-2">
-        <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-white/70 text-blue-800">
-          <MapPin className="size-5" />
-        </div>
+      {/* هدر */}
+      <div className="flex items-center justify-between gap-3 border-b bg-muted/30 px-4 py-3 sm:px-5">
+        <div className="flex items-center gap-2.5">
+          <div className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
+            <Truck className="size-5" />
+          </div>
 
-        <div className="flex min-w-0 flex-col">
-          <span className="text-[10px] text-blue-950/60">
-            ارسال به
-          </span>
+          <div>
+            <p className="text-sm font-bold">محل ارسال و شعبه خرید</p>
 
-          <select
-            aria-label="انتخاب آدرس تحویل"
-            value={addressId ?? ""}
-            onChange={(event) =>
-              handleAddressChange(event.target.value)
-            }
-            className="max-w-[155px] cursor-pointer truncate border-0 bg-transparent text-xs font-bold text-blue-950 outline-none sm:max-w-[190px]"
-          >
-            {(addressesQuery.data ?? []).map((address) => (
-              <option key={address.id} value={address.id}>
-                {address.city?.name ?? "شهر نامشخص"} -{" "}
-                {address.address?.slice(0, 25) ?? "آدرس"}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      <div className="hidden h-8 w-px bg-blue-900/15 sm:block" />
-
-      {/* انتخاب شعبه */}
-      <div className="flex min-w-0 items-center gap-2">
-        <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-white/70 text-blue-800">
-          <MapPinned className="size-5" />
-        </div>
-
-        <div className="flex min-w-0 flex-col">
-          <span className="text-[10px] text-blue-950/60">
-            شعبه خرید
-          </span>
-
-          {branchesQuery.isLoading ? (
-            <span className="flex items-center gap-1 text-xs font-medium text-blue-800">
-              <LoaderCircle className="size-3 animate-spin" />
-              دریافت شعب...
-            </span>
-          ) : branchesQuery.isError ? (
-            <button
-              type="button"
-              onClick={() => void branchesQuery.refetch()}
-              className="text-xs font-semibold text-red-600"
-            >
-              تلاش مجدد
-            </button>
-          ) : branches.length === 0 ? (
-            <span className="text-xs text-red-600">
-              شعبه‌ای یافت نشد
-            </span>
-          ) : (
-            <select
-              aria-label="انتخاب شعبه خرید"
-              value={branchId ?? ""}
-              onChange={(event) =>
-                handleBranchChange(event.target.value)
-              }
-              className="max-w-[150px] cursor-pointer truncate border-0 bg-transparent text-xs font-bold text-blue-950 outline-none sm:max-w-[180px]"
-            >
-              {!selectedBranch && (
-                <option value="" disabled>
-                  انتخاب شعبه
-                </option>
-              )}
-
-              {branches.map((branch) => (
-                <option key={branch.id} value={branch.id}>
-                  {branch.name}
-                  {branch.isDefault ? " (پیشنهادی)" : ""}
-                  {branch.distanceKm != null
-                    ? ` - ${branch.distanceKm} کیلومتر`
-                    : ""}
-                </option>
-              ))}
-            </select>
-          )}
+            <p className="text-xs text-muted-foreground">
+              آدرس و شعبه موردنظر خود را انتخاب کنید
+            </p>
+          </div>
         </div>
 
         {selectedBranch && (
-          <CheckCircle2 className="size-4 shrink-0 text-blue-700" />
+          <Badge
+            variant="secondary"
+            className="hidden gap-1.5 border-green-200 bg-green-50 text-green-700 dark:border-green-900 dark:bg-green-950 dark:text-green-400 sm:flex"
+          >
+            <CheckCircle2 className="size-3.5" />
+            شعبه فعال
+          </Badge>
         )}
       </div>
 
+      <CardContent className="p-4 sm:p-5">
+        <div className="grid gap-4 sm:grid-cols-2">
+          {/* آدرس */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <div className="flex size-8 items-center justify-center rounded-lg bg-muted text-muted-foreground">
+                <MapPin className="size-4" />
+              </div>
 
-    </div>
+              <div>
+                <p className="text-xs font-medium text-muted-foreground">
+                  ارسال به
+                </p>
+
+                <p className="text-sm font-semibold">آدرس تحویل</p>
+              </div>
+            </div>
+
+            <Select
+              value={addressId?.toString() ?? ""}
+              onValueChange={handleAddressChange}
+            >
+              <SelectTrigger className="h-11 w-full rounded-xl bg-background">
+                <SelectValue placeholder="انتخاب آدرس" />
+              </SelectTrigger>
+
+              <SelectContent>
+                {(addressesQuery.data ?? []).map((address) => (
+                  <SelectItem key={address.id} value={address.id.toString()}>
+                    {address.city?.name ?? "شهر نامشخص"} -{" "}
+                    {address.address?.slice(0, 35) ?? "آدرس"}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* شعبه */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <div className="flex size-8 items-center justify-center rounded-lg bg-muted text-muted-foreground">
+                <MapPinned className="size-4" />
+              </div>
+
+              <div>
+                <p className="text-xs font-medium text-muted-foreground">
+                  شعبه خرید
+                </p>
+
+                <p className="text-sm font-semibold">انتخاب شعبه</p>
+              </div>
+            </div>
+
+            {branchesQuery.isLoading ? (
+              <div className="flex h-11 items-center gap-2 rounded-xl border bg-muted/30 px-3 text-sm text-muted-foreground">
+                <LoaderCircle className="size-4 animate-spin" />
+                در حال دریافت شعب...
+              </div>
+            ) : branchesQuery.isError ? (
+              <Button
+                variant="outline"
+                className="h-11 w-full justify-between rounded-xl text-destructive"
+                onClick={() => void branchesQuery.refetch()}
+              >
+                دریافت شعب ناموفق بود
+                <RefreshCw className="size-4" />
+              </Button>
+            ) : branches.length === 0 ? (
+              <div className="flex h-11 items-center rounded-xl border border-destructive/20 bg-destructive/5 px-3 text-sm text-destructive">
+                شعبه‌ای در این شهر یافت نشد
+              </div>
+            ) : (
+              <Select
+                value={branchId?.toString() ?? ""}
+                onValueChange={handleBranchChange}
+              >
+                <SelectTrigger className="h-11 w-full rounded-xl bg-background">
+                  <SelectValue placeholder="انتخاب شعبه" />
+                </SelectTrigger>
+
+                <SelectContent>
+                  {branches.map((branch) => (
+                    <SelectItem key={branch.id} value={branch.id.toString()}>
+                      {branch.name}
+                      {branch.isDefault ? " (پیشنهادی)" : ""}
+                      {branch.distanceKm != null
+                        ? ` - ${branch.distanceKm} کیلومتر`
+                        : ""}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+          </div>
+        </div>
+
+        {/* وضعیت انتخاب */}
+        {selectedBranch && (
+          <div className="mt-4 flex items-start gap-3 rounded-xl border border-green-200/70 bg-green-50/70 p-3 dark:border-green-900/60 dark:bg-green-950/30">
+            <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-green-600 dark:text-green-400" />
+
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-semibold text-green-800 dark:text-green-300">
+                {selectedBranch.name}
+              </p>
+
+              <p className="mt-1 text-xs text-green-700/80 dark:text-green-400/80">
+                کالاهای فروشگاه براساس این شعبه نمایش داده می‌شوند.
+              </p>
+            </div>
+
+            {selectedBranch.distanceKm != null && (
+              <Badge
+                variant="outline"
+                className="shrink-0 border-green-200 text-green-700 dark:border-green-900 dark:text-green-400"
+              >
+                {selectedBranch.distanceKm} کیلومتر
+              </Badge>
+            )}
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 }

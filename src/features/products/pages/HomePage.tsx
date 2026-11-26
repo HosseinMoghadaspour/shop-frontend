@@ -22,8 +22,7 @@ import { useSelectedBranchId } from "@/hooks/useSelectedBranchId";
 
 import { PageLoader } from "@/components/ui/PageLoader";
 import { ProductSection } from "../components/ProductSection";
-
-
+import { StoreBranchSelector } from "@/layouts/StoreBranchSelector";
 
 export function HomePage() {
   const fetchCart = useCartStore((state) => state.fetchCart);
@@ -73,8 +72,12 @@ export function HomePage() {
           <Category />
         </div>
 
+        <div className="mb-5 w-full">
+          <StoreBranchSelector />
+        </div>
+
         {/* باکس‌های اعتماد و مزایای خرید */}
-        <div className="grid grid-cols-1 gap-3.5 rounded-[1.5rem] border border-blue-100 bg-[#edf2ff] p-4 sm:grid-cols-3 sm:gap-5 sm:p-6 shadow-lg shadow-blue-900/5 ring-1 ring-blue-900/10 backdrop-blur-md">
+        <div className="grid grid-cols-1 gap-3.5 rounded-[1.5rem] border border-blue-100 bg-[#edf2ff] p-2 sm:grid-cols-3 sm:gap-5 sm:p-3 shadow-lg shadow-blue-900/5 ring-1 ring-blue-900/10 backdrop-blur-md">
           {[
             {
               icon: Truck,
@@ -94,13 +97,13 @@ export function HomePage() {
           ].map(({ icon: Icon, title, description }) => (
             <div
               key={title}
-              className="flex items-center gap-4 rounded-3xl bg-white/90 p-4 sm:p-5 shadow-sm shadow-blue-900/5 ring-1 ring-blue-900/5 transition-all duration-300 hover:scale-[1.02] hover:bg-white hover:shadow-md"
+              className="flex items-center gap-4 rounded-xl bg-white/90 p-4 sm:p-2 shadow-sm shadow-blue-900/5 ring-1 ring-blue-900/5 transition-all duration-300 hover:scale-[1.02] hover:bg-white hover:shadow-md"
             >
-              <span className="flex size-12 sm:size-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-md shadow-blue-600/30">
-                <Icon className="size-6" />
+              <span className="flex size-8 sm:size-10 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-md shadow-blue-600/30">
+                <Icon className="size-4" />
               </span>
               <div>
-                <h3 className="text-sm sm:text-base font-extrabold text-slate-900">
+                <h3 className="text-xs sm:text-sm font-extrabold text-slate-900">
                   {title}
                 </h3>
                 <p className="mt-1 text-xs leading-relaxed text-slate-600 font-medium">

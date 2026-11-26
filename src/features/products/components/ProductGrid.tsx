@@ -18,7 +18,7 @@ export function ProductGrid({
           overflow-x-auto overscroll-x-contain pb-3
           [scrollbar-color:#cbd5e1_transparent]
           [scrollbar-width:thin]
-        
+
         "
       >
         {products.map((product) => (
@@ -39,14 +39,7 @@ export function ProductGrid({
   }
 
   return (
-    <div
-      className="
-        grid grid-cols-2 items-stretch gap-3
-        sm:grid-cols-3 sm:gap-4
-        lg:grid-cols-4
-        xl:grid-cols-5 2xl:grid-cols-6
-      "
-    >
+    <div className="grid grid-cols-2 items-stretch gap-3 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-4 ">
       {products.map((product) => (
         <ProductCard key={product.id} product={product} />
       ))}

@@ -16,7 +16,6 @@ import { Input } from "@/components/ui/input";
 import { useAuthStore } from "@/stores/auth.store";
 import { useCartStore } from "@/stores/cart.store";
 import { useSelectedBranchId } from "@/hooks/useSelectedBranchId";
-import { StoreBranchSelector } from "@/layouts/StoreBranchSelector";
 
 export function Header() {
   const navigate = useNavigate();
@@ -71,13 +70,20 @@ export function Header() {
   const userName = user?.RowName?.trim() || "حساب کاربری";
 
   const mobileNavItems = [
-      { to: "/products", label: "محصولات", icon: ShoppingBag, end: true },
-      { to: "/categories", label: "دسته‌ها", icon: LayoutGrid },
-      { to: "/", label: "خانه", icon: Home, featured: true },
+    { to: "/categories", label: "دسته‌ها", icon: LayoutGrid },
+    { to: "/", label: "خانه", icon: Home, featured: true },
     { to: "/cart", label: "سبد خرید", icon: ShoppingBag, badge: cartQuantity },
     {
-      to: !isAuthenticated ? "/auth/login" : authKind === "admin" ? "/admin" : "/profile",
-      label: !isAuthenticated ? "ورود" : authKind === "admin" ? "پنل مدیریت" : "حساب من",
+      to: !isAuthenticated
+        ? "/auth/login"
+        : authKind === "admin"
+          ? "/admin"
+          : "/profile",
+      label: !isAuthenticated
+        ? "ورود"
+        : authKind === "admin"
+          ? "پنل مدیریت"
+          : "حساب من",
       icon: authKind === "admin" ? ShoppingBag : UserRound,
     },
   ];
@@ -89,24 +95,50 @@ export function Header() {
         className="sticky top-0 z-40 border-b border-slate-200/80 bg-white/95 shadow-[0_4px_24px_rgba(20,32,68,0.04)] backdrop-blur-xl"
       >
         <div className="mx-auto w-full max-w-[1280px] px-3 sm:px-6 lg:px-8">
-          <div className="flex min-h-[66px] items-center justify-between gap-3 sm:min-h-[76px] sm:gap-4 lg:gap-8">
+          <div className="flex min-h-[60px] items-center gap-2 sm:min-h-[76px] sm:gap-4 lg:gap-8">
             {/* لوگو */}
             <Link
               to="/"
               aria-label="صفحه اصلی آدینامارکت"
-              className="flex shrink-0 items-center gap-2.5"
+              className="flex shrink-0 items-center gap-1.5 sm:gap-2.5"
             >
               <img
                 src="/adinaLogo.png"
                 alt="لوگوی آدینامارکت"
-                className="h-10 w-10 object-contain sm:h-12 sm:w-12 "
+                className="h-9 w-9 object-contain sm:h-12 sm:w-12"
               />
-              <span className="text-base font-extrabold tracking-tight text-slate-800 sm:text-xl hidden sm:flex">
+
+              <span className="hidden sm:flex text-base font-extrabold tracking-tight text-slate-800 sm:text-xl">
                 آدینامارکت
               </span>
             </Link>
 
-            {/* جست‌وجوی دسکتاپ */}
+            {/* سرچ موبایل */}
+            <form
+              onSubmit={handleSearch}
+              role="search"
+              className="flex h-10 min-w-0 flex-1 items-center rounded-full border border-blue-900/10 bg-white px-2 shadow-sm md:hidden"
+            >
+              <Input
+                type="search"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="جستجوی محصول..."
+                aria-label="جستجوی محصولات"
+                className="h-full min-w-0 flex-1 rounded-none border-0 bg-transparent px-2 text-xs shadow-none outline-none focus-visible:ring-0 placeholder:text-slate-400"
+              />
+
+              <Button
+                variant="ghost"
+                type="submit"
+                aria-label="جستجو"
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full p-0 text-blue-700 hover:bg-blue-50"
+              >
+                <Search className="size-4" />
+              </Button>
+            </form>
+
+            {/* سرچ دسکتاپ */}
             <form
               onSubmit={handleSearch}
               role="search"
@@ -121,14 +153,16 @@ export function Header() {
                 همه دسته‌ها
                 <ChevronDown className="size-3.5" />
               </Button>
+
               <Input
                 type="search"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="جستجوی نام یا کد محصول..."
                 aria-label="جستجوی محصولات"
-                className="h-full w-auto min-w-0 flex-1 rounded-none border-0 bg-transparent px-4 text-sm text-slate-700 shadow-none outline-none focus-visible:ring-0 placeholder:text-slate-400"
+                className="h-full min-w-0 flex-1 rounded-none border-0 bg-transparent px-4 text-sm text-slate-700 shadow-none outline-none focus-visible:ring-0 placeholder:text-slate-400"
               />
+
               <Button
                 variant="ghost"
                 type="submit"
@@ -139,7 +173,6 @@ export function Header() {
               </Button>
             </form>
 
-            {/* عملیات دسکتاپ */}
             <div className="hidden shrink-0 items-center gap-2 md:flex">
               {!isInitialized ? (
                 <div className="h-9 w-20 animate-pulse rounded-lg bg-white/50" />
@@ -189,43 +222,12 @@ export function Header() {
                 <ShoppingCart className="size-[22px]" />
                 {cartQuantity > 0 && (
                   <span className="absolute -right-1 -top-1 flex min-h-5 min-w-5 items-center justify-center rounded-full bg-blue-700 px-1 text-[10px] font-bold text-white ring-2 ring-[#EAF0FF]">
-                    {cartQuantity > 99 ? "99+" : cartQuantity.toLocaleString("fa-IR")}
+                    {cartQuantity > 99
+                      ? "99+"
+                      : cartQuantity.toLocaleString("fa-IR")}
                   </span>
                 )}
               </Link>
-            </div>
-          </div>
-
-          {/* جست‌وجوی موبایل */}
-          <form
-            onSubmit={handleSearch}
-            role="search"
-            className="mb-3 flex h-10 items-center rounded-full border border-blue-900/10 bg-white/80 px-3 shadow-sm md:hidden"
-          >
-            <Search className="size-4 shrink-0 text-blue-700" />
-            <Input
-              type="search"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="جستجوی نام یا کد محصول..."
-              aria-label="جستجوی محصولات"
-              className="h-full w-auto min-w-0 flex-1 rounded-none border-0 bg-transparent px-3 text-sm shadow-none outline-none focus-visible:ring-0 placeholder:text-slate-400"
-            />
-            <Button
-              variant="ghost"
-              type="submit"
-              className="h-8 rounded-full px-3 text-xs font-bold text-blue-700 hover:bg-blue-50 border-"
-            >
-              جستجو
-            </Button>
-          </form>
-
-
-
-          {/* انتخاب آدرس و شعبه برای مشتری و ادمین */}
-          <div className="border-t border-slate-100 py-2">
-            <div className="mx-auto flex w-full max-w-[1280px] justify-center px-2 sm:px-4">
-              <StoreBranchSelector />
             </div>
           </div>
 
@@ -236,10 +238,9 @@ export function Header() {
           >
             {[
               { to: "/", label: "صفحه اصلی", end: true },
-              { to: "/products", label: "محصولات" },
               { to: "/categories", label: "دسته‌بندی‌ها" },
               { to: "/products", label: "تخفیف‌ها" },
-              { to: "/#contact", label: "تماس با ما" },
+              { to: "/contact", label: "تماس با ما" },
             ].map((item) => (
               <NavLink
                 key={item.to}
@@ -268,16 +269,17 @@ export function Header() {
         aria-label="ناوبری اصلی موبایل"
         className="fixed inset-x-0 bottom-0 z-50 border-t border-blue-900/10 bg-white/95 pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_30px_rgba(20,32,68,0.08)] backdrop-blur-xl md:hidden"
       >
-        <div className="mx-auto grid h-[68px] max-w-lg grid-cols-5 items-center px-2">
-          {mobileNavItems.map(({ to, label, icon: Icon, end, featured, badge }) => (
+        <div className="mx-auto grid h-[68px] max-w-lg grid-cols-4 items-center px-2">
+          {mobileNavItems.map(({ to, label, icon: Icon, featured, badge }) => (
             <NavLink
               key={to}
               to={to}
-              end={end}
               className={({ isActive }) =>
                 [
                   "group relative flex h-full flex-col items-center justify-center gap-1 text-[10px] font-medium transition-colors",
-                  isActive ? "text-blue-800" : "text-slate-500 hover:text-blue-700",
+                  isActive
+                    ? "text-blue-800"
+                    : "text-slate-500 hover:text-blue-700",
                 ].join(" ")
               }
             >
@@ -289,9 +291,8 @@ export function Header() {
                   <span
                     className={[
                       "relative flex items-center justify-center transition-all duration-200",
-                      isActive
-                        && "mb-1 -mt-7 size-12 rounded-2xl border-4 border-white bg-blue-700 text-white shadow-lg text-blue-700"
-
+                      isActive &&
+                        "mb-1 -mt-7 size-12 rounded-2xl border-4 border-white bg-blue-700 text-white shadow-lg text-blue-700",
                     ].join(" ")}
                   >
                     <Icon className={featured ? "size-5" : "size-[19px]"} />
@@ -301,9 +302,7 @@ export function Header() {
                       </span>
                     )}
                   </span>
-                  <span>
-                    {label}
-                  </span>
+                  <span>{label}</span>
                 </>
               )}
             </NavLink>
