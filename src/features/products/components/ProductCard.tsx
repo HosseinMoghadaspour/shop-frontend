@@ -234,8 +234,8 @@ export function ProductCard({ product }: ProductCardProps) {
         <Link to={`/products/${product.id}`} className="min-w-0">
           <h2
             className="
-              line-clamp-2 min-h-[36px]
-              text-xs font-bold leading-6
+              line-clamp-1 min-h-[30px]
+              text-xs font-bold
               text-slate-800
               transition-colors
               group-hover:text-blue-700

@@ -185,9 +185,7 @@ export function StoreBranchSelector() {
 
     if (!selectedBranchExists) {
       const preferredBranch =
-        branchesQuery.data.defaultBranchId ??
-        branches[0]?.id ??
-        null;
+        branchesQuery.data.defaultBranchId ?? branches[0]?.id ?? null;
 
       setSelectedBranchId(preferredBranch);
       if (preferredBranch !== null) refreshBranchData();
@@ -286,12 +284,14 @@ export function StoreBranchSelector() {
 
   const branches = branchesQuery.data?.data ?? [];
 
+  console.log(branches)
+
   const selectedBranch = branches.find((branch) => branch.id === branchId);
 
   return (
     <Card
       dir="rtl"
-      className="overflow-hidden border-border/60 bg-background shadow-sm transition-shadow duration-300 hover:shadow-md"
+      className="overflow-hidden border-border/60 bg-blue-100 shadow-sm transition-shadow duration-300 hover:shadow-md"
     >
       {/* هدر */}
       <div className="flex items-center justify-between gap-3 border-b bg-muted/30 px-4 py-3 sm:px-5">
@@ -308,19 +308,9 @@ export function StoreBranchSelector() {
             </p>
           </div>
         </div>
-
-        {selectedBranch && (
-          <Badge
-            variant="secondary"
-            className="hidden gap-1.5 border-green-200 bg-green-50 text-green-700 dark:border-green-900 dark:bg-green-950 dark:text-green-400 sm:flex"
-          >
-            <CheckCircle2 className="size-3.5" />
-            شعبه فعال
-          </Badge>
-        )}
       </div>
 
-      <CardContent className="p-4 sm:p-5">
+      <CardContent>
         <div className="grid gap-4 sm:grid-cols-2">
           {/* آدرس */}
           <div className="space-y-2">
@@ -330,10 +320,6 @@ export function StoreBranchSelector() {
               </div>
 
               <div>
-                <p className="text-xs font-medium text-muted-foreground">
-                  ارسال به
-                </p>
-
                 <p className="text-sm font-semibold">آدرس تحویل</p>
               </div>
             </div>
@@ -343,7 +329,14 @@ export function StoreBranchSelector() {
               onValueChange={handleAddressChange}
             >
               <SelectTrigger className="h-11 w-full rounded-xl bg-background">
-                <SelectValue placeholder="انتخاب آدرس" />
+                <SelectValue placeholder="انتخاب آدرس">
+                  {addressesQuery.data?.find(
+                    (address) =>
+                      address.id.toString() === addressId?.toString(),
+                  )
+                    ? `${addressesQuery.data.find((address) => address.id.toString() === addressId?.toString())?.city?.name ?? "شهر نامشخص"} - ${addressesQuery.data.find((address) => address.id.toString() === addressId?.toString())?.address?.slice(0, 35) ?? "آدرس"}`
+                    : "انتخاب آدرس"}
+                </SelectValue>
               </SelectTrigger>
 
               <SelectContent>
@@ -363,12 +356,7 @@ export function StoreBranchSelector() {
               <div className="flex size-8 items-center justify-center rounded-lg bg-muted text-muted-foreground">
                 <MapPinned className="size-4" />
               </div>
-
               <div>
-                <p className="text-xs font-medium text-muted-foreground">
-                  شعبه خرید
-                </p>
-
                 <p className="text-sm font-semibold">انتخاب شعبه</p>
               </div>
             </div>
@@ -397,7 +385,13 @@ export function StoreBranchSelector() {
                 onValueChange={handleBranchChange}
               >
                 <SelectTrigger className="h-11 w-full rounded-xl bg-background">
-                  <SelectValue placeholder="انتخاب شعبه" />
+                  <SelectValue placeholder="انتخاب شعبه">
+                    {branches.find(
+                      (branch) => branch.id.toString() === branchId?.toString(),
+                    )
+                      ? `${branches.find((branch) => branch.id.toString() === branchId?.toString())?.name ?? "شعبه"}${branches.find((branch) => branch.id.toString() === branchId?.toString())?.isDefault ? " (پیشنهادی)" : ""}${branches.find((branch) => branch.id.toString() === branchId?.toString())?.distanceKm != null ? ` - ${branches.find((branch) => branch.id.toString() === branchId?.toString())?.distanceKm} کیلومتر` : ""}`
+                      : "انتخاب شعبه"}
+                  </SelectValue>
                 </SelectTrigger>
 
                 <SelectContent>
@@ -426,8 +420,8 @@ export function StoreBranchSelector() {
                 {selectedBranch.name}
               </p>
 
-              <p className="mt-1 text-xs text-green-700/80 dark:text-green-400/80">
-                کالاهای فروشگاه براساس این شعبه نمایش داده می‌شوند.
+              <p className="text-xs font-semibold text-green-700/80 dark:text-green-400/80">
+                {selectedBranch.RowDesc}
               </p>
             </div>
 

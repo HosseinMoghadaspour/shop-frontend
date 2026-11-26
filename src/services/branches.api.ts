@@ -10,6 +10,7 @@ export interface StoreBranch {
   longitude: number | null;
   isDefault: boolean;
   distanceKm: number | null;
+  RowDesc: string | null;
 }
 
 export interface AdminBranchRecord {

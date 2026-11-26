@@ -70,7 +70,7 @@ export function Header() {
   const userName = user?.RowName?.trim() || "حساب کاربری";
 
   const mobileNavItems = [
-    { to: "/categories", label: "دسته‌ها", icon: LayoutGrid },
+    { to: "/categories", label: "دسته‌بندی", icon: LayoutGrid },
     { to: "/", label: "خانه", icon: Home, featured: true },
     { to: "/cart", label: "سبد خرید", icon: ShoppingBag, badge: cartQuantity },
     {
@@ -92,7 +92,7 @@ export function Header() {
     <>
       <header
         dir="rtl"
-        className="sticky top-0 z-40 border-b border-slate-200/80 bg-white/95 shadow-[0_4px_24px_rgba(20,32,68,0.04)] backdrop-blur-xl"
+        className="sticky p-1 inset-x-15 top-5 sm:rounded-lg rounded-3xl sm:top-0 z-40 border-b border-slate-200/80 bg-white/95 shadow-[0_4px_24px_rgba(20,32,68,0.04)] backdrop-blur-xl"
       >
         <div className="mx-auto w-full max-w-[1280px] px-3 sm:px-6 lg:px-8">
           <div className="flex min-h-[60px] items-center gap-2 sm:min-h-[76px] sm:gap-4 lg:gap-8">
@@ -267,7 +267,7 @@ export function Header() {
       <nav
         dir="rtl"
         aria-label="ناوبری اصلی موبایل"
-        className="fixed inset-x-0 bottom-0 z-50 border-t border-blue-900/10 bg-white/95 pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_30px_rgba(20,32,68,0.08)] backdrop-blur-xl md:hidden"
+        className="fixed inset-x-15 bottom-10 z-50 border-t border-blue-900/10 bg-white/95 pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_30px_rgba(20,32,68,0.08)] backdrop-blur-xl md:hidden rounded-3xl"
       >
         <div className="mx-auto grid h-[68px] max-w-lg grid-cols-4 items-center px-2">
           {mobileNavItems.map(({ to, label, icon: Icon, featured, badge }) => (

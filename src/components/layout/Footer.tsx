@@ -1,3 +1,4 @@
+
 import { getFooter } from "@/services/footer.api";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
@@ -7,6 +8,8 @@ import {
   MessageCircle,
   MapPin,
   Phone,
+  ArrowLeft,
+  ShieldCheck,
 } from "lucide-react";
 
 import { getApiAssetUrl } from "@/lib/api-url";
@@ -22,7 +25,18 @@ export function Footer() {
 
   if (footerQuery.isLoading) {
     return (
-      <footer className="mt-16 h-64 animate-pulse bg-[#EAF0FF]" />
+      <footer className="mt-16 animate-pulse bg-blue-50">
+        <div className="mx-auto max-w-[1440px] px-4 py-16">
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div
+                key={i}
+                className="h-52 rounded-2xl bg-white"
+              />
+            ))}
+          </div>
+        </div>
+      </footer>
     );
   }
 
@@ -32,7 +46,7 @@ export function Footer() {
     {
       title: "اینستاگرام",
       handle: footer.InstagramHandle,
-      icon: MessageCircleHeart ,
+      icon: Send,
       url: footer.InstagramHandle
         ? `https://instagram.com/${footer.InstagramHandle}`
         : null,
@@ -64,7 +78,7 @@ export function Footer() {
     {
       title: "روبیکا",
       handle: footer.Rubikahandle,
-      icon: MessageCircle,
+      icon: MessageCircleHeart,
       url: footer.Rubikahandle
         ? `https://rubika.ir/${footer.Rubikahandle}`
         : null,
@@ -87,137 +101,78 @@ export function Footer() {
     ? getApiAssetUrl(footer.ReziImageUrl)
     : null;
 
+  const quickLinks = [
+    { title: "صفحه اصلی", to: "/" },
+    { title: "همه محصولات", to: "/products" },
+    { title: "پیگیری سفارش", to: "/orders" },
+    { title: "سبد خرید", to: "/cart" },
+    { title: "حساب کاربری", to: "/profile" },
+    ...(footer.LinkAboutUs
+      ? [{ title: "درباره ما", to: footer.LinkAboutUs }]
+      : []),
+    ...(footer.LinkContactUs
+      ? [{ title: "تماس با ما", to: footer.LinkContactUs }]
+      : []),
+  ];
+
   return (
-    <footer id="contact" className="mt-12 scroll-mt-32 border-t border-slate-200 bg-white">
-      <div className="mx-auto max-w-[1440px] px-4 py-12 sm:px-6 lg:px-8">
+    <footer
+      id="contact"
+      className="relative mt-16 overflow-hidden border-t border-blue-100 bg-gradient-to-b from-white to-blue-50/70"
+    >
+      {/* تزئین پس زمینه */}
+      <div className="pointer-events-none absolute -right-32 -top-32 size-80 rounded-full bg-blue-100/40 blur-3xl" />
+      <div className="pointer-events-none absolute -left-32 bottom-0 size-80 rounded-full bg-blue-100/40 blur-3xl" />
 
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1.3fr]">
+      <div className="relative mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8">
 
-          {/* معرفی سایت */}
-          <div>
+        {/* بخش اصلی فوتر */}
+        <div className="grid grid-cols-1 gap-10 py-12 sm:grid-cols-2 lg:grid-cols-12 lg:gap-12 lg:py-16">
+
+          {/* معرفی فروشگاه */}
+          <div className="lg:col-span-4">
             <Link
               to="/"
-              className="mb-5 flex w-fit items-center gap-3 text-lg font-extrabold text-primary"
+              className="mb-6 flex w-fit items-center gap-3"
             >
-              <span className="flex size-11 items-center justify-center overflow-hidden rounded-xl bg-white shadow-sm">
+              <div className="flex size-14 items-center justify-center overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm">
                 {logoUrl ? (
                   <img
                     src={logoUrl}
                     alt={footer.SiteName || ""}
-                    className="h-full w-full object-contain"
+                    className="h-full w-full object-contain p-1"
                   />
                 ) : (
                   <img
                     src="/adinaLogo.png"
                     alt={footer.SiteName || ""}
-                    className="h-7 w-7 object-contain"
+                    className="h-10 w-10 object-contain"
                   />
                 )}
-              </span>
+              </div>
 
-              {footer.SiteName}
+              <div>
+                <span className="block text-lg font-black text-blue-950">
+                  {footer.SiteName}
+                </span>
+                <span className="mt-1 block text-xs text-blue-500">
+                  خرید آسان، مطمئن و سریع
+                </span>
+              </div>
             </Link>
 
-            <p className="max-w-sm whitespace-pre-line text-sm leading-8 text-blue-950/70">
+            <p className="max-w-md whitespace-pre-line text-sm leading-8 text-slate-600">
               {footer.AboutText}
             </p>
-          </div>
 
-          {/* دسترسی سریع */}
-          <div>
-            <h2 className="mb-5 font-bold text-blue-950">
-              دسترسی سریع
-            </h2>
-
-            <div className="flex flex-col gap-4 text-sm text-blue-950/70">
-              <Link to="/" className="transition hover:text-primary">
-                صفحه اصلی
-              </Link>
-
-              <Link to="/products" className="transition hover:text-primary">
-                همه محصولات
-              </Link>
-
-              <Link to="/orders" className="transition hover:text-primary">
-                پیگیری سفارش
-              </Link>
-
-              <Link to="/cart" className="transition hover:text-primary">
-                سبد خرید
-              </Link>
-
-              <Link to="/profile" className="transition hover:text-primary">
-                حساب کاربری
-              </Link>
-
-              {footer.LinkAboutUs && (
-                <Link
-                  to={footer.LinkAboutUs}
-                  className="transition hover:text-primary"
-                >
-                  درباره ما
-                </Link>
-              )}
-
-              {footer.LinkContactUs && (
-                <Link
-                  to={footer.LinkContactUs}
-                  className="transition hover:text-primary"
-                >
-                  تماس با ما
-                </Link>
-              )}
-            </div>
-          </div>
-
-          {/* ارتباط با ما */}
-          <div>
-            <h2 className="mb-5 font-bold text-blue-950">
-              ارتباط با ما
-            </h2>
-
-            <div className="flex flex-col gap-4 text-sm text-blue-950/70">
-
-              {footer.Phone1 && (
-                <a
-                  href={`tel:${footer.Phone1}`}
-                  className="flex items-center gap-2 transition hover:text-primary"
-                  dir="rtl"
-                >
-                  <Phone className="size-4 shrink-0" />
-                  <span>{footer.Phone1}</span>
-                </a>
-              )}
-
-              {footer.Phone2 && (
-                <a
-                  href={`tel:${footer.Phone2}`}
-                  className="flex items-center gap-2 transition hover:text-primary"
-                  dir="rtl"
-                >
-                  <Phone className="size-4 shrink-0" />
-                  <span>{footer.Phone2}</span>
-                </a>
-              )}
-
-              {footer.Address && (
-                <div className="flex items-start gap-2 leading-7">
-                  <MapPin className="mt-1 size-4 shrink-0" />
-                  <span className="whitespace-pre-line">
-                    {footer.Address}
-                  </span>
-                </div>
-              )}
-
-            </div>
-
+            {/* شبکه های اجتماعی */}
             {socialLinks.length > 0 && (
-              <div className="mt-6">
-                <h3 className="mb-3 text-sm font-bold text-blue-950">
-                  ما را دنبال کنید
+              <div className="mt-7">
+                <h3 className="mb-4 text-sm font-bold text-blue-950">
+                  در شبکه‌های اجتماعی همراه ما باشید
                 </h3>
 
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2.5">
                   {socialLinks.map((item) => {
                     const Icon = item.icon;
 
@@ -229,7 +184,7 @@ export function Footer() {
                         rel="noopener noreferrer"
                         title={item.title}
                         aria-label={item.title}
-                        className="flex size-10 items-center justify-center rounded-xl bg-white/70 text-blue-900 transition hover:bg-primary hover:text-white"
+                        className="group flex size-11 items-center justify-center rounded-xl border border-blue-100 bg-white text-blue-700 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#0033ff] hover:bg-[#0033ff] hover:text-white hover:shadow-lg hover:shadow-blue-200"
                       >
                         <Icon className="size-5" />
                       </a>
@@ -240,63 +195,176 @@ export function Footer() {
             )}
           </div>
 
+          {/* لینک ها */}
+          <div className="lg:col-span-2">
+            <h2 className="mb-6 flex items-center gap-2 text-base font-extrabold text-blue-950">
+              <span className="h-5 w-1 rounded-full bg-[#0033ff]" />
+              دسترسی سریع
+            </h2>
+
+            <ul className="space-y-4">
+              {quickLinks.map((item) => (
+                <li key={item.title}>
+                  <Link
+                    to={item.to}
+                    className="group flex items-center gap-2 text-sm text-slate-600 transition-colors hover:text-[#0033ff]"
+                  >
+                    <ArrowLeft className="size-3.5 text-blue-300 transition-transform group-hover:-translate-x-1 group-hover:text-[#0033ff]" />
+                    {item.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* ارتباط با ما */}
+          <div className="lg:col-span-3">
+            <h2 className="mb-6 flex items-center gap-2 text-base font-extrabold text-blue-950">
+              <span className="h-5 w-1 rounded-full bg-[#0033ff]" />
+              ارتباط با ما
+            </h2>
+
+            <div className="space-y-4">
+              {footer.Phone1 && (
+                <a
+                  href={`tel:${footer.Phone1}`}
+                  className="group flex items-center gap-3 rounded-xl border border-blue-100/70 bg-white/80 p-3 transition-all hover:border-blue-200 hover:shadow-sm"
+                  dir="rtl"
+                >
+                  <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-[#0033ff]">
+                    <Phone className="size-5" />
+                  </div>
+
+                  <div>
+                    <span className="mb-1 block text-xs text-slate-400">
+                      شماره تماس
+                    </span>
+                    <span className="text-sm font-bold text-blue-950">
+                      {footer.Phone1}
+                    </span>
+                  </div>
+                </a>
+              )}
+
+              {footer.Phone2 && (
+                <a
+                  href={`tel:${footer.Phone2}`}
+                  className="group flex items-center gap-3 rounded-xl border border-blue-100/70 bg-white/80 p-3 transition-all hover:border-blue-200 hover:shadow-sm"
+                  dir="rtl"
+                >
+                  <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-[#0033ff]">
+                    <Phone className="size-5" />
+                  </div>
+
+                  <div>
+                    <span className="mb-1 block text-xs text-slate-400">
+                      شماره تماس دوم
+                    </span>
+                    <span className="text-sm font-bold text-blue-950">
+                      {footer.Phone2}
+                    </span>
+                  </div>
+                </a>
+              )}
+
+              {footer.Address && (
+                <div className="flex items-start gap-3 rounded-xl border border-blue-100/70 bg-white/80 p-3">
+                  <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-[#0033ff]">
+                    <MapPin className="size-5" />
+                  </div>
+
+                  <div>
+                    <span className="mb-1 block text-xs text-slate-400">
+                      آدرس
+                    </span>
+                    <span className="whitespace-pre-line text-sm leading-7 text-blue-950">
+                      {footer.Address}
+                    </span>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
           {/* نمادهای اعتماد */}
-          <div>
-            <h2 className="mb-5 font-bold text-blue-950">
+          <div className="lg:col-span-3">
+            <h2 className="mb-6 flex items-center gap-2 text-base font-extrabold text-blue-950">
+              <span className="h-5 w-1 rounded-full bg-[#0033ff]" />
               نمادهای اعتماد
             </h2>
 
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="rounded-2xl border border-blue-100 bg-white/80 p-5 shadow-sm">
+              <div className="flex flex-wrap items-center justify-center gap-4">
 
-              {enamadUrl && (
-                <a
-                  href={footer.EnamadImageUrl || "#"}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex h-24 w-24 items-center justify-center rounded-xl bg-white p-3"
-                >
-                  <img
-                    src={enamadUrl}
-                    alt="نماد اعتماد الکترونیکی"
-                    className="max-h-full max-w-full object-contain"
-                  />
-                </a>
-              )}
+                {enamadUrl && (
+                  <a
+                    href={footer.EnamadImageUrl || "#"}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex size-24 items-center justify-center rounded-xl border border-slate-100 bg-white p-3 transition hover:shadow-md"
+                  >
+                    <img
+                      src={enamadUrl}
+                      alt="نماد اعتماد الکترونیکی"
+                      className="max-h-full max-w-full object-contain"
+                    />
+                  </a>
+                )}
 
-              {samandehiUrl && (
-                <a
-                  href={footer.SamandehiUrl || "#"}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex h-24 w-24 items-center justify-center rounded-xl bg-white p-3"
-                >
-                  <img
-                    src={samandehiUrl}
-                    alt="نماد ساماندهی"
-                    className="max-h-full max-w-full object-contain"
-                  />
-                </a>
-              )}
+                {samandehiUrl && (
+                  <a
+                    href={footer.SamandehiUrl || "#"}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex size-24 items-center justify-center rounded-xl border border-slate-100 bg-white p-3 transition hover:shadow-md"
+                  >
+                    <img
+                      src={samandehiUrl}
+                      alt="نماد ساماندهی"
+                      className="max-h-full max-w-full object-contain"
+                    />
+                  </a>
+                )}
 
-              {reziUrl && (
-                <div className="flex h-24 w-24 items-center justify-center rounded-xl bg-white p-3">
-                  <img
-                    src={reziUrl}
-                    alt="نماد رضایت"
-                    className="max-h-full max-w-full object-contain"
-                  />
-                </div>
-              )}
+                {reziUrl && (
+                  <div className="flex size-24 items-center justify-center rounded-xl border border-slate-100 bg-white p-3">
+                    <img
+                      src={reziUrl}
+                      alt="نماد رضایت"
+                      className="max-h-full max-w-full object-contain"
+                    />
+                  </div>
+                )}
 
+                {!enamadUrl && !samandehiUrl && !reziUrl && (
+                  <div className="py-4 text-center">
+                    <ShieldCheck className="mx-auto mb-3 size-10 text-blue-200" />
+                    <p className="text-sm text-slate-400">
+                      اطلاعات نمادهای اعتماد در دسترس نیست
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              <p className="mt-4 text-center text-xs leading-6 text-slate-500">
+                خرید امن و آسوده را با ما تجربه کنید
+              </p>
             </div>
           </div>
         </div>
 
-        {/* کپی رایت */}
-        <div className="mt-10 gap-3 border-t border-blue-950/10 pt-6 text-center text-xs sm:flex-row sm:items-center ">
-          <span>
-            {footer.Copyright}
-          </span>
+        {/* نوار پایین */}
+        <div className="border-t border-blue-100 py-5">
+          <div className="flex flex-col items-center justify-between gap-3 text-center sm:flex-row sm:text-right">
+            <p className="text-xs leading-6 text-slate-500">
+              {footer.Copyright}
+            </p>
+
+            <div className="flex items-center gap-2 text-xs text-blue-600">
+              <ShieldCheck className="size-4" />
+              <span>تجربه خرید امن و آسان</span>
+            </div>
+          </div>
         </div>
 
       </div>

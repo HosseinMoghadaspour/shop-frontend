@@ -45,7 +45,7 @@ export function StoreLayout() {
   return (
     <div className="flex min-h-screen flex-col bg-background pb-[calc(5.25rem+env(safe-area-inset-bottom))] text-foreground md:pb-0">
       <Header />
-      {isAuthenticated && location.pathname !== "/delivery-address" && <div className="mx-auto w-full max-w-[1100px] px-3 pt-3 sm:px-5 lg:px-8"><StoreBranchSelector /></div>}
+    
       <main className="mx-auto w-full max-w-[1100px] flex-1 px-3 py-5 sm:px-5 sm:py-7 lg:px-8 lg:py-9">
         {isAuthenticated &&
         location.pathname !== "/delivery-address" &&

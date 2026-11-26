@@ -98,14 +98,8 @@ export function ProductSection({
             <h2 className="text-xl font-black tracking-tight sm:text-xl text-slate-900">
               {title}
             </h2>
-            <p
-              className={`mt-1 text-xs sm:text-sm font-medium ${sectionTheme.description}`}
-            >
-              {description && ""}
-            </p>
           </div>
         </div>
-        <div></div>
         <div>{theme === "amazing" && <AmazingCountdown />}</div>
         <Link
           to="/products"
