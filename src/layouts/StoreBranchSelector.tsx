@@ -7,7 +7,6 @@ import {
   LoaderCircle,
   RefreshCw,
   CheckCircle2,
-  ChevronDown,
   Truck,
 } from "lucide-react";
 
@@ -187,15 +186,11 @@ export function StoreBranchSelector() {
     if (!selectedBranchExists) {
       const preferredBranch =
         branchesQuery.data.defaultBranchId ??
-        (selectedAddress?.latitude != null &&
-        selectedAddress.longitude != null &&
-        branches[0]?.distanceKm != null
-          ? branches[0].id
-          : null);
+        branches[0]?.id ??
+        null;
 
       setSelectedBranchId(preferredBranch);
-
-      refreshBranchData();
+      if (preferredBranch !== null) refreshBranchData();
     }
   }, [
     branchesQuery.isSuccess,
