@@ -41,8 +41,9 @@ export default function LocationSelector({
         <Select
           value={provinceId ? String(provinceId) : ""}
           onValueChange={(value) => {
+            if (!value) { onProvinceChange(null); onCityChange(null); return; }
             const id = Number(value);
-            onProvinceChange(id);
+            if (Number.isSafeInteger(id) && id > 0) onProvinceChange(id);
           }}
           disabled={provincesQuery.isLoading}
         >
@@ -77,7 +78,9 @@ export default function LocationSelector({
         <Select
           value={cityId ? String(cityId) : ""}
           onValueChange={(value) => {
-            onCityChange(Number(value));
+            if (!value) { onCityChange(null); return; }
+            const id = Number(value);
+            if (Number.isSafeInteger(id) && id > 0) onCityChange(id);
           }}
           disabled={
             provinceId === null ||
